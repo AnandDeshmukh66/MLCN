@@ -141,15 +141,8 @@ python -m packet_capture [-h] [-i INTERFACE] [-l] [-v]
 MLCN/
 ├── requirements.txt
 ├── README.md
-└── packet_capture/
-    ├── __init__.py       # Public exports
-    ├── __main__.py       # python -m packet_capture
-    ├── cli.py            # Argument parsing and entry point
-    ├── capture.py        # Scapy sniff loop and graceful shutdown
-    ├── formatter.py      # Tabular output formatting
-    ├── interfaces.py     # Interface discovery
-    ├── models.py         # ParsedPacket dataclass
-    └── parser.py         # Field extraction from raw packets
+├── packet_capture/       # Module 1 — live capture + CLI display
+└── packet_parsing/       # Module 2 — parse / normalize / PacketMetadata
 ```
 
 ## Programmatic usage
@@ -164,5 +157,6 @@ engine.start()
 ## Notes
 
 - Malformed or unsupported packets are skipped silently (use `-v` for debug traces).
-- Only Module 1 is implemented; no flow building, ML, database, or dashboard code is included.
+- Field parsing is performed by **Module 2** (`packet_parsing`); this module owns capture and display only.
+- No flow building, ML, database, or dashboard code is included.
 - PyShark is not required; Scapy is the sole capture backend.

@@ -12,7 +12,9 @@ from scapy.all import sniff
 from packet_capture.formatter import format_divider, format_header, format_packet_row
 from packet_capture.interfaces import resolve_interface
 from packet_capture.models import ParsedPacket
-from packet_capture.parser import parse_packet
+from packet_capture.parser import metadata_to_parsed_packet
+from packet_parsing import PacketMetadata
+from packet_parsing import parse_packet as parse_metadata
 
 logger = logging.getLogger(__name__)
 
@@ -35,21 +37,33 @@ class PacketCaptureEngine:
     def _default_handler(packet: ParsedPacket) -> None:
         print(format_packet_row(packet), flush=True)
 
-    def _parse_raw_packet(self, raw_packet) -> Optional[ParsedPacket]:
-        """Parse a raw Scapy packet, skipping malformed packets."""
+    def _parse_raw_packet(self, raw_packet) -> Optional[PacketMetadata]:
+        """Parse a raw Scapy packet via Module 2, skipping malformed packets."""
         self._packets_seen += 1
-        parsed = parse_packet(raw_packet)
-        if parsed is None:
+        metadata = parse_metadata(raw_packet)
+        if metadata is None:
             return None
         self._packets_printed += 1
-        return parsed
+        return metadata
 
-    def _dispatch_packet(
+    def _dispatch_metadata(
+        self,
+        metadata: PacketMetadata,
+        consumers: tuple[Callable[[PacketMetadata], None], ...],
+    ) -> None:
+        """Invoke one or more consumers for successfully parsed metadata."""
+        for consumer in consumers:
+            try:
+                consumer(metadata)
+            except Exception:
+                logger.debug("Packet consumer failed", exc_info=True)
+
+    def _dispatch_parsed(
         self,
         packet: ParsedPacket,
         consumers: tuple[Callable[[ParsedPacket], None], ...],
     ) -> None:
-        """Invoke one or more consumers for a successfully parsed packet."""
+        """Invoke one or more consumers for a Module 1 display packet."""
         for consumer in consumers:
             try:
                 consumer(packet)
@@ -57,10 +71,13 @@ class PacketCaptureEngine:
                 logger.debug("Packet consumer failed", exc_info=True)
 
     def _handle_raw_packet(self, raw_packet) -> None:
-        """Parse and dispatch a single raw Scapy packet to the default handler."""
-        parsed = self._parse_raw_packet(raw_packet)
-        if parsed is not None:
-            self._dispatch_packet(parsed, (self._packet_handler,))
+        """Parse via Module 2 and dispatch a Module 1 display packet."""
+        metadata = self._parse_raw_packet(raw_packet)
+        if metadata is not None:
+            self._dispatch_parsed(
+                metadata_to_parsed_packet(metadata),
+                (self._packet_handler,),
+            )
 
     def _install_signal_handlers(self) -> None:
         def _request_stop(signum, _frame) -> None:
@@ -119,9 +136,28 @@ class PacketCaptureEngine:
         self._begin_capture()
 
         def on_raw_packet(raw_packet) -> None:
-            parsed = self._parse_raw_packet(raw_packet)
-            if parsed is not None:
-                self._dispatch_packet(parsed, (callback,))
+            metadata = self._parse_raw_packet(raw_packet)
+            if metadata is not None:
+                self._dispatch_parsed(
+                    metadata_to_parsed_packet(metadata),
+                    (callback,),
+                )
+
+        self._run_sniff_loop(on_raw_packet)
+
+    def capture_metadata(self, callback: Callable[[PacketMetadata], None]) -> None:
+        """
+        Capture packets and invoke ``callback`` with Module 2 :class:`PacketMetadata`.
+
+        This is the integration path for the future Flow Builder.
+        No console output is produced. Stop with Ctrl+C or SIGTERM.
+        """
+        self._begin_capture()
+
+        def on_raw_packet(raw_packet) -> None:
+            metadata = self._parse_raw_packet(raw_packet)
+            if metadata is not None:
+                self._dispatch_metadata(metadata, (callback,))
 
         self._run_sniff_loop(on_raw_packet)
 
@@ -131,13 +167,23 @@ class PacketCaptureEngine:
 
         No console output is produced. Stop with Ctrl+C or SIGTERM.
         """
+        for metadata in self.iter_metadata():
+            yield metadata_to_parsed_packet(metadata)
+
+    def iter_metadata(self) -> Iterator[PacketMetadata]:
+        """
+        Yield Module 2 :class:`PacketMetadata` for each captured packet.
+
+        Suitable as direct input to the future Flow Builder.
+        No console output is produced. Stop with Ctrl+C or SIGTERM.
+        """
         self._begin_capture()
-        pending: list[ParsedPacket] = []
+        pending: list[PacketMetadata] = []
 
         def on_raw_packet(raw_packet) -> None:
-            parsed = self._parse_raw_packet(raw_packet)
-            if parsed is not None:
-                pending.append(parsed)
+            metadata = self._parse_raw_packet(raw_packet)
+            if metadata is not None:
+                pending.append(metadata)
 
         try:
             while self._running:
