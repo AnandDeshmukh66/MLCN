@@ -3,10 +3,9 @@
 from __future__ import annotations
 
 import ipaddress
-from typing import Optional
 
 
-def normalize_ip(value: object) -> Optional[str]:
+def normalize_ip(value: object) -> str | None:
     """Return a canonical IP string, or ``None`` if invalid/missing."""
     if value is None:
         return None
@@ -19,7 +18,7 @@ def normalize_ip(value: object) -> Optional[str]:
         return None
 
 
-def normalize_port(value: object) -> Optional[int]:
+def normalize_port(value: object) -> int | None:
     """Return an integer port in ``[0, 65535]``, or ``None`` if invalid."""
     if value is None:
         return None
@@ -32,7 +31,7 @@ def normalize_port(value: object) -> Optional[int]:
     return None
 
 
-def normalize_ttl(value: object) -> Optional[int]:
+def normalize_ttl(value: object) -> int | None:
     """Return an integer TTL/hop-limit in ``[0, 255]``, or ``None``."""
     if value is None:
         return None
@@ -45,7 +44,7 @@ def normalize_ttl(value: object) -> Optional[int]:
     return None
 
 
-def normalize_tcp_window(value: object) -> Optional[int]:
+def normalize_tcp_window(value: object) -> int | None:
     """Return an integer TCP window in ``[0, 65535]``, or ``None``."""
     if value is None:
         return None
@@ -58,7 +57,7 @@ def normalize_tcp_window(value: object) -> Optional[int]:
     return None
 
 
-def normalize_length(value: object) -> Optional[int]:
+def normalize_length(value: object) -> int | None:
     """Return a non-negative packet length, or ``None`` if invalid."""
     if value is None:
         return None

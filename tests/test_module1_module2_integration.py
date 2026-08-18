@@ -7,7 +7,8 @@ from datetime import timezone
 
 from packet_capture import PacketCaptureEngine, ParsedPacket, metadata_to_parsed_packet
 from packet_capture.parser import parse_packet as parse_for_module1
-from packet_parsing import PacketMetadata, parse_packet as parse_for_module2
+from packet_parsing import PacketMetadata
+from packet_parsing import parse_packet as parse_for_module2
 from tests.fixtures import (
     make_ethernet_only_packet,
     make_icmp_packet,

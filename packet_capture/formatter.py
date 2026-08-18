@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Optional
-
 from packet_capture.models import ParsedPacket
 
 _HEADER = (
@@ -13,7 +11,7 @@ _HEADER = (
 _DIVIDER = "-" * len(_HEADER)
 
 
-def _format_port(port: Optional[int]) -> str:
+def _format_port(port: int | None) -> str:
     return str(port) if port is not None else "-"
 
 

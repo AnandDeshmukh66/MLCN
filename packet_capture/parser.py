@@ -8,8 +8,6 @@ existing capture CLI and public API stay unchanged.
 
 from __future__ import annotations
 
-from typing import Optional
-
 from scapy.packet import Packet
 
 from packet_capture.models import ParsedPacket
@@ -31,7 +29,7 @@ def metadata_to_parsed_packet(metadata: PacketMetadata) -> ParsedPacket:
     )
 
 
-def parse_packet(packet: Packet) -> Optional[ParsedPacket]:
+def parse_packet(packet: Packet) -> ParsedPacket | None:
     """
     Parse a Scapy packet into a :class:`ParsedPacket`.
 

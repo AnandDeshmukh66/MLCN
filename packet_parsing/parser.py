@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import logging
 from datetime import datetime, timezone
-from typing import Optional, Union
 
 from scapy.layers.inet import ICMP, IP, TCP, UDP
 from scapy.layers.inet6 import IPv6
@@ -48,7 +47,7 @@ def _packet_timestamp(packet: Packet) -> datetime:
     return datetime.fromtimestamp(epoch, tz=timezone.utc)
 
 
-def _format_tcp_flags(tcp_layer: TCP) -> Optional[str]:
+def _format_tcp_flags(tcp_layer: TCP) -> str | None:
     """Render TCP flags as a compact string (e.g. ``SA`` for SYN-ACK)."""
     flags = getattr(tcp_layer, "flags", None)
     if flags is None:
@@ -70,7 +69,7 @@ def _has_icmpv6(packet: Packet) -> bool:
     return any(cls.__name__.startswith("ICMPv6") for cls in packet.layers())
 
 
-def _packet_length(packet: Packet) -> Optional[int]:
+def _packet_length(packet: Packet) -> int | None:
     """
     Measure packet length without crashing the pipeline.
 
@@ -79,21 +78,21 @@ def _packet_length(packet: Packet) -> Optional[int]:
     """
     try:
         return normalize_length(len(packet))
-    except Exception:
+    except Exception:  # noqa: BLE001 - malformed Scapy packets should fail gracefully
         original = getattr(packet, "original", None)
         if original is not None:
             return normalize_length(len(original))
         return None
 
 
-def _ip_next_header(ip_layer: Union[IP, IPv6]) -> int:
+def _ip_next_header(ip_layer: IP | IPv6) -> int:
     """Return IPv4 ``proto`` or IPv6 ``nh`` as an integer."""
     if isinstance(ip_layer, IPv6):
         return int(getattr(ip_layer, "nh", 0) or 0)
     return int(getattr(ip_layer, "proto", 0) or 0)
 
 
-def _extract_ttl(ip_layer: Union[IP, IPv6]) -> Optional[int]:
+def _extract_ttl(ip_layer: IP | IPv6) -> int | None:
     """Extract TTL (IPv4) or hop limit (IPv6)."""
     if isinstance(ip_layer, IPv6):
         return normalize_ttl(getattr(ip_layer, "hlim", None))
@@ -121,7 +120,7 @@ def _resolve_protocol(
     return "Other"
 
 
-def parse_packet(packet: object) -> Optional[PacketMetadata]:
+def parse_packet(packet: object) -> PacketMetadata | None:
     """
     Parse a raw (Scapy) packet into :class:`PacketMetadata`.
 
@@ -137,7 +136,7 @@ def parse_packet(packet: object) -> Optional[PacketMetadata]:
         if length is None:
             return None
 
-        ip_layer: Optional[Union[IP, IPv6]] = packet.getlayer(IP) or packet.getlayer(IPv6)
+        ip_layer: IP | IPv6 | None = packet.getlayer(IP) or packet.getlayer(IPv6)
         if ip_layer is None:
             return PacketMetadata(
                 timestamp=timestamp,
@@ -173,10 +172,10 @@ def parse_packet(packet: object) -> Optional[PacketMetadata]:
             )
         )
 
-        src_port: Optional[int] = None
-        dst_port: Optional[int] = None
-        tcp_flags: Optional[str] = None
-        tcp_window: Optional[int] = None
+        src_port: int | None = None
+        dst_port: int | None = None
+        tcp_flags: str | None = None
+        tcp_window: int | None = None
         ttl = _extract_ttl(ip_layer)
 
         if tcp_layer is not None:

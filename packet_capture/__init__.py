@@ -7,7 +7,7 @@ from packet_capture.parser import metadata_to_parsed_packet, parse_packet
 __all__ = [
     "PacketCaptureEngine",
     "ParsedPacket",
-    "parse_packet",
     "metadata_to_parsed_packet",
+    "parse_packet",
 ]
 __version__ = "1.0.0"
