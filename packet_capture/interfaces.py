@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import List, Optional
 
 from scapy.all import get_if_addr, get_if_list
 
@@ -13,24 +12,24 @@ class NetworkInterface:
     """A capture-capable network interface."""
 
     name: str
-    address: Optional[str]
+    address: str | None
 
 
-def list_interfaces() -> List[NetworkInterface]:
+def list_interfaces() -> list[NetworkInterface]:
     """Return available network interfaces with their primary IPv4 address."""
-    interfaces: List[NetworkInterface] = []
+    interfaces: list[NetworkInterface] = []
     for name in get_if_list():
         try:
             address = get_if_addr(name)
             if not address or address == "0.0.0.0":
                 address = None
-        except Exception:
+        except Exception:  # noqa: BLE001 - ignore missing interface metadata safely
             address = None
         interfaces.append(NetworkInterface(name=name, address=address))
     return interfaces
 
 
-def resolve_interface(name: Optional[str]) -> Optional[str]:
+def resolve_interface(name: str | None) -> str | None:
     """
     Validate and return the interface name for capture.
 

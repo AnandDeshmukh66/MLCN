@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import signal
 import sys
-from typing import Callable, Iterator, Optional
+from collections.abc import Callable, Iterator
 
 from scapy.all import sniff
 
@@ -24,8 +24,8 @@ class PacketCaptureEngine:
 
     def __init__(
         self,
-        interface: Optional[str] = None,
-        packet_handler: Optional[Callable[[ParsedPacket], None]] = None,
+        interface: str | None = None,
+        packet_handler: Callable[[ParsedPacket], None] | None = None,
     ) -> None:
         self.interface = resolve_interface(interface)
         self._packet_handler = packet_handler or self._default_handler
@@ -37,7 +37,7 @@ class PacketCaptureEngine:
     def _default_handler(packet: ParsedPacket) -> None:
         print(format_packet_row(packet), flush=True)
 
-    def _parse_raw_packet(self, raw_packet) -> Optional[PacketMetadata]:
+    def _parse_raw_packet(self, raw_packet) -> PacketMetadata | None:
         """Parse a raw Scapy packet via Module 2, skipping malformed packets."""
         self._packets_seen += 1
         metadata = parse_metadata(raw_packet)
