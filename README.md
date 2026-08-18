@@ -1,4 +1,4 @@
-# MLCN — Machine Learning Cybersecurity Network
+# MLCN - Machine Learning Cybersecurity Network
 
 > An end-to-end ML-powered SOC pipeline that simulates network attacks, captures live traffic, engineers flow-based features, and uses machine learning with explainable AI to detect and report threats in real time.
 
