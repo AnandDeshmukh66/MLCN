@@ -8,7 +8,10 @@
 
 ---
 
-## 📖 Overview
+##  📖 Problem Statement & Overview
+
+ #### **Problem Statement**: 
+Traditional SOC systems often generate large volumes of network data, making it difficult to detect and classify attacks efficiently and accurately. MLCN addresses this problem by building an end-to-end ML-powered SOC that monitors network traffic, extracts and engineers relevant features, detects network attacks using Machine Learning, and generates actionable security reports.
 
 **MLCN** is a Security Operations Center (SOC) simulation platform that demonstrates how Machine Learning can be integrated into a practical network-defense pipeline. The system consists of two sides: 
 1. an **attacker component** capable of generating five distinct types of network attacks
