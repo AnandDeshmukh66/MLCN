@@ -1,4 +1,5 @@
 ﻿.venv/
+macvenv/
 __pycache__/
 *.pyc
 npcap-*.exe
