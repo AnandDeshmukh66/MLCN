@@ -74,13 +74,14 @@ def _packet_length(packet: Packet) -> int | None:
     Measure packet length without crashing the pipeline.
 
     Prefer ``len(packet)``; if Scapy cannot rebuild the packet, fall back to
-    the original wire bytes when available.
+    the captured wire bytes. Packets that were never received off the wire
+    have empty ``original`` bytes, so they are unusable rather than zero-length.
     """
     try:
         return normalize_length(len(packet))
     except Exception:  # noqa: BLE001 - malformed Scapy packets should fail gracefully
         original = getattr(packet, "original", None)
-        if original is not None:
+        if original:
             return normalize_length(len(original))
         return None
 
