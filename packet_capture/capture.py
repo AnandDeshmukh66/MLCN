@@ -149,7 +149,7 @@ class PacketCaptureEngine:
         """
         Capture packets and invoke ``callback`` with Module 2 :class:`PacketMetadata`.
 
-        This is the integration path for the future Flow Builder.
+        This is the integration path for Module 3 (Flow Builder).
         No console output is produced. Stop with Ctrl+C or SIGTERM.
         """
         self._begin_capture()
@@ -174,7 +174,7 @@ class PacketCaptureEngine:
         """
         Yield Module 2 :class:`PacketMetadata` for each captured packet.
 
-        Suitable as direct input to the future Flow Builder.
+        Suitable as direct input to Module 3 (Flow Builder).
         No console output is produced. Stop with Ctrl+C or SIGTERM.
         """
         self._begin_capture()

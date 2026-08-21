@@ -2,7 +2,7 @@
 Module 2 — Packet Parsing.
 
 Interpret raw packets from Module 1, normalize and validate fields, and
-emit :class:`~packet_parsing.models.PacketMetadata` for the Flow Builder.
+emit :class:`~packet_parsing.models.PacketMetadata` for Module 3 (Flow Builder).
 """
 
 from __future__ import annotations
