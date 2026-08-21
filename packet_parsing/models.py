@@ -13,7 +13,7 @@ class PacketMetadata:
 
     Protocol-specific fields are ``None`` when not applicable.
     This type hides Scapy (and other capture-library) details from
-    the Flow Builder and later pipeline stages.
+    Module 3 (Flow Builder) and later pipeline stages.
     """
 
     timestamp: datetime

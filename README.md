@@ -171,7 +171,41 @@ Networking & Traffic Analysis
 
 ## 🚀 Getting Started
 
-> Installation steps, dependencies, and configuration details are still being finalized for this project. This section will be updated with exact setup commands, required environment variables, and port configurations.
+```bash
+git clone <repo-url> MLCN
+cd MLCN
+python3 -m venv macvenv
+source macvenv/bin/activate
+pip install -r requirements.txt
+python -m unittest discover -s tests -v
+```
+
+Implemented pipeline modules so far:
+
+| Module | Package | Role |
+|--------|---------|------|
+| 1 | `packet_capture` | Live packet capture (Scapy) |
+| 2 | `packet_parsing` | Normalize / validate → `PacketMetadata` |
+| 3 | `flow_builder` | Bidirectional flows from packet metadata |
+
+```bash
+# Live capture CLI (requires elevated privileges)
+sudo python -m packet_capture -i lo0
+```
+
+Offline Module 2 → 3:
+
+```python
+from packet_parsing import parse_packet
+from flow_builder import FlowBuilder
+
+builder = FlowBuilder(inactivity_timeout=60.0)
+# meta = parse_packet(raw_scapy_packet)
+# for completed in builder.add_packet(meta): ...
+# for completed in builder.flush(): ...
+```
+
+> Attack simulation, ML detection, and dashboard components are still being finalized.
 
 ---
 

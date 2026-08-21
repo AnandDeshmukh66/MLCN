@@ -4,14 +4,14 @@ Formal packet parsing, normalization, validation, and structured-output layer
 for the MLCN pipeline.
 
 ```text
-Network → Module 1: Packet Capture → Module 2: Packet Parsing → Future Flow Builder
+Network → Module 1: Packet Capture → Module 2: Packet Parsing → Module 3: Flow Builder
 ```
 
 ## Responsibility
 
 Module 2 takes raw packets produced by Module 1 (Scapy `Packet` objects) and
-emits a clean, typed `PacketMetadata` value suitable as direct input to the
-future Flow Builder. It does **not** capture or sniff traffic.
+emits a clean, typed `PacketMetadata` value suitable as direct input to
+Module 3 (Flow Builder). It does **not** capture or sniff traffic.
 
 Parsed fields:
 
@@ -34,17 +34,19 @@ Module 1 still owns live capture and the CLI. Its parse path delegates to
 Module 2, then maps `PacketMetadata` → `ParsedPacket` for the existing
 tabular display.
 
-Programmatic pipeline path (for the future Flow Builder):
+Programmatic pipeline path (with Module 3 Flow Builder):
 
 ```python
 from packet_capture import PacketCaptureEngine
 from packet_parsing import PacketMetadata
+from flow_builder import FlowBuilder
 
 engine = PacketCaptureEngine(interface="lo0")
+builder = FlowBuilder(inactivity_timeout=60.0)
 
 def on_packet(meta: PacketMetadata) -> None:
-    # Hand off to Flow Builder later
-    print(meta.protocol, meta.src_ip, meta.dst_ip, meta.ttl, meta.tcp_window)
+    for flow in builder.add_packet(meta):
+        print(flow.protocol, flow.packet_count, flow.duration)
 
 engine.capture_metadata(on_packet)
 # or: for meta in engine.iter_metadata(): ...
