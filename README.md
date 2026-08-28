@@ -3,7 +3,7 @@
 > An end-to-end ML-powered SOC pipeline that simulates network attacks, captures live traffic, engineers flow-based features, and uses machine learning with explainable AI to detect and report threats in real time.
 
 <p align="center">
-  <img src="assets/diagram.png" alt="MLCN Overview" width="800">
+  <img src="assets/diagram2.png" alt="MLCN Overview" width="800">
 </p>
 
 ---
