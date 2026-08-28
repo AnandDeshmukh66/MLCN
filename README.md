@@ -187,22 +187,27 @@ Implemented pipeline modules so far:
 | 1 | `packet_capture` | Live packet capture (Scapy) |
 | 2 | `packet_parsing` | Normalize / validate → `PacketMetadata` |
 | 3 | `flow_builder` | Bidirectional flows from packet metadata |
+| 4 | `feature_engineering` | Flow → 24-feature vector (`common_feature_schema`) |
 
 ```bash
 # Live capture CLI (requires elevated privileges)
 sudo python -m packet_capture -i lo0
 ```
 
-Offline Module 2 → 3:
+Offline Module 2 → 3 → 4:
 
 ```python
 from packet_parsing import parse_packet
 from flow_builder import FlowBuilder
+from feature_engineering import FeatureEngineeringEngine
 
 builder = FlowBuilder(inactivity_timeout=60.0)
+fe = FeatureEngineeringEngine()
 # meta = parse_packet(raw_scapy_packet)
-# for completed in builder.add_packet(meta): ...
-# for completed in builder.flush(): ...
+# for completed in builder.add_packet(meta):
+#     vector = fe.extract(completed)  # 24 floats in schema order
+# for completed in builder.flush():
+#     vector = fe.extract(completed)
 ```
 
 > Attack simulation, ML detection, and dashboard components are still being finalized.

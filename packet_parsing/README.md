@@ -4,7 +4,7 @@ Formal packet parsing, normalization, validation, and structured-output layer
 for the MLCN pipeline.
 
 ```text
-Network → Module 1: Packet Capture → Module 2: Packet Parsing → Module 3: Flow Builder
+Network → Module 1: Packet Capture → Module 2: Packet Parsing → Module 3: Flow Builder → Module 4: Feature Engineering
 ```
 
 ## Responsibility
@@ -34,19 +34,22 @@ Module 1 still owns live capture and the CLI. Its parse path delegates to
 Module 2, then maps `PacketMetadata` → `ParsedPacket` for the existing
 tabular display.
 
-Programmatic pipeline path (with Module 3 Flow Builder):
+Programmatic pipeline path (with Module 3 Flow Builder and Module 4):
 
 ```python
 from packet_capture import PacketCaptureEngine
 from packet_parsing import PacketMetadata
 from flow_builder import FlowBuilder
+from feature_engineering import FeatureEngineeringEngine
 
 engine = PacketCaptureEngine(interface="lo0")
 builder = FlowBuilder(inactivity_timeout=60.0)
+fe = FeatureEngineeringEngine()
 
 def on_packet(meta: PacketMetadata) -> None:
     for flow in builder.add_packet(meta):
-        print(flow.protocol, flow.packet_count, flow.duration)
+        vector = fe.extract(flow)
+        print(flow.protocol, flow.packet_count, len(vector))
 
 engine.capture_metadata(on_packet)
 # or: for meta in engine.iter_metadata(): ...
