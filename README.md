@@ -82,11 +82,11 @@ The attacker component can generate **five different types of network attacks**:
 
 | Attack | Purpose |
 |---|---|
-| DDoS (Distributed Denial of Service) | Overwhelm the target server with traffic |
-| Port Scan | Probe the target for open ports and services |
-| Brute Force Attack | Attempt repeated login/credential guesses |
-| SQL Injection (SQLi) | Exploit vulnerable input fields at the application layer |
-| Botnet Traffic | Simulate traffic patterns from compromised/botnet hosts |
+| BENIGN | Represent normal network traffic with no detected malicious activity |
+| Brute Force | Attempt repeated login or credential guesses |
+| DDoS (Distributed Denial of Service) | Overwhelm the target server with a large volume of traffic |
+| DoS (Denial of Service) | Disrupt service availability by overwhelming the target system or resource |
+| Port Scan | Probe the target for open ports and available services |
 
 ---
 
