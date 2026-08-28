@@ -1,0 +1,6 @@
+,BENIGN,Brute Force,DDoS,DoS,Port Scan
+BENIGN,208300,799,46,398,95
+Brute Force,9,906,0,0,0
+DDoS,4,0,12798,0,0
+DoS,92,0,0,19283,0
+Port Scan,5,0,0,3,9074

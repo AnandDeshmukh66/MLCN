@@ -1,0 +1,53 @@
+{
+    "features": [
+        "Flow Duration",
+        "Total Fwd Packets",
+        "Total Backward Packets",
+        "Fwd Packets Length Total",
+        "Bwd Packets Length Total",
+        "Fwd Packet Length Mean",
+        "Bwd Packet Length Mean",
+        "Flow Bytes/s",
+        "Flow Packets/s",
+        "Flow IAT Mean",
+        "Flow IAT Std",
+        "Fwd IAT Mean",
+        "Bwd IAT Mean",
+        "Packet Length Mean",
+        "Packet Length Std",
+        "FIN Flag Count",
+        "SYN Flag Count",
+        "RST Flag Count",
+        "PSH Flag Count",
+        "ACK Flag Count",
+        "URG Flag Count",
+        "Down/Up Ratio",
+        "Active Mean",
+        "Idle Mean"
+    ],
+    "classes": [
+        "BENIGN",
+        "Brute Force",
+        "DDoS",
+        "DoS",
+        "Port Scan"
+    ],
+    "class_to_id": {
+        "BENIGN": 0,
+        "Brute Force": 1,
+        "DDoS": 2,
+        "DoS": 3,
+        "Port Scan": 4
+    },
+    "id_to_class": {
+        "0": "BENIGN",
+        "1": "Brute Force",
+        "2": "DDoS",
+        "3": "DoS",
+        "4": "Port Scan"
+    },
+    "num_classes": 5,
+    "best_iteration": 520,
+    "best_mlogloss": 0.02570706015121968,
+    "xgboost_version": "3.4.1"
+}
