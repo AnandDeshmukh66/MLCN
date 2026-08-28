@@ -3,7 +3,7 @@
 Bidirectional flow assembly for the MLCN pipeline.
 
 ```text
-Network → Module 1: Packet Capture → Module 2: Packet Parsing → Module 3: Flow Builder → Feature Engineering
+Network → Module 1: Packet Capture → Module 2: Packet Parsing → Module 3: Flow Builder → Module 4: Feature Engineering
 ```
 
 ## Responsibility
@@ -29,16 +29,19 @@ downstream Feature Engineering.
 ```python
 from packet_capture import PacketCaptureEngine
 from flow_builder import FlowBuilder
+from feature_engineering import FeatureEngineeringEngine
 
 builder = FlowBuilder(inactivity_timeout=60.0, max_duration=300.0)
 engine = PacketCaptureEngine(interface="lo0")
+fe = FeatureEngineeringEngine()
 
 def on_packet(meta):
     for flow in builder.add_packet(meta):
-        print(flow.protocol, flow.packet_count, flow.byte_count, flow.duration)
+        vector = fe.extract(flow)
+        print(flow.protocol, flow.packet_count, len(vector))
 
 engine.capture_metadata(on_packet)
-# At shutdown: for flow in builder.flush(): ...
+# At shutdown: for flow in builder.flush(): fe.extract(flow)
 ```
 
 Offline / tests:
