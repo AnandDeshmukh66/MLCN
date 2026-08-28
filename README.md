@@ -188,29 +188,32 @@ Implemented pipeline modules so far:
 | 2 | `packet_parsing` | Normalize / validate → `PacketMetadata` |
 | 3 | `flow_builder` | Bidirectional flows from packet metadata |
 | 4 | `feature_engineering` | Flow → 24-feature vector (`common_feature_schema`) |
+| 5 | `ml_detection` | FeatureVector → XGBoost multi-class detection |
 
 ```bash
 # Live capture CLI (requires elevated privileges)
 sudo python -m packet_capture -i lo0
 ```
 
-Offline Module 2 → 3 → 4:
+Offline Module 2 → 3 → 4 → 5:
 
 ```python
 from packet_parsing import parse_packet
 from flow_builder import FlowBuilder
 from feature_engineering import FeatureEngineeringEngine
+from ml_detection import MLDetectionEngine
 
 builder = FlowBuilder(inactivity_timeout=60.0)
 fe = FeatureEngineeringEngine()
+detector = MLDetectionEngine()
 # meta = parse_packet(raw_scapy_packet)
 # for completed in builder.add_packet(meta):
-#     vector = fe.extract(completed)  # 24 floats in schema order
+#     result = detector.predict(fe.extract(completed))
 # for completed in builder.flush():
-#     vector = fe.extract(completed)
+#     result = detector.predict(fe.extract(completed))
 ```
 
-> Attack simulation, ML detection, and dashboard components are still being finalized.
+> Attack simulation, explainability, reporting, and dashboard components are still being finalized.
 
 ---
 
