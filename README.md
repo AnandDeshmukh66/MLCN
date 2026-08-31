@@ -189,31 +189,28 @@ Implemented pipeline modules so far:
 | 3 | `flow_builder` | Bidirectional flows from packet metadata |
 | 4 | `feature_engineering` | Flow → 24-feature vector (`common_feature_schema`) |
 | 5 | `ml_detection` | FeatureVector → XGBoost multi-class detection |
+| — | `pipeline` | End-to-end orchestration of Modules 1–5 |
 
 ```bash
 # Live capture CLI (requires elevated privileges)
 sudo python -m packet_capture -i lo0
+
+# End-to-end detection pipeline (Modules 1–5)
+sudo python -m pipeline -i lo0
 ```
 
-Offline Module 2 → 3 → 4 → 5:
+Offline / programmatic pipeline:
 
 ```python
-from packet_parsing import parse_packet
-from flow_builder import FlowBuilder
-from feature_engineering import FeatureEngineeringEngine
-from ml_detection import MLDetectionEngine
+from pipeline import IntrusionDetectionPipeline
 
-builder = FlowBuilder(inactivity_timeout=60.0)
-fe = FeatureEngineeringEngine()
-detector = MLDetectionEngine()
-# meta = parse_packet(raw_scapy_packet)
-# for completed in builder.add_packet(meta):
-#     result = detector.predict(fe.extract(completed))
-# for completed in builder.flush():
-#     result = detector.predict(fe.extract(completed))
+pipeline = IntrusionDetectionPipeline()
+# results = pipeline.process_raw_packets(raw_scapy_packets, flush=True)
+# for result in results:
+#     print(result.predicted_class, result.confidence)
 ```
 
-> Attack simulation, explainability, reporting, and dashboard components are still being finalized.
+> Explainability, reporting, and dashboard components are still being finalized.
 
 ---
 
