@@ -13,7 +13,6 @@ from pathlib import Path
 from typing import Iterable, Sequence, Union
 
 import numpy as np
-import xgboost as xgb
 
 from feature_engineering.models import FeatureVector
 from feature_engineering.schema import FEATURE_COUNT, FEATURE_ORDER
@@ -26,8 +25,11 @@ from ml_detection.schema import (
     DEFAULT_MODEL_PATH,
     ID_TO_CLASS,
 )
+from ml_detection.xgboost_import import import_xgboost
 
 logger = logging.getLogger(__name__)
+
+xgb = import_xgboost()
 
 FeatureInput = Union[FeatureVector, Sequence[float]]
 

@@ -38,11 +38,12 @@ print(result.predicted_class, result.confidence, result.probabilities)
 
 | File | Role |
 |------|------|
-| `models/xgboost_ids_multiclass.json` | Trained booster |
-| `models/xgboost_ids_features.json` | Feature/class metadata |
+| `models/xgboost_ids_multiclass.json` (or `xgboost/…`) | Trained booster |
+| `models/xgboost_ids_features.json` (or `xgboost/…`) | Feature/class metadata |
 
-> The artifact directory is named `models/` (not `xgboost/`) so it does not
-> shadow the pip `xgboost` package when running from the repository root.
+Module 5 resolves artifacts from `models/` first, then `xgboost/`. Prefer
+`models/` so a local folder named `xgboost/` does not shadow the pip package;
+a safe import helper is used if the legacy folder name remains.
 
 ## Dependencies
 
