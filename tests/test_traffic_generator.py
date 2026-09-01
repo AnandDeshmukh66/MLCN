@@ -185,8 +185,9 @@ class TestControllerIntegration(unittest.TestCase):
                 confirmation_phrase="LAB",
             )
 
+    @patch("traffic_generator.controller.require_two_machine_receiver")
     @patch("traffic_generator.traffic_generator._tcp_exchange")
-    def test_controller_runs_short_test(self, mock_exchange) -> None:
+    def test_controller_runs_short_test(self, mock_exchange, _mock_receiver_check) -> None:
         from traffic_generator.controller import TrafficGeneratorController
 
         mock_exchange.return_value = (50, 1)
@@ -208,6 +209,50 @@ class TestControllerIntegration(unittest.TestCase):
         self.assertFalse(ctrl.running)
         self.assertIsNotNone(ctrl.last_log)
         self.assertEqual(ctrl.last_log.profile_name, "BENIGN")
+
+
+class TestConnectivity(unittest.TestCase):
+    def test_same_machine_target_rejected_for_two_machine(self) -> None:
+        from traffic_generator.connectivity import require_two_machine_receiver
+
+        with self.assertRaises(SafetyError) as ctx:
+            require_two_machine_receiver(
+                resolved_target="127.0.0.1",
+                target_port=8080,
+                profile_name="DDoS",
+                use_http=True,
+                enable_validation=False,
+            )
+        self.assertIn("Validation mode", str(ctx.exception))
+
+    def test_validation_mode_skips_receiver_probe(self) -> None:
+        from traffic_generator.connectivity import require_two_machine_receiver
+
+        require_two_machine_receiver(
+            resolved_target="127.0.0.1",
+            target_port=8080,
+            profile_name="DDoS",
+            use_http=True,
+            enable_validation=True,
+        )
+
+    @patch("traffic_generator.connectivity.probe_tcp_endpoint", return_value=(False, "connection refused"))
+    def test_unreachable_receiver_rejected(self, _mock_probe) -> None:
+        from traffic_generator.connectivity import require_two_machine_receiver
+
+        with patch(
+            "traffic_generator.connectivity.is_same_machine_target",
+            return_value=False,
+        ):
+            with self.assertRaises(SafetyError) as ctx:
+                require_two_machine_receiver(
+                    resolved_target="192.168.1.99",
+                    target_port=8080,
+                    profile_name="BENIGN",
+                    use_http=True,
+                    enable_validation=False,
+                )
+        self.assertIn("receiver_server", str(ctx.exception))
 
 
 class TestProfilesFilePresent(unittest.TestCase):

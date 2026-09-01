@@ -31,6 +31,14 @@ class BaseTrafficGenerator(ABC):
         self.progress_callback = progress_callback
         self.stats = GeneratorStats()
 
+    def _record_error(self, exc: OSError, *, context: str) -> None:
+        message = f"{context}: {exc}"
+        self.stats.errors += 1
+        self.stats.last_error = message
+        if self.stats.errors == 1:
+            self._report(0.0, message)
+        logger.debug(message)
+
     def _sleep(self, seconds: float) -> None:
         if seconds <= 0:
             return
@@ -143,8 +151,7 @@ class BenignTrafficGenerator(BaseTrafficGenerator):
                 self.stats.packets_sent += pkts
                 self.stats.connections_completed += 1
             except OSError as exc:
-                self.stats.errors += 1
-                logger.debug("benign request failed: %s", exc)
+                self._record_error(exc, context=f"BENIGN HTTP GET to {host}:{port} failed")
             cycles += 1
             self._sleep(self._jittered_delay(delay))
         return self.stats
@@ -176,8 +183,7 @@ class PortScanTrafficGenerator(BaseTrafficGenerator):
                 self.stats.packets_sent += 1
                 self.stats.connections_completed += 1
             except OSError as exc:
-                self.stats.errors += 1
-                logger.debug("port scan probe failed: %s", exc)
+                self._record_error(exc, context=f"Port Scan probe to {host}:{port} failed")
             self._sleep(self._jittered_delay(delay))
         return self.stats
 
@@ -221,8 +227,10 @@ class BruteForceTrafficGenerator(BaseTrafficGenerator):
                     self.stats.packets_sent += pkts
                     self.stats.connections_completed += 1
                 except OSError as exc:
-                    self.stats.errors += 1
-                    logger.debug("brute-force lab burst failed: %s", exc)
+                    self._record_error(
+                        exc,
+                        context=f"Brute Force HTTP POST to {host}:{port} failed",
+                    )
                 self._sleep(self._jittered_delay(delay))
             self._sleep(self._jittered_delay(self.params.inter_message_delay_seconds))
         return self.stats
@@ -251,9 +259,12 @@ class DDoSTrafficGenerator(BaseTrafficGenerator):
                         self.stats.bytes_sent += sent
                         self.stats.packets_sent += pkts
                         self.stats.connections_completed += 1
-                except OSError:
+                except OSError as exc:
                     with lock:
                         self.stats.errors += 1
+                        self.stats.last_error = f"DDoS HTTP POST to {host}:{port} failed: {exc}"
+                        if self.stats.errors == 1:
+                            self._report(0.0, self.stats.last_error)
                 self._sleep(self._jittered_delay(self.params.forward_inter_delay_seconds))
 
         worker_count = max(1, self.params.max_concurrent_connections)
@@ -303,8 +314,7 @@ class DoSTrafficGenerator(BaseTrafficGenerator):
                     self._sleep(self._jittered_delay(self.params.inter_message_delay_seconds))
                 self.stats.connections_completed += 1
             except OSError as exc:
-                self.stats.errors += 1
-                logger.debug("DoS lab burst failed: %s", exc)
+                self._record_error(exc, context=f"DoS HTTP POST to {host}:{port} failed")
 
             idle = max(5.5, self.params.idle_gap_seconds)
             self._report(
