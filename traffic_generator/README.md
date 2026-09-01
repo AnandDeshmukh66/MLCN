@@ -46,24 +46,27 @@ python -m traffic_generator
 
 ```bash
 python -m pipeline -l
+python -m traffic_generator.receiver_server --port 8080
 python -m pipeline -i "Wi-Fi"    # Windows: use listed Npcap interface name
 ```
 
-Run a simple HTTP listener on the test port if needed:
+The lab echo server is **required** for HTTP-based profiles (`BENIGN`, `DDoS`, `DoS`, `Brute Force`).
+Without it, the generator reports connection errors and sends **zero bytes** — the receiver
+will only classify unrelated background traffic (often outbound HTTPS marked `BENIGN`).
 
-```bash
-python -m http.server 8080
-```
+Allow inbound TCP **8080** through Windows Firewall on Laptop B.
 
 **Laptop A — Generator (this package):**
 
-1. Open the Streamlit UI
+1. Open the Streamlit UI on a **different machine** from Laptop B
 2. Select profile (`BENIGN`, `Brute Force`, `DDoS`, `DoS`, `Port Scan`)
-3. Enter Laptop B's **private IP** (e.g. `192.168.x.x`)
+3. Enter Laptop B's **private IP** (e.g. `192.168.x.x`) — not Laptop A's IP
 4. Confirm with checkbox + type `LAB`
 5. Start test → observe classifications on Laptop B terminal
 
 Traffic must be **destined to Laptop B** (same Wi-Fi is not enough for passive sniffing of third-party flows).
+
+**Do not** target this PC's own LAN IP from the same machine without Validation mode — use Validation mode for single-host tests instead.
 
 ## Single-machine validation mode
 

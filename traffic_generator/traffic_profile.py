@@ -77,14 +77,16 @@ class GeneratorStats:
     packets_sent: int = 0
     bytes_sent: int = 0
     errors: int = 0
+    last_error: str = ""
 
-    def as_dict(self) -> dict[str, int]:
+    def as_dict(self) -> dict[str, int | str]:
         return {
             "connections_attempted": self.connections_attempted,
             "connections_completed": self.connections_completed,
             "packets_sent": self.packets_sent,
             "bytes_sent": self.bytes_sent,
             "errors": self.errors,
+            "last_error": self.last_error,
         }
 
 

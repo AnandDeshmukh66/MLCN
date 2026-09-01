@@ -118,6 +118,13 @@ def main() -> None:
                 "For Laptop B remote tests, run `python -m pipeline` separately."
             ),
         )
+        if not enable_validation:
+            st.info(
+                "**Two-machine setup (Laptop B):**\n"
+                "1. `python -m traffic_generator.receiver_server --port <port>`\n"
+                "2. `python -m pipeline -i \"<Npcap interface>\"`\n"
+                "3. Enter **Laptop B's IP** here (not this PC's IP unless it is Laptop B)."
+            )
         validation_iface = st.text_input(
             "Validation capture interface",
             value=default_loopback_interface(),
@@ -184,11 +191,25 @@ def main() -> None:
         st.write("No completed runs yet.")
 
     stats = ctrl.stats
-    if stats.connections_attempted or stats.packets_sent:
+    if stats.connections_attempted or stats.packets_sent or stats.errors:
         st.metric("Connections attempted", stats.connections_attempted)
+        st.metric("Connections completed", stats.connections_completed)
         st.metric("Packets/messages sent", stats.packets_sent)
         st.metric("Bytes sent", stats.bytes_sent)
         st.metric("Errors", stats.errors)
+        if stats.last_error:
+            st.error(f"Last connection error: {stats.last_error}")
+        if (
+            stats.connections_attempted > 0
+            and stats.bytes_sent == 0
+            and stats.errors >= stats.connections_attempted
+        ):
+            st.error(
+                "No traffic was delivered to the receiver. The pipeline may still show "
+                "unrelated background BENIGN flows (e.g. HTTPS to the Internet). "
+                "On Laptop B run `python -m traffic_generator.receiver_server --port "
+                f"{DEFAULT_HTTP_PORT}` and allow inbound TCP through the firewall."
+            )
 
     # Validation results
     st.subheader("Validation results (receiver M1→M5)")

@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Callable
 
 from traffic_generator.config import DEFAULT_LOG_DIR
+from traffic_generator.connectivity import require_two_machine_receiver
 from traffic_generator.parameter_mapper import map_profile_to_parameters
 from traffic_generator.profile_loader import load_profiles
 from traffic_generator.safety import (
@@ -151,6 +152,13 @@ class TrafficGeneratorController:
             connection_rate=params.connection_rate_per_sec,
             port_scan_start=params.port_scan_start if profile_name == "Port Scan" else None,
             port_scan_end=params.port_scan_end if profile_name == "Port Scan" else None,
+        )
+        require_two_machine_receiver(
+            resolved_target=resolved_target,
+            target_port=target_port,
+            profile_name=profile_name,
+            use_http=params.use_http,
+            enable_validation=enable_validation,
         )
 
         self._parameters = params
