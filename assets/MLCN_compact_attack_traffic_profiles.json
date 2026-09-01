@@ -1,0 +1,1863 @@
+{
+  "schema": {
+    "name": "MLCN Compact Attack Traffic Profiles",
+    "version": "1.0",
+    "purpose": "Compact empirical specification for designing controlled traffic experiments.",
+    "source": "MLCN_24_feature_attack_characterization.json",
+    "feature_count": 24,
+    "features": [
+      "Flow Duration",
+      "Total Fwd Packets",
+      "Total Backward Packets",
+      "Fwd Packets Length Total",
+      "Bwd Packets Length Total",
+      "Fwd Packet Length Mean",
+      "Bwd Packet Length Mean",
+      "Flow Bytes/s",
+      "Flow Packets/s",
+      "Flow IAT Mean",
+      "Flow IAT Std",
+      "Fwd IAT Mean",
+      "Bwd IAT Mean",
+      "Packet Length Mean",
+      "Packet Length Std",
+      "FIN Flag Count",
+      "SYN Flag Count",
+      "RST Flag Count",
+      "PSH Flag Count",
+      "ACK Flag Count",
+      "URG Flag Count",
+      "Down/Up Ratio",
+      "Active Mean",
+      "Idle Mean"
+    ],
+    "classes": [
+      "BENIGN",
+      "Brute Force",
+      "DDoS",
+      "DoS",
+      "Port Scan"
+    ]
+  },
+  "class_distribution": {
+    "BENIGN": 2096377,
+    "DoS": 193748,
+    "DDoS": 128016,
+    "Port Scan": 90819,
+    "Brute Force": 9152
+  },
+  "benign_baseline": {
+    "Flow Duration": {
+      "P5": 5.0,
+      "P10": 50.0,
+      "Q1": 203.0,
+      "median": 39539.0,
+      "Q3": 1092155.0,
+      "P90": 61042963.2,
+      "P95": 115274161.39999999,
+      "P99": 118084977.8
+    },
+    "Total Fwd Packets": {
+      "P5": 1.0,
+      "P10": 1.0,
+      "Q1": 2.0,
+      "median": 2.0,
+      "Q3": 4.0,
+      "P90": 15.0,
+      "P95": 22.0,
+      "P99": 59.0
+    },
+    "Total Backward Packets": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 1.0,
+      "median": 2.0,
+      "Q3": 4.0,
+      "P90": 13.0,
+      "P95": 20.0,
+      "P99": 74.0
+    },
+    "Fwd Packets Length Total": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 14.0,
+      "median": 68.0,
+      "Q3": 207.0,
+      "P90": 1146.0,
+      "P95": 2341.0,
+      "P99": 11607.0
+    },
+    "Bwd Packets Length Total": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 6.0,
+      "median": 144.0,
+      "Q3": 368.0,
+      "P90": 4665.0,
+      "P95": 8169.199999999953,
+      "P99": 98859.95999999996
+    },
+    "Fwd Packet Length Mean": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 6.0,
+      "median": 38.0,
+      "Q3": 52.0,
+      "P90": 95.2857142857,
+      "P95": 165.0,
+      "P99": 1397.0
+    },
+    "Bwd Packet Length Mean": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 6.0,
+      "median": 83.0,
+      "Q3": 163.0,
+      "P90": 492.6727273000021,
+      "P95": 749.5714285714,
+      "P99": 1529.51958544
+    },
+    "Flow Bytes/s": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 103.8380112203,
+      "median": 4240.235863,
+      "Q3": 144578.3133,
+      "P90": 1425454.545,
+      "P95": 2319847.0327999913,
+      "P99": 12333333.3333333
+    },
+    "Flow Packets/s": {
+      "P5": 0.28036407939999997,
+      "P10": 0.4863541356,
+      "Q1": 8.289399353,
+      "median": 84.98342823,
+      "Q3": 18518.51852,
+      "P90": 46511.62791,
+      "P95": 500000.0,
+      "P99": 1000000.0
+    },
+    "Flow IAT Mean": {
+      "P5": 4.0,
+      "P10": 35.5,
+      "Q1": 78.33333333,
+      "median": 16038.3333333333,
+      "Q3": 175818.0,
+      "P90": 2184172.7502,
+      "P95": 3801078.1095999996,
+      "P99": 22300000.0
+    },
+    "Flow IAT Std": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 0.0,
+      "median": 219.4121517,
+      "Q3": 145491.1429,
+      "P90": 4195496.799400002,
+      "P95": 5876185.067208725,
+      "P99": 36700000.0
+    },
+    "Fwd IAT Mean": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 0.0,
+      "median": 4.0,
+      "Q3": 68255.0909090909,
+      "P90": 4129597.9856000044,
+      "P95": 7344268.7749999985,
+      "P99": 64060847.16
+    },
+    "Bwd IAT Mean": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 0.0,
+      "median": 3.0,
+      "Q3": 14448.5,
+      "P90": 3936463.4644000027,
+      "P95": 7542794.05,
+      "P99": 59000537.08
+    },
+    "Packet Length Mean": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 6.0,
+      "median": 61.4,
+      "Q3": 103.0,
+      "P90": 298.7692308,
+      "P95": 469.25,
+      "P99": 999.0477606319998
+    },
+    "Packet Length Std": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 2.19089023,
+      "median": 30.67246322,
+      "Q3": 116.4484865,
+      "P90": 545.0666136800002,
+      "P95": 753.5042356691,
+      "P99": 1270.8032712
+    },
+    "FIN Flag Count": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 0.0,
+      "median": 0.0,
+      "Q3": 0.0,
+      "P90": 0.0,
+      "P95": 0.0,
+      "P99": 1.0
+    },
+    "SYN Flag Count": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 0.0,
+      "median": 0.0,
+      "Q3": 0.0,
+      "P90": 0.0,
+      "P95": 1.0,
+      "P99": 1.0
+    },
+    "RST Flag Count": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 0.0,
+      "median": 0.0,
+      "Q3": 0.0,
+      "P90": 0.0,
+      "P95": 0.0,
+      "P99": 0.0
+    },
+    "PSH Flag Count": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 0.0,
+      "median": 0.0,
+      "Q3": 1.0,
+      "P90": 1.0,
+      "P95": 1.0,
+      "P99": 1.0
+    },
+    "ACK Flag Count": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 0.0,
+      "median": 0.0,
+      "Q3": 1.0,
+      "P90": 1.0,
+      "P95": 1.0,
+      "P99": 1.0
+    },
+    "URG Flag Count": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 0.0,
+      "median": 0.0,
+      "Q3": 0.0,
+      "P90": 1.0,
+      "P95": 1.0,
+      "P99": 1.0
+    },
+    "Down/Up Ratio": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 0.0,
+      "median": 1.0,
+      "Q3": 1.0,
+      "P90": 1.0,
+      "P95": 1.0,
+      "P99": 3.0
+    },
+    "Active Mean": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 0.0,
+      "median": 0.0,
+      "Q3": 0.0,
+      "P90": 94859.72727490921,
+      "P95": 270180.1,
+      "P99": 1837073.5599999994
+    },
+    "Idle Mean": {
+      "P5": 0.0,
+      "P10": 0.0,
+      "Q1": 0.0,
+      "median": 0.0,
+      "Q3": 0.0,
+      "P90": 9997039.0,
+      "P95": 17476843.99999998,
+      "P99": 75300000.0
+    }
+  },
+  "attack_profiles": {
+    "DDoS": {
+      "attack_name": "DDoS",
+      "dataset_samples": 128016,
+      "profile_purpose": "Empirical feature-space target profile derived from the CICIDS-based dataset.",
+      "top_discriminative_features": [
+        {
+          "feature": "Flow IAT Std",
+          "importance_rank": 1,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.812236170871241,
+          "cohens_d": 0.5465922909434963,
+          "benign_median": 219.4121517,
+          "attack_median": 932242.91195,
+          "median_difference": 932023.4997983,
+          "median_ratio": 4248.820791040991,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 11630.355370000001,
+              "P10": 24207.869145,
+              "Q1": 229917.8835,
+              "median": 932242.91195,
+              "Q3": 4910689.12925,
+              "P90": 21200000.0,
+              "P95": 24200000.0,
+              "P99": 27300000.0
+            },
+            "target_min": 0.0,
+            "target_max": 57500000.0,
+            "target_mean": 5112213.312435264,
+            "target_std": 8084731.165256693
+          },
+          "traffic_characteristic": "variability of packet inter-arrival timing",
+          "controllable_dimensions": "timing variability; burstiness",
+          "candidate_control_variables": [
+            "inter_packet_delay",
+            "timing_variability"
+          ]
+        },
+        {
+          "feature": "Flow Packets/s",
+          "importance_rank": 2,
+          "direction_vs_benign": "LOWER_IN_ATTACK",
+          "separation_auc": 0.7777884505081707,
+          "cohens_d": -0.25261537649451576,
+          "benign_median": 84.98342823,
+          "attack_median": 2.5893668175,
+          "median_difference": -82.39406141250001,
+          "median_ratio": 0.030469079342058454,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 0.145292213,
+              "P10": 0.162074791,
+              "Q1": 0.495309662,
+              "median": 2.5893668175,
+              "Q3": 13.024295734999999,
+              "P90": 110.1048749,
+              "P95": 214.731475575,
+              "P99": 416.53591262500134
+            },
+            "target_min": 0.036869681,
+            "target_max": 2000000.0,
+            "target_mean": 155.38745336818337,
+            "target_std": 9514.442474251313
+          },
+          "traffic_characteristic": "average packet throughput over the flow",
+          "controllable_dimensions": "packet emission rate; flow duration",
+          "candidate_control_variables": [
+            "packet_rate",
+            "flow_duration"
+          ]
+        },
+        {
+          "feature": "Flow IAT Mean",
+          "importance_rank": 3,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.7736184061823685,
+          "cohens_d": 0.22153826833345303,
+          "benign_median": 16038.3333333333,
+          "attack_median": 489330.5,
+          "median_difference": 473292.1666666667,
+          "median_ratio": 30.51005923308746,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 5343.76339275,
+              "P10": 10528.732145,
+              "Q1": 88000.71875,
+              "median": 489330.5,
+              "Q3": 2641684.41675,
+              "P90": 6694527.1665,
+              "P95": 7500299.0627500005,
+              "P99": 8500797.450000001
+            },
+            "target_min": 0.0,
+            "target_max": 44200000.0,
+            "target_mean": 1881636.689370535,
+            "target_std": 2560372.6216008086
+          },
+          "traffic_characteristic": "average time between consecutive flow packets",
+          "controllable_dimensions": "inter-packet timing",
+          "candidate_control_variables": [
+            "inter_packet_delay"
+          ]
+        },
+        {
+          "feature": "Flow Duration",
+          "importance_rank": 4,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.7675842521573061,
+          "cohens_d": 0.15415131056385614,
+          "benign_median": 39539.0,
+          "attack_median": 1879055.0,
+          "median_difference": 1839516.0,
+          "median_ratio": 47.52409013885025,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 36649.0,
+              "P10": 68640.0,
+              "Q1": 613571.0,
+              "median": 1879055.0,
+              "Q3": 9388005.0,
+              "P90": 81108697.0,
+              "P95": 91543277.25,
+              "P99": 100247247.75
+            },
+            "target_min": 0.0,
+            "target_max": 103941558.0,
+            "target_mean": 16956893.030222785,
+            "target_std": 31013616.253769953
+          },
+          "traffic_characteristic": "flow/connection lifetime",
+          "controllable_dimensions": "connection lifetime; session duration",
+          "candidate_control_variables": []
+        },
+        {
+          "feature": "Fwd IAT Mean",
+          "importance_rank": 5,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.7675017632067523,
+          "cohens_d": 0.06478453122114931,
+          "benign_median": 4.0,
+          "attack_median": 490552.29165,
+          "median_difference": 490548.29165,
+          "median_ratio": 122638.0729125,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 317.0,
+              "P10": 369.0,
+              "Q1": 1794.125,
+              "median": 490552.29165,
+              "Q3": 2641684.41675,
+              "P90": 11400000.0,
+              "P95": 12600000.0,
+              "P99": 14200000.0
+            },
+            "target_min": 0.0,
+            "target_max": 44200000.0,
+            "target_mean": 2655011.949063102,
+            "target_std": 4298341.169476013
+          },
+          "traffic_characteristic": "average forward-direction inter-arrival time",
+          "controllable_dimensions": "forward packet timing",
+          "candidate_control_variables": [
+            "forward_inter_packet_delay"
+          ]
+        },
+        {
+          "feature": "Fwd Packet Length Mean",
+          "importance_rank": 6,
+          "direction_vs_benign": "LOWER_IN_ATTACK",
+          "separation_auc": 0.7593737899307136,
+          "cohens_d": -0.30407426603052967,
+          "benign_median": 38.0,
+          "attack_median": 7.0,
+          "median_difference": -31.0,
+          "median_ratio": 0.18421052631578946,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 6.0,
+              "P10": 6.0,
+              "Q1": 6.0,
+              "median": 7.0,
+              "Q3": 8.666666667,
+              "P90": 8.666666667,
+              "P95": 8.666666667,
+              "P99": 10.0
+            },
+            "target_min": 3.0,
+            "target_max": 10.0,
+            "target_mean": 7.40138194771877,
+            "target_std": 1.2373133590143577
+          },
+          "traffic_characteristic": "average forward packet size",
+          "controllable_dimensions": "forward message/payload size",
+          "candidate_control_variables": [
+            "forward_payload_size"
+          ]
+        },
+        {
+          "feature": "Total Fwd Packets",
+          "importance_rank": 7,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.730043796016639,
+          "cohens_d": -0.008155937463711807,
+          "benign_median": 2.0,
+          "attack_median": 4.0,
+          "median_difference": 2.0,
+          "median_ratio": 2.0,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 3.0,
+              "P10": 3.0,
+              "Q1": 3.0,
+              "median": 4.0,
+              "Q3": 5.0,
+              "P90": 8.0,
+              "P95": 8.0,
+              "P99": 9.0
+            },
+            "target_min": 1.0,
+            "target_max": 11.0,
+            "target_mean": 4.472628421447319,
+            "target_std": 1.8977249322996341
+          },
+          "traffic_characteristic": "number of packets transmitted in forward direction",
+          "controllable_dimensions": "packets per flow; request/message count",
+          "candidate_control_variables": [
+            "packets_per_flow"
+          ]
+        },
+        {
+          "feature": "Fwd Packets Length Total",
+          "importance_rank": 8,
+          "direction_vs_benign": "LOWER_IN_ATTACK",
+          "separation_auc": 0.7163872137768483,
+          "cohens_d": -0.06062201506697836,
+          "benign_median": 68.0,
+          "attack_median": 26.0,
+          "median_difference": -42.0,
+          "median_ratio": 0.38235294117647056,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 24.0,
+              "P10": 24.0,
+              "Q1": 26.0,
+              "median": 26.0,
+              "Q3": 30.0,
+              "P90": 56.0,
+              "P95": 56.0,
+              "P99": 62.0
+            },
+            "target_min": 6.0,
+            "target_max": 74.0,
+            "target_mean": 31.910167479065116,
+            "target_std": 11.956083280038039
+          },
+          "traffic_characteristic": "total forward-direction bytes",
+          "controllable_dimensions": "forward data volume; payload volume",
+          "candidate_control_variables": [
+            "forward_data_volume"
+          ]
+        },
+        {
+          "feature": "Packet Length Mean",
+          "importance_rank": 9,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.7071773303543282,
+          "cohens_d": 2.6550149552563593,
+          "benign_median": 61.4,
+          "attack_median": 833.5,
+          "median_difference": 772.1,
+          "median_ratio": 13.574918566775244,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 6.0,
+              "P10": 6.0,
+              "Q1": 6.0,
+              "median": 833.5,
+              "Q3": 1291.888889,
+              "P90": 1453.375,
+              "P95": 1454.125,
+              "P99": 1454.125
+            },
+            "target_min": 2.0,
+            "target_max": 1936.833333,
+            "target_mean": 736.9409564827685,
+            "target_std": 584.5395904805789
+          },
+          "traffic_characteristic": "average packet size across the flow",
+          "controllable_dimensions": "message/payload size; packet-size distribution",
+          "candidate_control_variables": [
+            "payload_size",
+            "packet_size_distribution"
+          ]
+        },
+        {
+          "feature": "Bwd Packet Length Mean",
+          "importance_rank": 10,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.6768773907201731,
+          "cohens_d": 3.2881127416605884,
+          "benign_median": 83.0,
+          "attack_median": 1934.5,
+          "median_difference": 1851.5,
+          "median_ratio": 23.30722891566265,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 0.0,
+              "P10": 0.0,
+              "Q1": 0.0,
+              "median": 1934.5,
+              "Q3": 2321.4,
+              "P90": 2900.25,
+              "P95": 2901.75,
+              "P99": 2901.75
+            },
+            "target_min": 0.0,
+            "target_max": 5800.5,
+            "target_mean": 1481.1320353598067,
+            "target_std": 1164.8572259314876
+          },
+          "traffic_characteristic": "average reverse packet size",
+          "controllable_dimensions": "response/message size",
+          "candidate_control_variables": [
+            "response_payload_size"
+          ]
+        }
+      ],
+      "strongest_feature_relationships": [
+        {
+          "feature_a": "Flow Packets/s",
+          "feature_b": "Flow IAT Mean",
+          "spearman_correlation": -0.9997244093557547,
+          "absolute_correlation": 0.9997244093557547
+        },
+        {
+          "feature_a": "Flow IAT Std",
+          "feature_b": "Flow Packets/s",
+          "spearman_correlation": -0.9978365085711662,
+          "absolute_correlation": 0.9978365085711662
+        },
+        {
+          "feature_a": "Flow IAT Std",
+          "feature_b": "Flow IAT Mean",
+          "spearman_correlation": 0.9967193371125704,
+          "absolute_correlation": 0.9967193371125704
+        },
+        {
+          "feature_a": "Flow IAT Std",
+          "feature_b": "Flow Duration",
+          "spearman_correlation": 0.9946326866243839,
+          "absolute_correlation": 0.9946326866243839
+        },
+        {
+          "feature_a": "Flow Packets/s",
+          "feature_b": "Flow Duration",
+          "spearman_correlation": -0.9926349777626331,
+          "absolute_correlation": 0.9926349777626331
+        },
+        {
+          "feature_a": "Flow IAT Mean",
+          "feature_b": "Flow Duration",
+          "spearman_correlation": 0.9905707282014193,
+          "absolute_correlation": 0.9905707282014193
+        },
+        {
+          "feature_a": "Fwd Packet Length Mean",
+          "feature_b": "Packet Length Mean",
+          "spearman_correlation": 0.9437241137209019,
+          "absolute_correlation": 0.9437241137209019
+        },
+        {
+          "feature_a": "Packet Length Mean",
+          "feature_b": "Bwd Packet Length Mean",
+          "spearman_correlation": 0.8877818949357617,
+          "absolute_correlation": 0.8877818949357617
+        }
+      ],
+      "candidate_traffic_dimensions": [
+        "flow_duration",
+        "forward_data_volume",
+        "forward_inter_packet_delay",
+        "forward_payload_size",
+        "inter_packet_delay",
+        "packet_rate",
+        "packet_size_distribution",
+        "packets_per_flow",
+        "payload_size",
+        "response_payload_size",
+        "timing_variability"
+      ]
+    },
+    "DoS": {
+      "attack_name": "DoS",
+      "dataset_samples": 193748,
+      "profile_purpose": "Empirical feature-space target profile derived from the CICIDS-based dataset.",
+      "top_discriminative_features": [
+        {
+          "feature": "Fwd IAT Mean",
+          "importance_rank": 1,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.9104062030045765,
+          "cohens_d": 1.2061915891103752,
+          "benign_median": 4.0,
+          "attack_median": 14100000.0,
+          "median_difference": 14099996.0,
+          "median_ratio": 3525000.0,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 593.0,
+              "P10": 5496.5,
+              "Q1": 9683109.61925,
+              "median": 14100000.0,
+              "Q3": 17300000.0,
+              "P90": 21500000.0,
+              "P95": 24900000.0,
+              "P99": 81600000.0
+            },
+            "target_min": 0.0,
+            "target_max": 120000000.0,
+            "target_mean": 13967801.41504844,
+            "target_std": 12410306.330833409
+          },
+          "traffic_characteristic": "average forward-direction inter-arrival time",
+          "controllable_dimensions": "forward packet timing",
+          "candidate_control_variables": [
+            "forward_inter_packet_delay"
+          ]
+        },
+        {
+          "feature": "Flow IAT Std",
+          "importance_rank": 2,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.8954104527764035,
+          "cohens_d": 2.779933473989366,
+          "benign_median": 219.4121517,
+          "attack_median": 25400000.0,
+          "median_difference": 25399780.5878483,
+          "median_ratio": 115763.87088500531,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 577.395585685,
+              "P10": 8182.341963600001,
+              "Q1": 12500000.0,
+              "median": 25400000.0,
+              "Q3": 28400000.0,
+              "P90": 29900000.0,
+              "P95": 31100000.0,
+              "P99": 44800000.0
+            },
+            "target_min": 0.0,
+            "target_max": 83700000.0,
+            "target_mean": 20665709.188336976,
+            "target_std": 12167089.480753237
+          },
+          "traffic_characteristic": "variability of packet inter-arrival timing",
+          "controllable_dimensions": "timing variability; burstiness",
+          "candidate_control_variables": [
+            "inter_packet_delay",
+            "timing_variability"
+          ]
+        },
+        {
+          "feature": "Flow Packets/s",
+          "importance_rank": 3,
+          "direction_vs_benign": "LOWER_IN_ATTACK",
+          "separation_auc": 0.8832963691313029,
+          "cohens_d": -0.2490020077511023,
+          "benign_median": 84.98342823,
+          "attack_median": 0.1503111675,
+          "median_difference": -84.8331170625,
+          "median_ratio": 0.0017687115080036117,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 0.1103023646,
+              "P10": 0.1190381955,
+              "Q1": 0.130557914,
+              "median": 0.1503111675,
+              "Q3": 0.18510125049999998,
+              "P90": 192.6695654600002,
+              "P95": 1081.6893496999946,
+              "P99": 6191.950464
+            },
+            "target_min": 0.016717574,
+            "target_max": 3000000.0,
+            "target_mean": 1618.974032328644,
+            "target_std": 36174.54808695464
+          },
+          "traffic_characteristic": "average packet throughput over the flow",
+          "controllable_dimensions": "packet emission rate; flow duration",
+          "candidate_control_variables": [
+            "packet_rate",
+            "flow_duration"
+          ]
+        },
+        {
+          "feature": "Flow IAT Mean",
+          "importance_rank": 4,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.8796563658534187,
+          "cohens_d": 1.3235946572935262,
+          "benign_median": 16038.3333333333,
+          "attack_median": 7168926.5,
+          "median_difference": 7152888.166666667,
+          "median_ratio": 446.98699989608326,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 1166.5875,
+              "P10": 6898.5666669000175,
+              "Q1": 5784331.6620000005,
+              "median": 7168926.5,
+              "Q3": 8306644.91675,
+              "P90": 9405724.089000002,
+              "P95": 10500000.0,
+              "P99": 36300000.0
+            },
+            "target_min": 0.0,
+            "target_max": 120000000.0,
+            "target_mean": 7010009.008832217,
+            "target_std": 7518389.641691842
+          },
+          "traffic_characteristic": "average time between consecutive flow packets",
+          "controllable_dimensions": "inter-packet timing",
+          "candidate_control_variables": [
+            "inter_packet_delay"
+          ]
+        },
+        {
+          "feature": "Idle Mean",
+          "importance_rank": 5,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.8790478698673428,
+          "cohens_d": 3.7070124273111924,
+          "benign_median": 0.0,
+          "attack_median": 85300000.0,
+          "median_difference": 85300000.0,
+          "median_ratio": null,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 0.0,
+              "P10": 0.0,
+              "Q1": 31400000.0,
+              "median": 85300000.0,
+              "Q3": 98700000.0,
+              "P90": 99700000.0,
+              "P95": 100000000.0,
+              "P99": 107000000.0
+            },
+            "target_min": 0.0,
+            "target_max": 120000000.0,
+            "target_mean": 69560005.59839585,
+            "target_std": 39615091.235375695
+          },
+          "traffic_characteristic": "average idle gap exceeding 5 seconds",
+          "controllable_dimensions": "burst spacing; idle periods",
+          "candidate_control_variables": [
+            "burst_spacing",
+            "idle_period_duration"
+          ]
+        },
+        {
+          "feature": "Packet Length Std",
+          "importance_rank": 6,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.8751239328049814,
+          "cohens_d": 3.61087527484673,
+          "benign_median": 30.67246322,
+          "attack_median": 1620.918073,
+          "median_difference": 1590.24560978,
+          "median_ratio": 52.84603526537377,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 0.0,
+              "P10": 3.0,
+              "Q1": 1415.8571735,
+              "median": 1620.918073,
+              "Q3": 1887.258002,
+              "P90": 2383.359247,
+              "P95": 2666.7574891,
+              "P99": 3335.4447136699996
+            },
+            "target_min": 0.0,
+            "target_max": 4364.022571,
+            "target_mean": 1523.5649453352198,
+            "target_std": 776.9901542829537
+          },
+          "traffic_characteristic": "variability of packet sizes",
+          "controllable_dimensions": "payload-size variability; message-size diversity",
+          "candidate_control_variables": [
+            "payload_size",
+            "payload_size_variability"
+          ]
+        },
+        {
+          "feature": "Bwd Packet Length Mean",
+          "importance_rank": 7,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.8567305185545282,
+          "cohens_d": 4.0000565924990665,
+          "benign_median": 83.0,
+          "attack_median": 1932.5,
+          "median_difference": 1849.5,
+          "median_ratio": 23.283132530120483,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 0.0,
+              "P10": 0.0,
+              "Q1": 1656.428571,
+              "median": 1932.5,
+              "Q3": 1932.5,
+              "P90": 2319.0,
+              "P95": 2319.0,
+              "P99": 2898.75
+            },
+            "target_min": 0.0,
+            "target_max": 3877.333333,
+            "target_mean": 1596.471665977045,
+            "target_std": 758.2620322238677
+          },
+          "traffic_characteristic": "average reverse packet size",
+          "controllable_dimensions": "response/message size",
+          "candidate_control_variables": [
+            "response_payload_size"
+          ]
+        },
+        {
+          "feature": "Packet Length Mean",
+          "importance_rank": 8,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.8535999315058613,
+          "cohens_d": 2.9616446425127556,
+          "benign_median": 61.4,
+          "attack_median": 850.8571429,
+          "median_difference": 789.4571429,
+          "median_ratio": 13.857608190553746,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 0.0,
+              "P10": 3.6,
+              "Q1": 746.1875,
+              "median": 850.8571429,
+              "Q3": 918.6153846,
+              "P90": 999.0833333,
+              "P95": 1190.4,
+              "P99": 1324.666667
+            },
+            "target_min": 0.0,
+            "target_max": 1710.714286,
+            "target_mean": 736.1351328185531,
+            "target_std": 340.53755324466965
+          },
+          "traffic_characteristic": "average packet size across the flow",
+          "controllable_dimensions": "message/payload size; packet-size distribution",
+          "candidate_control_variables": [
+            "payload_size",
+            "packet_size_distribution"
+          ]
+        },
+        {
+          "feature": "Flow Duration",
+          "importance_rank": 9,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.8521976798619864,
+          "cohens_d": 1.8964987492808023,
+          "benign_median": 39539.0,
+          "attack_median": 85872079.0,
+          "median_difference": 85832540.0,
+          "median_ratio": 2171.832342750196,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 4806.700000000001,
+              "P10": 33476.100000000006,
+              "Q1": 66992798.5,
+              "median": 85872079.0,
+              "Q3": 99055175.25,
+              "P90": 100338683.7,
+              "P95": 101440943.9,
+              "P99": 116613378.2
+            },
+            "target_min": 0.0,
+            "target_max": 119968626.0,
+            "target_mean": 72633614.90480419,
+            "target_std": 38796960.53682393
+          },
+          "traffic_characteristic": "flow/connection lifetime",
+          "controllable_dimensions": "connection lifetime; session duration",
+          "candidate_control_variables": []
+        },
+        {
+          "feature": "Bwd Packets Length Total",
+          "importance_rank": 10,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.824307191557132,
+          "cohens_d": -0.004296936116262096,
+          "benign_median": 144.0,
+          "attack_median": 11595.0,
+          "median_difference": 11451.0,
+          "median_ratio": 80.52083333333333,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 0.0,
+              "P10": 0.0,
+              "Q1": 11595.0,
+              "median": 11595.0,
+              "Q3": 11595.0,
+              "P90": 11595.0,
+              "P95": 11595.0,
+              "P99": 11632.0
+            },
+            "target_min": 0.0,
+            "target_max": 14556.0,
+            "target_mean": 9620.102220410017,
+            "target_std": 4318.344477953809
+          },
+          "traffic_characteristic": "total reverse-direction bytes",
+          "controllable_dimensions": "response data volume; payload volume",
+          "candidate_control_variables": [
+            "response_data_volume"
+          ]
+        }
+      ],
+      "strongest_feature_relationships": [
+        {
+          "feature_a": "Flow Packets/s",
+          "feature_b": "Flow IAT Mean",
+          "spearman_correlation": -0.9935762198699011,
+          "absolute_correlation": 0.9935762198699011
+        },
+        {
+          "feature_a": "Idle Mean",
+          "feature_b": "Flow Duration",
+          "spearman_correlation": 0.9033903873517553,
+          "absolute_correlation": 0.9033903873517553
+        },
+        {
+          "feature_a": "Fwd IAT Mean",
+          "feature_b": "Flow IAT Mean",
+          "spearman_correlation": 0.8726314358390649,
+          "absolute_correlation": 0.8726314358390649
+        },
+        {
+          "feature_a": "Flow IAT Std",
+          "feature_b": "Flow Packets/s",
+          "spearman_correlation": -0.871647137219606,
+          "absolute_correlation": 0.871647137219606
+        },
+        {
+          "feature_a": "Fwd IAT Mean",
+          "feature_b": "Flow Packets/s",
+          "spearman_correlation": -0.8705953592797191,
+          "absolute_correlation": 0.8705953592797191
+        },
+        {
+          "feature_a": "Flow IAT Std",
+          "feature_b": "Flow IAT Mean",
+          "spearman_correlation": 0.8519366245924064,
+          "absolute_correlation": 0.8519366245924064
+        },
+        {
+          "feature_a": "Flow IAT Std",
+          "feature_b": "Idle Mean",
+          "spearman_correlation": 0.8468151688110465,
+          "absolute_correlation": 0.8468151688110465
+        },
+        {
+          "feature_a": "Flow IAT Std",
+          "feature_b": "Flow Duration",
+          "spearman_correlation": 0.8268938743614765,
+          "absolute_correlation": 0.8268938743614765
+        }
+      ],
+      "candidate_traffic_dimensions": [
+        "burst_spacing",
+        "flow_duration",
+        "forward_inter_packet_delay",
+        "idle_period_duration",
+        "inter_packet_delay",
+        "packet_rate",
+        "packet_size_distribution",
+        "payload_size",
+        "payload_size_variability",
+        "response_data_volume",
+        "response_payload_size",
+        "timing_variability"
+      ]
+    },
+    "Port Scan": {
+      "attack_name": "Port Scan",
+      "dataset_samples": 90819,
+      "profile_purpose": "Empirical feature-space target profile derived from the CICIDS-based dataset.",
+      "top_discriminative_features": [
+        {
+          "feature": "Fwd Packets Length Total",
+          "importance_rank": 1,
+          "direction_vs_benign": "LOWER_IN_ATTACK",
+          "separation_auc": 0.9020765600200685,
+          "cohens_d": -0.06294894938039422,
+          "benign_median": 68.0,
+          "attack_median": 0.0,
+          "median_difference": -68.0,
+          "median_ratio": 0.0,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 0.0,
+              "P10": 0.0,
+              "Q1": 0.0,
+              "median": 0.0,
+              "Q3": 2.0,
+              "P90": 2.0,
+              "P95": 2.0,
+              "P99": 2.0
+            },
+            "target_min": 0.0,
+            "target_max": 1473.0,
+            "target_mean": 1.170305773021064,
+            "target_std": 7.438094755432569
+          },
+          "traffic_characteristic": "total forward-direction bytes",
+          "controllable_dimensions": "forward data volume; payload volume",
+          "candidate_control_variables": [
+            "forward_data_volume"
+          ]
+        },
+        {
+          "feature": "Fwd Packet Length Mean",
+          "importance_rank": 2,
+          "direction_vs_benign": "LOWER_IN_ATTACK",
+          "separation_auc": 0.8977424751641836,
+          "cohens_d": -0.3321949189429144,
+          "benign_median": 38.0,
+          "attack_median": 0.0,
+          "median_difference": -38.0,
+          "median_ratio": 0.0,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 0.0,
+              "P10": 0.0,
+              "Q1": 0.0,
+              "median": 0.0,
+              "Q3": 2.0,
+              "P90": 2.0,
+              "P95": 2.0,
+              "P99": 2.0
+            },
+            "target_min": 0.0,
+            "target_max": 147.3,
+            "target_mean": 1.0309168052207138,
+            "target_std": 1.5017293694296743
+          },
+          "traffic_characteristic": "average forward packet size",
+          "controllable_dimensions": "forward message/payload size",
+          "candidate_control_variables": [
+            "forward_payload_size"
+          ]
+        },
+        {
+          "feature": "Flow Duration",
+          "importance_rank": 3,
+          "direction_vs_benign": "LOWER_IN_ATTACK",
+          "separation_auc": 0.8924964457355375,
+          "cohens_d": -0.39333574227647716,
+          "benign_median": 39539.0,
+          "attack_median": 50.0,
+          "median_difference": -39489.0,
+          "median_ratio": 0.0012645742178608462,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 11.0,
+              "P10": 16.0,
+              "Q1": 33.0,
+              "median": 50.0,
+              "Q3": 68.0,
+              "P90": 86.0,
+              "P95": 97.0,
+              "P99": 699.8199999999924
+            },
+            "target_min": 0.0,
+            "target_max": 119809735.0,
+            "target_mean": 144896.7543795902,
+            "target_std": 3075330.561731325
+          },
+          "traffic_characteristic": "flow/connection lifetime",
+          "controllable_dimensions": "connection lifetime; session duration",
+          "candidate_control_variables": []
+        },
+        {
+          "feature": "Flow Packets/s",
+          "importance_rank": 4,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.8745636254995681,
+          "cohens_d": 0.08466660514685527,
+          "benign_median": 84.98342823,
+          "attack_median": 40000.0,
+          "median_difference": 39915.01657177,
+          "median_ratio": 470.68000000827925,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 20618.5567,
+              "P10": 23255.81395,
+              "Q1": 29411.76471,
+              "median": 40000.0,
+              "Q3": 58823.52941,
+              "P90": 125000.0,
+              "P95": 181818.1818,
+              "P99": 666666.6667
+            },
+            "target_min": 0.033386269,
+            "target_max": 2000000.0,
+            "target_mean": 71896.39546798274,
+            "target_std": 157978.2222789554
+          },
+          "traffic_characteristic": "average packet throughput over the flow",
+          "controllable_dimensions": "packet emission rate; flow duration",
+          "candidate_control_variables": [
+            "packet_rate",
+            "flow_duration"
+          ]
+        },
+        {
+          "feature": "Total Fwd Packets",
+          "importance_rank": 5,
+          "direction_vs_benign": "LOWER_IN_ATTACK",
+          "separation_auc": 0.8677888712819478,
+          "cohens_d": -0.012123448474148276,
+          "benign_median": 2.0,
+          "attack_median": 1.0,
+          "median_difference": -1.0,
+          "median_ratio": 0.5,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 1.0,
+              "P10": 1.0,
+              "Q1": 1.0,
+              "median": 1.0,
+              "Q3": 1.0,
+              "P90": 1.0,
+              "P95": 1.0,
+              "P99": 2.0
+            },
+            "target_min": 1.0,
+            "target_max": 150.0,
+            "target_mean": 1.0307314548717779,
+            "target_std": 0.5626159288188604
+          },
+          "traffic_characteristic": "number of packets transmitted in forward direction",
+          "controllable_dimensions": "packets per flow; request/message count",
+          "candidate_control_variables": [
+            "packets_per_flow"
+          ]
+        },
+        {
+          "feature": "PSH Flag Count",
+          "importance_rank": 6,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.8657551467329815,
+          "cohens_d": 1.6873443572689082,
+          "benign_median": 0.0,
+          "attack_median": 1.0,
+          "median_difference": 1.0,
+          "median_ratio": null,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 1.0,
+              "P10": 1.0,
+              "Q1": 1.0,
+              "median": 1.0,
+              "Q3": 1.0,
+              "P90": 1.0,
+              "P95": 1.0,
+              "P99": 1.0
+            },
+            "target_min": 0.0,
+            "target_max": 1.0,
+            "target_mean": 0.9992512579966747,
+            "target_std": 0.02735305516734382
+          },
+          "traffic_characteristic": "TCP PSH behavior",
+          "controllable_dimensions": "application-data transmission pattern",
+          "candidate_control_variables": [
+            "application_data_pattern"
+          ]
+        },
+        {
+          "feature": "Fwd IAT Mean",
+          "importance_rank": 7,
+          "direction_vs_benign": "LOWER_IN_ATTACK",
+          "separation_auc": 0.8637312647204309,
+          "cohens_d": -0.20242240280137686,
+          "benign_median": 4.0,
+          "attack_median": 0.0,
+          "median_difference": -4.0,
+          "median_ratio": 0.0,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 0.0,
+              "P10": 0.0,
+              "Q1": 0.0,
+              "median": 0.0,
+              "Q3": 0.0,
+              "P90": 0.0,
+              "P95": 0.0,
+              "P99": 515.8199999999924
+            },
+            "target_min": 0.0,
+            "target_max": 120000000.0,
+            "target_mean": 136791.51428707357,
+            "target_std": 2998173.196722917
+          },
+          "traffic_characteristic": "average forward-direction inter-arrival time",
+          "controllable_dimensions": "forward packet timing",
+          "candidate_control_variables": [
+            "forward_inter_packet_delay"
+          ]
+        },
+        {
+          "feature": "Packet Length Mean",
+          "importance_rank": 8,
+          "direction_vs_benign": "LOWER_IN_ATTACK",
+          "separation_auc": 0.8629637494185969,
+          "cohens_d": -0.5934221880801741,
+          "benign_median": 61.4,
+          "attack_median": 2.4,
+          "median_difference": -59.0,
+          "median_ratio": 0.03908794788273615,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 2.0,
+              "P10": 2.0,
+              "Q1": 2.0,
+              "median": 2.4,
+              "Q3": 3.333333333,
+              "P90": 3.333333333,
+              "P95": 3.333333333,
+              "P99": 3.333333333
+            },
+            "target_min": 0.0,
+            "target_max": 1161.3,
+            "target_mean": 3.6901722378686173,
+            "target_std": 33.42520481177504
+          },
+          "traffic_characteristic": "average packet size across the flow",
+          "controllable_dimensions": "message/payload size; packet-size distribution",
+          "candidate_control_variables": [
+            "payload_size",
+            "packet_size_distribution"
+          ]
+        },
+        {
+          "feature": "Flow IAT Mean",
+          "importance_rank": 9,
+          "direction_vs_benign": "LOWER_IN_ATTACK",
+          "separation_auc": 0.8444799330346108,
+          "cohens_d": -0.2255319373226204,
+          "benign_median": 16038.3333333333,
+          "attack_median": 50.0,
+          "median_difference": -15988.3333333333,
+          "median_ratio": 0.003117530915514919,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 11.0,
+              "P10": 16.0,
+              "Q1": 33.0,
+              "median": 50.0,
+              "Q3": 68.0,
+              "P90": 86.0,
+              "P95": 97.0,
+              "P99": 297.2733333059975
+            },
+            "target_min": 0.0,
+            "target_max": 39900000.0,
+            "target_mean": 46147.123463606215,
+            "target_std": 1000604.4753900479
+          },
+          "traffic_characteristic": "average time between consecutive flow packets",
+          "controllable_dimensions": "inter-packet timing",
+          "candidate_control_variables": [
+            "inter_packet_delay"
+          ]
+        },
+        {
+          "feature": "Flow IAT Std",
+          "importance_rank": 10,
+          "direction_vs_benign": "LOWER_IN_ATTACK",
+          "separation_auc": 0.8297174496742684,
+          "cohens_d": -0.27290722906652226,
+          "benign_median": 219.4121517,
+          "attack_median": 0.0,
+          "median_difference": -219.4121517,
+          "median_ratio": 0.0,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 0.0,
+              "P10": 0.0,
+              "Q1": 0.0,
+              "median": 0.0,
+              "Q3": 0.0,
+              "P90": 0.0,
+              "P95": 0.0,
+              "P99": 334.79208377599696
+            },
+            "target_min": 0.0,
+            "target_max": 69200000.0,
+            "target_mean": 79918.63720957849,
+            "target_std": 1731775.3625640126
+          },
+          "traffic_characteristic": "variability of packet inter-arrival timing",
+          "controllable_dimensions": "timing variability; burstiness",
+          "candidate_control_variables": [
+            "inter_packet_delay",
+            "timing_variability"
+          ]
+        }
+      ],
+      "strongest_feature_relationships": [
+        {
+          "feature_a": "Flow Duration",
+          "feature_b": "Flow IAT Mean",
+          "spearman_correlation": 0.9999991183227465,
+          "absolute_correlation": 0.9999991183227465
+        },
+        {
+          "feature_a": "Fwd IAT Mean",
+          "feature_b": "Flow IAT Std",
+          "spearman_correlation": 0.9999845200394447,
+          "absolute_correlation": 0.9999845200394447
+        },
+        {
+          "feature_a": "Total Fwd Packets",
+          "feature_b": "Flow IAT Std",
+          "spearman_correlation": 0.9999205020092792,
+          "absolute_correlation": 0.9999205020092792
+        },
+        {
+          "feature_a": "Total Fwd Packets",
+          "feature_b": "Fwd IAT Mean",
+          "spearman_correlation": 0.999895896114141,
+          "absolute_correlation": 0.999895896114141
+        },
+        {
+          "feature_a": "Fwd Packets Length Total",
+          "feature_b": "Fwd Packet Length Mean",
+          "spearman_correlation": 0.9998472297856635,
+          "absolute_correlation": 0.9998472297856635
+        },
+        {
+          "feature_a": "Flow Packets/s",
+          "feature_b": "Flow IAT Mean",
+          "spearman_correlation": -0.9918153886581423,
+          "absolute_correlation": 0.9918153886581423
+        },
+        {
+          "feature_a": "Flow Duration",
+          "feature_b": "Flow Packets/s",
+          "spearman_correlation": -0.9918151420719377,
+          "absolute_correlation": 0.9918151420719377
+        },
+        {
+          "feature_a": "Fwd Packet Length Mean",
+          "feature_b": "Packet Length Mean",
+          "spearman_correlation": 0.9835950619330105,
+          "absolute_correlation": 0.9835950619330105
+        }
+      ],
+      "candidate_traffic_dimensions": [
+        "application_data_pattern",
+        "flow_duration",
+        "forward_data_volume",
+        "forward_inter_packet_delay",
+        "forward_payload_size",
+        "inter_packet_delay",
+        "packet_rate",
+        "packet_size_distribution",
+        "packets_per_flow",
+        "payload_size",
+        "timing_variability"
+      ]
+    },
+    "Brute Force": {
+      "attack_name": "Brute Force",
+      "dataset_samples": 9152,
+      "profile_purpose": "Empirical feature-space target profile derived from the CICIDS-based dataset.",
+      "top_discriminative_features": [
+        {
+          "feature": "Total Backward Packets",
+          "importance_rank": 1,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.7773839603903336,
+          "cohens_d": 0.0034514844026756466,
+          "benign_median": 2.0,
+          "attack_median": 15.0,
+          "median_difference": 13.0,
+          "median_ratio": 7.5,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 1.0,
+              "P10": 1.0,
+              "Q1": 15.0,
+              "median": 15.0,
+              "Q3": 32.0,
+              "P90": 32.0,
+              "P95": 33.0,
+              "P99": 33.0
+            },
+            "target_min": 0.0,
+            "target_max": 43.0,
+            "target_mean": 17.069274475524477,
+            "target_std": 11.72387518103401
+          },
+          "traffic_characteristic": "number of packets returned in reverse direction",
+          "controllable_dimensions": "response packet count; response behavior",
+          "candidate_control_variables": [
+            "response_packets_per_flow"
+          ]
+        },
+        {
+          "feature": "Total Fwd Packets",
+          "importance_rank": 2,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.7726877451640587,
+          "cohens_d": -0.00018841192787697047,
+          "benign_median": 2.0,
+          "attack_median": 9.0,
+          "median_difference": 7.0,
+          "median_ratio": 4.5,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 2.0,
+              "P10": 2.0,
+              "Q1": 9.0,
+              "median": 9.0,
+              "Q3": 21.0,
+              "P90": 21.0,
+              "P95": 22.0,
+              "P99": 24.0
+            },
+            "target_min": 1.0,
+            "target_max": 33.0,
+            "target_mean": 11.205856643356643,
+            "target_std": 7.474432185590132
+          },
+          "traffic_characteristic": "number of packets transmitted in forward direction",
+          "controllable_dimensions": "packets per flow; request/message count",
+          "candidate_control_variables": [
+            "packets_per_flow"
+          ]
+        },
+        {
+          "feature": "PSH Flag Count",
+          "importance_rank": 3,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.7459918429094693,
+          "cohens_d": 1.111285831316458,
+          "benign_median": 0.0,
+          "attack_median": 1.0,
+          "median_difference": 1.0,
+          "median_ratio": null,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 0.0,
+              "P10": 0.0,
+              "Q1": 1.0,
+              "median": 1.0,
+              "Q3": 1.0,
+              "P90": 1.0,
+              "P95": 1.0,
+              "P99": 1.0
+            },
+            "target_min": 0.0,
+            "target_max": 1.0,
+            "target_mean": 0.7597246503496503,
+            "target_std": 0.4272739798851372
+          },
+          "traffic_characteristic": "TCP PSH behavior",
+          "controllable_dimensions": "application-data transmission pattern",
+          "candidate_control_variables": [
+            "application_data_pattern"
+          ]
+        },
+        {
+          "feature": "Fwd IAT Mean",
+          "importance_rank": 4,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.7424408571240477,
+          "cohens_d": -0.1619741376236252,
+          "benign_median": 4.0,
+          "attack_median": 549913.41665,
+          "median_difference": 549909.41665,
+          "median_ratio": 137478.3541625,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 210.0,
+              "P10": 227.0,
+              "Q1": 415813.713425,
+              "median": 549913.41665,
+              "Q3": 740290.8125,
+              "P90": 797998.6,
+              "P95": 823190.81875,
+              "P99": 859480.6749999999
+            },
+            "target_min": 0.0,
+            "target_max": 2608063.5,
+            "target_mean": 492309.7765047203,
+            "target_std": 301767.75269884913
+          },
+          "traffic_characteristic": "average forward-direction inter-arrival time",
+          "controllable_dimensions": "forward packet timing",
+          "candidate_control_variables": [
+            "forward_inter_packet_delay"
+          ]
+        },
+        {
+          "feature": "Flow Duration",
+          "importance_rank": 5,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.7097716831449346,
+          "cohens_d": -0.13703709906390396,
+          "benign_median": 39539.0,
+          "attack_median": 9113798.0,
+          "median_difference": 9074259.0,
+          "median_ratio": 230.5014795518349,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 210.0,
+              "P10": 227.0,
+              "Q1": 7836164.0,
+              "median": 9113798.0,
+              "Q3": 11600654.0,
+              "P90": 12662207.0,
+              "P95": 13276077.0,
+              "P99": 14077968.0
+            },
+            "target_min": 0.0,
+            "target_max": 119816717.0,
+            "target_mean": 7889435.66291521,
+            "target_std": 5007491.631369746
+          },
+          "traffic_characteristic": "flow/connection lifetime",
+          "controllable_dimensions": "connection lifetime; session duration",
+          "candidate_control_variables": []
+        },
+        {
+          "feature": "Bwd IAT Mean",
+          "importance_rank": 6,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.6910586981628704,
+          "cohens_d": -0.15946017542306914,
+          "benign_median": 3.0,
+          "attack_median": 421234.37095,
+          "median_difference": 421231.37095,
+          "median_ratio": 140411.45698333334,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 0.0,
+              "P10": 0.0,
+              "Q1": 336684.517825,
+              "median": 421234.37095,
+              "Q3": 636433.785725,
+              "P90": 673688.48573,
+              "P95": 694000.6178649999,
+              "P99": 723641.581414
+            },
+            "target_min": 0.0,
+            "target_max": 7987775.6,
+            "target_mean": 409423.1844869427,
+            "target_std": 280109.1110069907
+          },
+          "traffic_characteristic": "average reverse-direction inter-arrival time",
+          "controllable_dimensions": "response timing",
+          "candidate_control_variables": [
+            "response_inter_packet_delay"
+          ]
+        },
+        {
+          "feature": "Flow IAT Std",
+          "importance_rank": 7,
+          "direction_vs_benign": "HIGHER_IN_ATTACK",
+          "separation_auc": 0.6791701334768412,
+          "cohens_d": -0.17393806618837043,
+          "benign_median": 219.4121517,
+          "attack_median": 678205.6379,
+          "median_difference": 677986.2257483,
+          "median_ratio": 3091.012200761349,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 22.627417,
+              "P10": 47.37615434,
+              "Q1": 539467.846725,
+              "median": 678205.6379,
+              "Q3": 1006739.3015000001,
+              "P90": 1067044.8524999998,
+              "P95": 1098419.1286499999,
+              "P99": 1141939.29102
+            },
+            "target_min": 0.0,
+            "target_max": 21400000.0,
+            "target_mean": 653065.9009575219,
+            "target_std": 505878.19740741357
+          },
+          "traffic_characteristic": "variability of packet inter-arrival timing",
+          "controllable_dimensions": "timing variability; burstiness",
+          "candidate_control_variables": [
+            "inter_packet_delay",
+            "timing_variability"
+          ]
+        },
+        {
+          "feature": "Bwd Packet Length Mean",
+          "importance_rank": 8,
+          "direction_vs_benign": "LOWER_IN_ATTACK",
+          "separation_auc": 0.6670299053198627,
+          "cohens_d": -0.4712352138355387,
+          "benign_median": 83.0,
+          "attack_median": 12.53333333,
+          "median_difference": -70.46666667,
+          "median_ratio": 0.15100401602409638,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 0.0,
+              "P10": 0.0,
+              "Q1": 12.53333333,
+              "median": 12.53333333,
+              "Q3": 85.78125,
+              "P90": 85.78125,
+              "P95": 88.5483871,
+              "P99": 88.5483871
+            },
+            "target_min": 0.0,
+            "target_max": 200.9,
+            "target_mean": 33.44823173530267,
+            "target_std": 37.364873776590734
+          },
+          "traffic_characteristic": "average reverse packet size",
+          "controllable_dimensions": "response/message size",
+          "candidate_control_variables": [
+            "response_payload_size"
+          ]
+        },
+        {
+          "feature": "Flow Packets/s",
+          "importance_rank": 9,
+          "direction_vs_benign": "LOWER_IN_ATTACK",
+          "separation_auc": 0.6605221185381162,
+          "cohens_d": -0.21971878729440084,
+          "benign_median": 84.98342823,
+          "attack_median": 4.064517201999999,
+          "median_difference": -80.918911028,
+          "median_ratio": 0.047827173916775274,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 2.47182167155,
+              "P10": 2.5458543371,
+              "Q1": 2.6947420625,
+              "median": 4.064517201999999,
+              "Q3": 5.120707929,
+              "P90": 13215.85903,
+              "P95": 14218.00948,
+              "P99": 42553.19149
+            },
+            "target_min": 0.250475632,
+            "target_max": 3000000.0,
+            "target_mean": 5817.3343024108135,
+            "target_std": 63301.0152107019
+          },
+          "traffic_characteristic": "average packet throughput over the flow",
+          "controllable_dimensions": "packet emission rate; flow duration",
+          "candidate_control_variables": [
+            "packet_rate",
+            "flow_duration"
+          ]
+        },
+        {
+          "feature": "Flow Bytes/s",
+          "importance_rank": 10,
+          "direction_vs_benign": "LOWER_IN_ATTACK",
+          "separation_auc": 0.6579815209136735,
+          "cohens_d": -0.05688147386315932,
+          "benign_median": 4240.235863,
+          "attack_median": 354.03112309999995,
+          "median_difference": -3886.2047399,
+          "median_ratio": 0.08349326182282704,
+          "target_distribution": {
+            "target_percentiles": {
+              "P5": 29.3871970535,
+              "P10": 30.639328901000003,
+              "Q1": 32.730397685,
+              "median": 354.03112309999995,
+              "Q3": 425.565903675,
+              "P90": 59829.05983,
+              "P95": 63926.94064,
+              "P99": 73298.42932
+            },
+            "target_min": 0.0,
+            "target_max": 14000000.0,
+            "target_mean": 25010.909268059564,
+            "target_std": 330407.5747575504
+          },
+          "traffic_characteristic": "average byte throughput over the flow",
+          "controllable_dimensions": "data volume; flow duration; transmission rate",
+          "candidate_control_variables": [
+            "data_volume",
+            "flow_duration",
+            "transmission_rate"
+          ]
+        }
+      ],
+      "strongest_feature_relationships": [
+        {
+          "feature_a": "Bwd IAT Mean",
+          "feature_b": "Flow IAT Std",
+          "spearman_correlation": 0.9894841977103546,
+          "absolute_correlation": 0.9894841977103546
+        },
+        {
+          "feature_a": "Flow IAT Std",
+          "feature_b": "Flow Packets/s",
+          "spearman_correlation": -0.9893408125990717,
+          "absolute_correlation": 0.9893408125990717
+        },
+        {
+          "feature_a": "Bwd IAT Mean",
+          "feature_b": "Flow Packets/s",
+          "spearman_correlation": -0.9890048259083353,
+          "absolute_correlation": 0.9890048259083353
+        },
+        {
+          "feature_a": "Fwd IAT Mean",
+          "feature_b": "Flow Packets/s",
+          "spearman_correlation": -0.9760919983788684,
+          "absolute_correlation": 0.9760919983788684
+        },
+        {
+          "feature_a": "Total Backward Packets",
+          "feature_b": "Total Fwd Packets",
+          "spearman_correlation": 0.9752125102702721,
+          "absolute_correlation": 0.9752125102702721
+        },
+        {
+          "feature_a": "Fwd IAT Mean",
+          "feature_b": "Flow IAT Std",
+          "spearman_correlation": 0.9673103645648661,
+          "absolute_correlation": 0.9673103645648661
+        },
+        {
+          "feature_a": "Fwd IAT Mean",
+          "feature_b": "Bwd IAT Mean",
+          "spearman_correlation": 0.9651076933473942,
+          "absolute_correlation": 0.9651076933473942
+        },
+        {
+          "feature_a": "Total Fwd Packets",
+          "feature_b": "Bwd Packet Length Mean",
+          "spearman_correlation": 0.9604329216440477,
+          "absolute_correlation": 0.9604329216440477
+        }
+      ],
+      "candidate_traffic_dimensions": [
+        "application_data_pattern",
+        "data_volume",
+        "flow_duration",
+        "forward_inter_packet_delay",
+        "inter_packet_delay",
+        "packet_rate",
+        "packets_per_flow",
+        "response_inter_packet_delay",
+        "response_packets_per_flow",
+        "response_payload_size",
+        "timing_variability",
+        "transmission_rate"
+      ]
+    }
+  },
+  "important_note": "The values in this file are empirical target characteristics derived from the dataset. They are not manually constructed 24-feature vectors. Traffic parameters must be experimentally validated by generating real traffic and allowing M1-M4 to recalculate the resulting features."
+}

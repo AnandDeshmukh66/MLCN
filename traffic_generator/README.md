@@ -1,0 +1,86 @@
+# MLCN Controlled IDS Traffic Generator
+
+Laboratory-only test traffic generator for the MLCN receiver pipeline (Modules 1–5).
+This package is **completely separate** from the receiver/detection modules.
+
+```text
+UI (Streamlit)
+  → Profile Selector (MLCN_compact_attack_traffic_profiles.json)
+  → Parameter Translator
+  → Safe Traffic Generator (socket/HTTP, rate-limited)
+  → Receiver Laptop (M1→M5) → XGBoost → Classification
+```
+
+## Safety
+
+- Private/local targets only (`127.0.0.0/8`, RFC1918, link-local)
+- Public Internet addresses are rejected
+- Hard caps on duration, connection rate, packet rate, port-scan span
+- Mandatory `LAB` confirmation before start
+- Immediate Stop control
+- No credentials, flooding, stealth, or evasion
+
+## Install
+
+From the project root:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Run the UI
+
+```bash
+streamlit run traffic_generator/streamlit_app.py
+```
+
+Or:
+
+```bash
+python -m traffic_generator
+```
+
+## Two-machine laboratory setup (recommended)
+
+**Laptop B — Receiver (existing M1→M5, unchanged):**
+
+```bash
+python -m pipeline -l
+python -m pipeline -i "Wi-Fi"    # Windows: use listed Npcap interface name
+```
+
+Run a simple HTTP listener on the test port if needed:
+
+```bash
+python -m http.server 8080
+```
+
+**Laptop A — Generator (this package):**
+
+1. Open the Streamlit UI
+2. Select profile (`BENIGN`, `Brute Force`, `DDoS`, `DoS`, `Port Scan`)
+3. Enter Laptop B's **private IP** (e.g. `192.168.x.x`)
+4. Confirm with checkbox + type `LAB`
+5. Start test → observe classifications on Laptop B terminal
+
+Traffic must be **destined to Laptop B** (same Wi-Fi is not enough for passive sniffing of third-party flows).
+
+## Single-machine validation mode
+
+Enable **Validation mode** in the UI (loopback only):
+
+- Starts a tiny lab echo HTTP server (generator side)
+- Starts receiver `IntrusionDetectionPipeline` on loopback in a background thread
+- Records: target profile → observed 24 features → XGBoost prediction
+
+Requires Npcap (Windows) or elevated privileges (macOS/Linux) for loopback capture.
+
+## Profile source of truth
+
+`assets/MLCN_compact_attack_traffic_profiles.json`
+
+Parameters are derived from empirical medians — the generator never writes the 24 ML features directly.
+
+## Logs
+
+Session logs: `logs/traffic_generator/run_<profile>_<timestamp>.json`
