@@ -122,8 +122,8 @@ def main() -> None:
             st.info(
                 "**Two-machine setup (Laptop B):**\n"
                 "1. `python -m traffic_generator.receiver_server --port <port>`\n"
-                "2. `python -m pipeline -i \"<Npcap interface>\"`\n"
-                "3. Enter **Laptop B's IP** here (not this PC's IP unless it is Laptop B)."
+                "2. `python -m pipeline -i \"Wi-Fi,\\Device\\NPF_Loopback\" --lab-port <port>`\n"
+                "3. Run Streamlit on **Laptop A** and enter **Laptop B's IP** (not this PC's IP)."
             )
         validation_iface = st.text_input(
             "Validation capture interface",

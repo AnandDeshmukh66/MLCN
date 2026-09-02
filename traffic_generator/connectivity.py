@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import socket
+import sys
 
 from traffic_generator.safety import SafetyError
 
@@ -89,3 +90,34 @@ def require_two_machine_receiver(
         f"`python -m pipeline -i <iface>` is capturing the interface that receives "
         f"traffic destined to Laptop B (not unrelated outbound Internet flows)."
     )
+
+
+def default_loopback_capture_interface() -> str:
+    """Npcap/loopback capture interface name for the local receiver pipeline."""
+    if sys.platform == "win32":
+        return r"\Device\NPF_Loopback"
+    if sys.platform == "darwin":
+        return "lo0"
+    return "lo"
+
+
+def recommended_receiver_pipeline_command(
+    *,
+    port: int = 8080,
+    wifi_interface: str = "Wi-Fi",
+) -> str:
+    """
+    Suggested ``python -m pipeline`` command for Laptop B.
+
+    Captures both the LAN adapter and loopback because Windows often hairpins
+    traffic destined to the local IP through the loopback driver, so Wi-Fi alone
+    only shows unrelated outbound Internet flows (e.g. HTTPS :443).
+    """
+    loopback = default_loopback_capture_interface()
+    if sys.platform == "win32":
+        return (
+            f'python -m pipeline -i "{wifi_interface},{loopback}" --lab-port {port}'
+        )
+    if sys.platform == "darwin":
+        return f"sudo python -m pipeline -i {wifi_interface},{loopback} --lab-port {port}"
+    return f"sudo python -m pipeline -i eth0,{loopback} --lab-port {port}"

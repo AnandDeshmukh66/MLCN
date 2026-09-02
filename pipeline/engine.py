@@ -25,6 +25,14 @@ logger = logging.getLogger(__name__)
 DetectionCallback = Callable[[PipelineResult], None]
 
 
+def _flow_involves_port(flow: Flow, port: int) -> bool:
+    return flow.src_port == port or flow.dst_port == port
+
+
+def _lab_bpf_filter(port: int) -> str:
+    return f"tcp port {port}"
+
+
 class IntrusionDetectionPipeline:
     """
     Orchestrate:
@@ -46,8 +54,11 @@ class IntrusionDetectionPipeline:
         model_path: str | Path | None = None,
         features_meta_path: str | Path | None = None,
         on_detection: DetectionCallback | None = None,
+        lab_port: int | None = None,
     ) -> None:
         self.interface = interface
+        self.lab_port = lab_port
+        self._bpf_filter = _lab_bpf_filter(lab_port) if lab_port else None
         self._builder = FlowBuilder(
             inactivity_timeout=inactivity_timeout,
             max_duration=max_duration,
@@ -187,7 +198,10 @@ class IntrusionDetectionPipeline:
         if self._closed:
             raise RuntimeError("pipeline is closed; create a new instance or call reset()")
 
-        capture = PacketCaptureEngine(interface=self.interface)
+        capture = PacketCaptureEngine(
+            interface=self.interface,
+            bpf_filter=self._bpf_filter,
+        )
         session: list[PipelineResult] = []
 
         def on_metadata(metadata: PacketMetadata) -> None:
@@ -230,6 +244,8 @@ class IntrusionDetectionPipeline:
 
     def _emit(self, result: PipelineResult) -> None:
         if self._on_detection is None:
+            return
+        if self.lab_port is not None and not _flow_involves_port(result.flow, self.lab_port):
             return
         try:
             self._on_detection(result)
