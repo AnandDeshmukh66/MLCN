@@ -42,6 +42,15 @@ def build_parser() -> argparse.ArgumentParser:
         help="Module 3 max flow duration in seconds (default: 300).",
     )
     parser.add_argument(
+        "--lab-port",
+        type=int,
+        metavar="PORT",
+        help=(
+            "Laboratory mode: capture/print only flows involving this TCP port "
+            "(e.g. 8080 for traffic-generator tests). Filters out background Internet traffic."
+        ),
+    )
+    parser.add_argument(
         "-v",
         "--verbose",
         action="store_true",
@@ -95,6 +104,7 @@ def main(argv: list[str] | None = None) -> int:
             inactivity_timeout=args.inactivity_timeout,
             max_duration=args.max_duration,
             on_detection=_print_result,
+            lab_port=args.lab_port,
         )
     except Exception as exc:
         print(f"Error initializing pipeline: {exc}", file=sys.stderr)
@@ -102,6 +112,8 @@ def main(argv: list[str] | None = None) -> int:
 
     iface_label = args.interface or "default"
     print(f"MLCN pipeline starting on interface: {iface_label}")
+    if args.lab_port:
+        print(f"Lab filter active: TCP port {args.lab_port}")
     print("Modules: Capture → Parse → Flow → Features → XGBoost")
     print("Press Ctrl+C to stop and flush active flows.\n")
 

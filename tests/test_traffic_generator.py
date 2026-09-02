@@ -225,6 +225,13 @@ class TestConnectivity(unittest.TestCase):
             )
         self.assertIn("Validation mode", str(ctx.exception))
 
+    def test_recommended_receiver_command_includes_lab_port(self) -> None:
+        from traffic_generator.connectivity import recommended_receiver_pipeline_command
+
+        cmd = recommended_receiver_pipeline_command(port=8080)
+        self.assertIn("--lab-port 8080", cmd)
+        self.assertIn("8080", cmd)
+
     def test_validation_mode_skips_receiver_probe(self) -> None:
         from traffic_generator.connectivity import require_two_machine_receiver
 

@@ -217,8 +217,9 @@ class TestPipelineBehaviors(unittest.TestCase):
         self.assertIsNotNone(meta)
 
         class _FakeCapture:
-            def __init__(self, interface=None) -> None:
+            def __init__(self, interface=None, bpf_filter=None) -> None:
                 self.interface = interface
+                self.bpf_filter = bpf_filter
 
             def capture_metadata(self, callback) -> None:
                 callback(meta)

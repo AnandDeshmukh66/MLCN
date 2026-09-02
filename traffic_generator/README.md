@@ -47,14 +47,13 @@ python -m traffic_generator
 ```bash
 python -m pipeline -l
 python -m traffic_generator.receiver_server --port 8080
-python -m pipeline -i "Wi-Fi"    # Windows: use listed Npcap interface name
+python -m pipeline -i "Wi-Fi,\Device\NPF_Loopback" --lab-port 8080
 ```
 
-The lab echo server is **required** for HTTP-based profiles (`BENIGN`, `DDoS`, `DoS`, `Brute Force`).
-Without it, the generator reports connection errors and sends **zero bytes** — the receiver
-will only classify unrelated background traffic (often outbound HTTPS marked `BENIGN`).
-
-Allow inbound TCP **8080** through Windows Firewall on Laptop B.
+Use the exact Npcap interface name from `-l`. On Windows, capture **both** Wi-Fi and
+`\Device\NPF_Loopback` — traffic to this PC's own IP is often hairpinned and never
+appears on Wi-Fi, while unrelated outbound HTTPS (`:443`) still does. `--lab-port 8080`
+filters out that background noise.
 
 **Laptop A — Generator (this package):**
 

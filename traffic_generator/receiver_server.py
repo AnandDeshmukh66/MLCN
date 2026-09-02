@@ -8,6 +8,10 @@ import signal
 import sys
 import time
 
+from traffic_generator.connectivity import (
+    local_ip_addresses,
+    recommended_receiver_pipeline_command,
+)
 from traffic_generator.lab_server import LabEchoServer
 
 logger = logging.getLogger(__name__)
@@ -43,7 +47,17 @@ def main(argv: list[str] | None = None) -> int:
     print(
         f"MLCN lab echo server listening on {args.host}:{args.port}\n"
         "Leave this running while Laptop A generates traffic toward this host.\n"
-        "Press Ctrl+C to stop.",
+        "Press Ctrl+C to stop.\n",
+        flush=True,
+    )
+    local_ips = ", ".join(sorted(local_ip_addresses()))
+    print(f"This host local IPs: {local_ips}")
+    print("\nRecommended receiver pipeline command (run in a second Admin terminal):")
+    print(f"  {recommended_receiver_pipeline_command(port=args.port)}")
+    print(
+        "\nWhy: on Windows, traffic to this PC's own IP often bypasses Wi-Fi capture "
+        "and only outbound Internet traffic (e.g. :443) appears. "
+        "Use --lab-port to hide that noise and capture loopback + Wi-Fi together.\n",
         flush=True,
     )
 

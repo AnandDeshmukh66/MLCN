@@ -43,3 +43,19 @@ def resolve_interface(name: str | None) -> str | None:
         known = ", ".join(sorted(available)) or "(none detected)"
         raise ValueError(f"Interface '{name}' not found. Available: {known}")
     return name
+
+
+def resolve_interfaces(name: str | None) -> list[str | None]:
+    """
+    Resolve one or more capture interfaces.
+
+    Comma-separated names capture on multiple adapters in parallel (needed on
+    Windows when lab traffic is hairpinned to the local IP and never appears
+    on Wi-Fi, or when background Internet traffic drowns out lab flows).
+    """
+    if name is None:
+        return [None]
+    parts = [part.strip() for part in name.split(",") if part.strip()]
+    if not parts:
+        return [None]
+    return [resolve_interface(part) for part in parts]

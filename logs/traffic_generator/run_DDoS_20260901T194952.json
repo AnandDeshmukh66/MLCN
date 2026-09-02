@@ -1,0 +1,36 @@
+{
+  "profile_name": "DDoS",
+  "target": "192.168.1.33:8080",
+  "started_at": "2026-09-01T19:49:52.515517+00:00",
+  "ended_at": "2026-09-01T19:50:22.612612+00:00",
+  "parameters": {
+    "profile_name": "DDoS",
+    "target_host": "192.168.1.33",
+    "target_port": 8080,
+    "duration_seconds": 30.0,
+    "intensity": 0.5,
+    "connection_rate_per_sec": 0.2,
+    "packets_per_flow": 4,
+    "payload_size_bytes": 7,
+    "inter_message_delay_seconds": 0.4893305,
+    "forward_inter_delay_seconds": 0.49055229165,
+    "idle_gap_seconds": 0.0,
+    "timing_jitter_seconds": 0.93224291195,
+    "max_concurrent_connections": 5,
+    "port_scan_start": 8080,
+    "port_scan_end": 8099,
+    "request_response_cycles": 4,
+    "use_http": true,
+    "send_syn_only": false
+  },
+  "stats": {
+    "connections_attempted": 257,
+    "connections_completed": 257,
+    "packets_sent": 514,
+    "bytes_sent": 45746,
+    "errors": 0,
+    "last_error": ""
+  },
+  "stop_reason": "stopped",
+  "error_messages": []
+}
