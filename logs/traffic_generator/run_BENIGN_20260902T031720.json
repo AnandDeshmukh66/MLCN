@@ -1,0 +1,36 @@
+{
+  "profile_name": "BENIGN",
+  "target": "127.0.0.1:8080",
+  "started_at": "2026-09-02T03:17:20.670650+00:00",
+  "ended_at": "2026-09-02T03:17:52.007674+00:00",
+  "parameters": {
+    "profile_name": "BENIGN",
+    "target_host": "127.0.0.1",
+    "target_port": 8080,
+    "duration_seconds": 30.0,
+    "intensity": 0.5,
+    "connection_rate_per_sec": 0.5567693228356801,
+    "packets_per_flow": 2,
+    "payload_size_bytes": 61,
+    "inter_message_delay_seconds": 0.05,
+    "forward_inter_delay_seconds": 0.05,
+    "idle_gap_seconds": 0.0,
+    "timing_jitter_seconds": 0.0025000000000000005,
+    "max_concurrent_connections": 2,
+    "port_scan_start": 8080,
+    "port_scan_end": 8099,
+    "request_response_cycles": 2,
+    "use_http": true,
+    "send_syn_only": false
+  },
+  "stats": {
+    "connections_attempted": 404,
+    "connections_completed": 404,
+    "packets_sent": 808,
+    "bytes_sent": 41906,
+    "errors": 0,
+    "last_error": ""
+  },
+  "stop_reason": "completed",
+  "error_messages": []
+}
