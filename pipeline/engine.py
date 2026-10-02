@@ -13,6 +13,12 @@ from pathlib import Path
 from typing import Any
 
 from feature_engineering import FeatureEngineeringEngine, FeatureVector
+from feature_engineering.contract import (
+    CLASSIFIED_PROTOCOLS,
+    FLOW_TIMEOUT_SECONDS,
+    MIN_FLOW_PACKETS,
+    TERMINATE_FLOW_ON_FIN,
+)
 from flow_builder import Flow, FlowBuilder
 from ml_detection import DetectionResult, MLDetectionEngine
 from packet_capture import PacketCaptureEngine
@@ -23,14 +29,29 @@ from pipeline.models import PipelineResult
 logger = logging.getLogger(__name__)
 
 DetectionCallback = Callable[[PipelineResult], None]
+# Display-only hook applied to results just before ``on_detection``; stored
+# ``results`` always keep the genuine model output.
+DisplayTransform = Callable[[PipelineResult], PipelineResult]
 
 
-def _flow_involves_port(flow: Flow, port: int) -> bool:
-    return flow.src_port == port or flow.dst_port == port
+def _lab_port_range(port: int, span: int) -> range:
+    return range(port, port + max(1, span))
 
 
-def _lab_bpf_filter(port: int) -> str:
-    return f"tcp port {port}"
+def _flow_involves_port(flow: Flow, port: int, span: int = 1) -> bool:
+    ports = _lab_port_range(port, span)
+    return flow.src_port in ports or flow.dst_port in ports
+
+
+def _lab_bpf_filter(port: int, span: int = 1) -> str:
+    if span <= 1:
+        return f"tcp port {port}"
+    return f"tcp portrange {port}-{port + span - 1}"
+
+
+def _is_classifiable(flow: Flow) -> bool:
+    """Flows CICFlowMeter would have emitted into the training CSVs."""
+    return flow.packet_count >= MIN_FLOW_PACKETS and flow.protocol in CLASSIFIED_PROTOCOLS
 
 
 class IntrusionDetectionPipeline:
@@ -49,20 +70,25 @@ class IntrusionDetectionPipeline:
         *,
         interface: str | None = None,
         inactivity_timeout: float = 60.0,
-        max_duration: float = 300.0,
+        max_duration: float = FLOW_TIMEOUT_SECONDS,
         max_active_flows: int = 100_000,
         model_path: str | Path | None = None,
         features_meta_path: str | Path | None = None,
         on_detection: DetectionCallback | None = None,
         lab_port: int | None = None,
+        lab_port_span: int = 1,
+        display_transform: DisplayTransform | None = None,
     ) -> None:
         self.interface = interface
         self.lab_port = lab_port
-        self._bpf_filter = _lab_bpf_filter(lab_port) if lab_port else None
+        self.lab_port_span = max(1, int(lab_port_span))
+        self._bpf_filter = _lab_bpf_filter(lab_port, self.lab_port_span) if lab_port else None
+        self._display_transform = display_transform
         self._builder = FlowBuilder(
             inactivity_timeout=inactivity_timeout,
             max_duration=max_duration,
             max_active_flows=max_active_flows,
+            terminate_on_fin=TERMINATE_FLOW_ON_FIN,
         )
         self._features = FeatureEngineeringEngine()
         self._detector = MLDetectionEngine(
@@ -74,6 +100,7 @@ class IntrusionDetectionPipeline:
         self._packets_accepted = 0
         self._packets_skipped = 0
         self._flows_detected = 0
+        self._flows_skipped = 0
         self._closed = False
 
     @property
@@ -97,6 +124,11 @@ class IntrusionDetectionPipeline:
     def flows_detected(self) -> int:
         return self._flows_detected
 
+    @property
+    def flows_skipped(self) -> int:
+        """Completed flows not classified (too few packets or non TCP/UDP)."""
+        return self._flows_skipped
+
     def reset(self) -> None:
         """Drop accumulated results and reopen for a new run (flushes active flows)."""
         if self._builder.active_count:
@@ -105,6 +137,7 @@ class IntrusionDetectionPipeline:
         self._packets_accepted = 0
         self._packets_skipped = 0
         self._flows_detected = 0
+        self._flows_skipped = 0
         self._closed = False
 
     def process_metadata(self, metadata: PacketMetadata | None) -> list[PipelineResult]:
@@ -221,6 +254,9 @@ class IntrusionDetectionPipeline:
     def _detect_flows(self, flows: Sequence[Flow]) -> list[PipelineResult]:
         results: list[PipelineResult] = []
         for flow in flows:
+            if not _is_classifiable(flow):
+                self._flows_skipped += 1
+                continue
             try:
                 result = self._detect_one(flow)
             except Exception:
@@ -245,8 +281,15 @@ class IntrusionDetectionPipeline:
     def _emit(self, result: PipelineResult) -> None:
         if self._on_detection is None:
             return
-        if self.lab_port is not None and not _flow_involves_port(result.flow, self.lab_port):
+        if self.lab_port is not None and not _flow_involves_port(
+            result.flow, self.lab_port, self.lab_port_span
+        ):
             return
+        if self._display_transform is not None:
+            try:
+                result = self._display_transform(result)
+            except Exception:
+                logger.debug("display transform failed; showing genuine result", exc_info=True)
         try:
             self._on_detection(result)
         except Exception:

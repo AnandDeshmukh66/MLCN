@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import dataclasses
 import json
 import math
 import statistics
@@ -19,8 +20,21 @@ from feature_engineering import (
     compute_feature_map,
     extract_features,
 )
+from data.common_feature_schema import _make_probe_flows, _reference_feature_values
+from feature_engineering.contract import CIC_FLAG_COLUMN_SOURCE, FEATURE_SPECS, ZERO_DURATION_RATE_FILL
 from packet_parsing import PacketMetadata, parse_packet
 from tests.fixtures import make_tcp_packet, make_udp_packet
+
+# (first packet flags, CIC flag columns set to 1).
+CIC_FLAG_CASES = (
+    ("S", {"PSH Flag Count"}),
+    ("SA", {"PSH Flag Count", "ACK Flag Count"}),
+    ("A", {"ACK Flag Count"}),
+    ("PA", {"SYN Flag Count", "ACK Flag Count"}),
+    ("FA", {"URG Flag Count", "ACK Flag Count"}),
+    ("R", {"FIN Flag Count"}),
+    ("RA", {"FIN Flag Count", "ACK Flag Count"}),
+)
 
 
 def _ts(seconds: float) -> datetime:
@@ -160,7 +174,8 @@ class TestNormalAndDirectionalFlows(unittest.TestCase):
         vector = extract_features(flow)
         values = vector.as_dict()
 
-        self.assertEqual(values["Flow Duration"], 3.0)
+        # CIC units: times in microseconds, rates per second.
+        self.assertEqual(values["Flow Duration"], 3_000_000)
         self.assertEqual(values["Total Fwd Packets"], 2)
         self.assertEqual(values["Total Backward Packets"], 2)
         self.assertEqual(values["Fwd Packets Length Total"], 140)
@@ -169,17 +184,17 @@ class TestNormalAndDirectionalFlows(unittest.TestCase):
         self.assertEqual(values["Bwd Packet Length Mean"], 70.0)
         self.assertAlmostEqual(values["Flow Bytes/s"], 280.0 / 3.0)
         self.assertAlmostEqual(values["Flow Packets/s"], 4.0 / 3.0)
-        self.assertAlmostEqual(values["Flow IAT Mean"], 1.0)
+        self.assertAlmostEqual(values["Flow IAT Mean"], 1_000_000.0)
         self.assertAlmostEqual(values["Flow IAT Std"], 0.0)
-        self.assertAlmostEqual(values["Fwd IAT Mean"], 2.0)
-        self.assertAlmostEqual(values["Bwd IAT Mean"], 2.0)
-        self.assertAlmostEqual(values["Packet Length Mean"], 70.0)
-        self.assertAlmostEqual(
-            values["Packet Length Std"],
-            statistics.stdev([60.0, 40.0, 80.0, 100.0]),
-        )
+        self.assertAlmostEqual(values["Fwd IAT Mean"], 2_000_000.0)
+        self.assertAlmostEqual(values["Bwd IAT Mean"], 2_000_000.0)
+        # CICFlowMeter counts the first packet's length twice (n + 1 samples).
+        lengths = [60.0, 60.0, 40.0, 80.0, 100.0]
+        self.assertAlmostEqual(values["Packet Length Mean"], statistics.mean(lengths))
+        self.assertAlmostEqual(values["Packet Length Std"], statistics.stdev(lengths))
         self.assertEqual(values["Down/Up Ratio"], 1.0)
-        self.assertAlmostEqual(values["Active Mean"], 3.0)
+        # No gap exceeds 5 s and the trailing active period is never recorded.
+        self.assertEqual(values["Active Mean"], 0.0)
         self.assertEqual(values["Idle Mean"], 0.0)
 
     def test_forward_only_flow(self) -> None:
@@ -197,7 +212,7 @@ class TestNormalAndDirectionalFlows(unittest.TestCase):
         self.assertEqual(values["Bwd Packet Length Mean"], 0.0)
         self.assertEqual(values["Bwd IAT Mean"], 0.0)
         self.assertEqual(values["Down/Up Ratio"], 0.0)
-        self.assertAlmostEqual(values["Fwd IAT Mean"], 1.0)
+        self.assertAlmostEqual(values["Fwd IAT Mean"], 1_000_000.0)
         self.assertAlmostEqual(values["Fwd Packet Length Mean"], 70.0)
 
     def test_reverse_only_counts_via_zero_forward_means(self) -> None:
@@ -216,8 +231,9 @@ class TestNormalAndDirectionalFlows(unittest.TestCase):
         self.assertEqual(values["Total Fwd Packets"], 1)
         self.assertEqual(values["Total Backward Packets"], 2)
         self.assertEqual(values["Fwd IAT Mean"], 0.0)
-        self.assertAlmostEqual(values["Bwd IAT Mean"], 1.0)
-        self.assertAlmostEqual(values["Down/Up Ratio"], 0.5)
+        self.assertAlmostEqual(values["Bwd IAT Mean"], 1_000_000.0)
+        # CIC Down/Up = floor(backward / forward).
+        self.assertEqual(values["Down/Up Ratio"], 2.0)
 
 
 class TestEdgeCases(unittest.TestCase):
@@ -227,8 +243,8 @@ class TestEdgeCases(unittest.TestCase):
         self.assertEqual(values["Flow Duration"], 0.0)
         self.assertEqual(values["Total Fwd Packets"], 1)
         self.assertEqual(values["Total Backward Packets"], 0)
-        self.assertEqual(values["Flow Bytes/s"], 0.0)
-        self.assertEqual(values["Flow Packets/s"], 0.0)
+        self.assertEqual(values["Flow Bytes/s"], ZERO_DURATION_RATE_FILL["Flow Bytes/s"])
+        self.assertEqual(values["Flow Packets/s"], ZERO_DURATION_RATE_FILL["Flow Packets/s"])
         self.assertEqual(values["Flow IAT Mean"], 0.0)
         self.assertEqual(values["Flow IAT Std"], 0.0)
         self.assertEqual(values["Fwd IAT Mean"], 0.0)
@@ -248,8 +264,9 @@ class TestEdgeCases(unittest.TestCase):
         )
         values = extract_features(flow).as_dict()
         self.assertEqual(values["Flow Duration"], 0.0)
-        self.assertEqual(values["Flow Bytes/s"], 0.0)
-        self.assertEqual(values["Flow Packets/s"], 0.0)
+        # Training data median-filled the undefined zero-duration rates.
+        self.assertEqual(values["Flow Bytes/s"], ZERO_DURATION_RATE_FILL["Flow Bytes/s"])
+        self.assertEqual(values["Flow Packets/s"], ZERO_DURATION_RATE_FILL["Flow Packets/s"])
         self.assertEqual(values["Flow IAT Mean"], 0.0)
         self.assertEqual(values["Flow IAT Std"], 0.0)
         self.assertEqual(values["Active Mean"], 0.0)
@@ -282,7 +299,7 @@ class TestEdgeCases(unittest.TestCase):
 
 
 class TestTcpFlagsAndIat(unittest.TestCase):
-    def test_tcp_flag_counting(self) -> None:
+    def test_flags_are_binary_from_first_packet_only(self) -> None:
         flow = _flow_from_packets(
             (
                 _meta(at=0.0, length=60, tcp_flags="S"),
@@ -294,12 +311,19 @@ class TestTcpFlagsAndIat(unittest.TestCase):
             )
         )
         values = extract_features(flow).as_dict()
-        self.assertEqual(values["FIN Flag Count"], 1)
-        self.assertEqual(values["SYN Flag Count"], 2)
-        self.assertEqual(values["RST Flag Count"], 1)
-        self.assertEqual(values["PSH Flag Count"], 2)
-        self.assertEqual(values["ACK Flag Count"], 4)
-        self.assertEqual(values["URG Flag Count"], 1)
+        # CIC 2017 column mapping: a SYN first packet sets "PSH Flag Count".
+        self.assertEqual(values["PSH Flag Count"], 1)
+        for column in ("FIN Flag Count", "SYN Flag Count", "RST Flag Count", "ACK Flag Count", "URG Flag Count"):
+            self.assertEqual(values[column], 0, msg=column)
+
+    def test_cic_flag_column_mapping(self) -> None:
+        for first_flags, expected in CIC_FLAG_CASES:
+            flow = _flow_from_packets(
+                (_meta(at=0.0, tcp_flags=first_flags), _reverse(at=0.1, tcp_flags="A"))
+            )
+            values = extract_features(flow).as_dict()
+            actual = {column for column in CIC_FLAG_COLUMN_SOURCE if values[column] == 1}
+            self.assertEqual(actual, expected, msg=first_flags)
 
     def test_missing_tcp_flags_contribute_zero(self) -> None:
         flow = _flow_from_packets(
@@ -350,14 +374,14 @@ class TestTcpFlagsAndIat(unittest.TestCase):
             )
         )
         values = extract_features(flow).as_dict()
-        self.assertAlmostEqual(values["Flow IAT Mean"], 2.0)
-        self.assertAlmostEqual(values["Flow IAT Std"], statistics.stdev([1.0, 3.0]))
-        self.assertAlmostEqual(values["Fwd IAT Mean"], 2.0)
+        self.assertAlmostEqual(values["Flow IAT Mean"], 2_000_000.0)
+        self.assertAlmostEqual(values["Flow IAT Std"], statistics.stdev([1_000_000.0, 3_000_000.0]))
+        self.assertAlmostEqual(values["Fwd IAT Mean"], 2_000_000.0)
 
 
 class TestActiveIdle(unittest.TestCase):
     def test_active_idle_with_gap_above_threshold(self) -> None:
-        # Active [0→1]=1.0, idle gap 9.0, active [10→11]=1.0
+        # Active [0→1] recorded at the 9 s idle gap; trailing [10→11] is not.
         flow = _flow_from_packets(
             (
                 _meta(at=0.0, length=50, tcp_flags="S"),
@@ -367,11 +391,11 @@ class TestActiveIdle(unittest.TestCase):
             )
         )
         values = extract_features(flow).as_dict()
-        self.assertAlmostEqual(values["Active Mean"], 1.0)
-        self.assertAlmostEqual(values["Idle Mean"], 9.0)
+        self.assertAlmostEqual(values["Active Mean"], 1_000_000.0)
+        self.assertAlmostEqual(values["Idle Mean"], 9_000_000.0)
         self.assertEqual(ACTIVITY_TIMEOUT_SECONDS, 5.0)
 
-    def test_no_idle_when_gaps_within_threshold(self) -> None:
+    def test_no_active_or_idle_when_gaps_within_threshold(self) -> None:
         flow = _flow_from_packets(
             (
                 _meta(at=0.0, length=50),
@@ -380,20 +404,34 @@ class TestActiveIdle(unittest.TestCase):
             )
         )
         values = extract_features(flow).as_dict()
-        self.assertAlmostEqual(values["Active Mean"], 4.0)
+        self.assertEqual(values["Active Mean"], 0.0)
         self.assertEqual(values["Idle Mean"], 0.0)
 
-    def test_gap_exactly_at_threshold_is_active(self) -> None:
-        # Schema: split when gap *exceeds* threshold (gap > 5.0).
+    def test_gap_exactly_at_threshold_stays_active(self) -> None:
+        # Split only when the gap *exceeds* 5 s: [0→5] stays one active span.
         flow = _flow_from_packets(
             (
                 _meta(at=0.0, length=50),
                 _meta(at=5.0, length=50),
+                _meta(at=11.0, length=50),
             )
         )
         values = extract_features(flow).as_dict()
-        self.assertAlmostEqual(values["Active Mean"], 5.0)
-        self.assertEqual(values["Idle Mean"], 0.0)
+        self.assertAlmostEqual(values["Active Mean"], 5_000_000.0)
+        self.assertAlmostEqual(values["Idle Mean"], 6_000_000.0)
+
+    def test_closing_fin_packet_does_not_update_activity(self) -> None:
+        packets = (
+            _meta(at=0.0, length=50, tcp_flags="S"),
+            _meta(at=1.0, length=50, tcp_flags="A"),
+            _meta(at=10.0, length=0, tcp_flags="FA"),
+        )
+        open_flow = _flow_from_packets(packets)
+        fin_flow = dataclasses.replace(open_flow, closed_by_fin=True)
+        self.assertAlmostEqual(extract_features(open_flow).as_dict()["Idle Mean"], 9_000_000.0)
+        fin_values = extract_features(fin_flow).as_dict()
+        self.assertEqual(fin_values["Active Mean"], 0.0)
+        self.assertEqual(fin_values["Idle Mean"], 0.0)
 
 
 class TestEngineApiAndIntegration(unittest.TestCase):
@@ -435,9 +473,9 @@ class TestEngineApiAndIntegration(unittest.TestCase):
         values = vector.as_dict()
         self.assertEqual(values["Total Fwd Packets"], 2)
         self.assertEqual(values["Total Backward Packets"], 1)
-        self.assertEqual(values["SYN Flag Count"], 2)
+        self.assertEqual(values["PSH Flag Count"], 1)  # first packet SYN
+        self.assertEqual(values["SYN Flag Count"], 0)
         self.assertEqual(values["FIN Flag Count"], 0)
-        self.assertEqual(values["PSH Flag Count"], 1)
         self.assertTrue(all(math.isfinite(v) for v in vector))
 
     def test_module2_parse_to_module4(self) -> None:
@@ -465,25 +503,34 @@ class TestEngineApiAndIntegration(unittest.TestCase):
             self.assertTrue(all(math.isfinite(v) for v in vector))
 
     def test_matches_schema_reference_probe(self) -> None:
-        from data.common_feature_schema import _reference_feature_values
+        """Module 4 equals the schema's independent CIC re-implementation on every probe flow."""
+        for flow in _make_probe_flows():
+            expected = _reference_feature_values(flow)
+            actual = compute_feature_map(flow)
+            for name in FEATURE_ORDER:
+                self.assertAlmostEqual(
+                    float(actual[name]),
+                    float(expected[name]),
+                    places=6,
+                    msg=f"{name} (packets={flow.packet_count}, fin={flow.closed_by_fin})",
+                )
 
+    def test_committed_schema_json_matches_contract(self) -> None:
+        schema_path = Path(__file__).resolve().parents[1] / "data" / "common_feature_schema.json"
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        documented = {f["canonical_name"]: (f["unit"], f["data_type"]) for f in schema["features"]}
+        contract = {spec.name: (spec.unit, spec.dtype) for spec in FEATURE_SPECS}
+        self.assertEqual(documented, contract)
+        self.assertEqual(schema["flow_rules"]["zero_duration_rate_fill"], ZERO_DURATION_RATE_FILL)
+
+    def test_compute_feature_map_covers_contract(self) -> None:
         flow = _flow_from_packets(
             (
                 _meta(at=0.0, length=60, tcp_flags="S"),
                 _reverse(at=1.0, length=40, tcp_flags="SA"),
-                _meta(at=2.0, length=80, tcp_flags="A"),
-                _meta(at=10.0, length=50, tcp_flags="FA"),
             )
         )
-        expected = _reference_feature_values(flow)
-        actual = compute_feature_map(flow)
-        for name in FEATURE_ORDER:
-            self.assertAlmostEqual(
-                float(actual[name]),
-                float(expected[name]),
-                places=9,
-                msg=name,
-            )
+        self.assertEqual(set(compute_feature_map(flow)), set(FEATURE_ORDER))
 
     def test_feature_vector_from_mapping_and_zeros(self) -> None:
         zeros = FeatureVector.zeros()

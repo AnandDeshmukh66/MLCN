@@ -2,10 +2,18 @@
 
 from __future__ import annotations
 
+import os
 import socket
 import sys
 
 from traffic_generator.safety import SafetyError
+
+# Set by mlcn_launcher: receiver pipeline and lab echo server already run on this PC.
+SINGLE_PC_ENV = "MLCN_SINGLE_PC"
+
+
+def single_pc_mode() -> bool:
+    return os.environ.get(SINGLE_PC_ENV, "").strip() == "1"
 
 
 def local_ip_addresses() -> set[str]:
@@ -66,7 +74,7 @@ def require_two_machine_receiver(
     if enable_validation:
         return
 
-    if is_same_machine_target(resolved_target):
+    if is_same_machine_target(resolved_target) and not single_pc_mode():
         raise SafetyError(
             f"target {resolved_target} is this machine — for single-host tests enable "
             "Validation mode (loopback). For two-machine tests, run the Streamlit UI on "

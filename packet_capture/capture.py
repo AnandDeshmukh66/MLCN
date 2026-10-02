@@ -98,8 +98,15 @@ class PacketCaptureEngine:
             logger.debug("Received signal %s; stopping capture", signum)
             self._running = False
 
+        if threading.current_thread() is not threading.main_thread():
+            # signal.signal() only works on the main thread; background captures
+            # (e.g. Streamlit validation mode) are stopped by their owner instead.
+            return
         if sys.platform != "win32":
             signal.signal(signal.SIGTERM, _request_stop)
+        else:
+            # Ctrl+Break: how mlcn_launcher stops a child started in its own process group.
+            signal.signal(signal.SIGBREAK, _request_stop)
         signal.signal(signal.SIGINT, _request_stop)
 
     def _begin_capture(self) -> None:

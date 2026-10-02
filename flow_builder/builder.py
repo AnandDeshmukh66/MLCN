@@ -78,6 +78,10 @@ def flow_key_from_packet(packet: PacketMetadata) -> FlowKey | None:
     )
 
 
+def _has_fin(packet: PacketMetadata) -> bool:
+    return packet.protocol == "TCP" and "F" in (packet.tcp_flags or "").upper()
+
+
 def _ensure_aware(ts: datetime) -> datetime:
     """Normalize naive datetimes to UTC so timeout math stays consistent."""
     if ts.tzinfo is None:
@@ -128,7 +132,7 @@ class _ActiveFlow:
             self.reverse_packet_count += 1
             self.reverse_byte_count += length
 
-    def to_flow(self) -> Flow:
+    def to_flow(self, *, closed_by_fin: bool = False) -> Flow:
         return Flow(
             key=self.key,
             start_time=self.start_time,
@@ -140,6 +144,7 @@ class _ActiveFlow:
             forward_byte_count=self.forward_byte_count,
             reverse_byte_count=self.reverse_byte_count,
             packets=tuple(self.packets),
+            closed_by_fin=closed_by_fin,
         )
 
 
@@ -148,7 +153,8 @@ class FlowBuilder:
     Incrementally assemble bidirectional flows from Module 2 packet metadata.
 
     Flows are closed by inactivity timeout, maximum duration (active timeout),
-    capacity eviction, or an explicit :meth:`flush`.
+    capacity eviction, an explicit :meth:`flush`, or — when
+    ``terminate_on_fin`` is set — the first FIN packet (CICFlowMeter 2017 rule).
     """
 
     def __init__(
@@ -156,6 +162,7 @@ class FlowBuilder:
         inactivity_timeout: float = 60.0,
         max_duration: float = 300.0,
         max_active_flows: int = 100_000,
+        terminate_on_fin: bool = False,
     ) -> None:
         if inactivity_timeout <= 0:
             raise ValueError("inactivity_timeout must be positive")
@@ -167,6 +174,7 @@ class FlowBuilder:
         self.inactivity_timeout = float(inactivity_timeout)
         self.max_duration = float(max_duration)
         self.max_active_flows = int(max_active_flows)
+        self.terminate_on_fin = bool(terminate_on_fin)
         self._active: dict[FlowKey, _ActiveFlow] = {}
 
     @property
@@ -205,6 +213,8 @@ class FlowBuilder:
                 self._active[key] = self._start_flow(key, packet, now)
             else:
                 existing.add(packet)
+                if self.terminate_on_fin and _has_fin(packet):
+                    completed.append(self._close(key, closed_by_fin=True))
         except Exception:
             logger.debug("Skipping packet during flow assembly", exc_info=True)
         return completed
@@ -259,9 +269,9 @@ class FlowBuilder:
         active.add(packet)
         return active
 
-    def _close(self, key: FlowKey) -> Flow:
+    def _close(self, key: FlowKey, *, closed_by_fin: bool = False) -> Flow:
         active = self._active.pop(key)
-        return active.to_flow()
+        return active.to_flow(closed_by_fin=closed_by_fin)
 
     def _evict_if_needed(self, completed: list[Flow]) -> None:
         """Evict the oldest idle flow when the active-flow cap is reached."""
