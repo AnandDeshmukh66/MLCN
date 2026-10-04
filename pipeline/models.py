@@ -21,6 +21,15 @@ class PipelineResult:
     flow: Flow
     features: FeatureVector
     detection: DetectionResult
+    # True when ``detection`` is the temporary demo display (demo_fallback package);
+    # ``genuine_detection`` then holds the untouched XGBoost output.
+    demo_fallback: bool = False
+    genuine_detection: DetectionResult | None = None
+
+    @property
+    def model_detection(self) -> DetectionResult:
+        """The real XGBoost output, regardless of any demo display override."""
+        return self.genuine_detection or self.detection
 
     @property
     def predicted_class(self) -> str:
@@ -31,6 +40,7 @@ class PipelineResult:
         return self.detection.confidence
 
     def as_dict(self) -> dict[str, object]:
+        genuine = self.model_detection
         return {
             "protocol": self.flow.protocol,
             "src_ip": self.flow.src_ip,
@@ -40,10 +50,16 @@ class PipelineResult:
             "packet_count": self.flow.packet_count,
             "byte_count": self.flow.byte_count,
             "duration": self.flow.duration,
+            "start_time": self.flow.start_time.timestamp(),
+            "first_packet_flags": self.flow.packets[0].tcp_flags if self.flow.packets else None,
             "predicted_class": self.detection.predicted_class,
             "predicted_class_id": self.detection.predicted_class_id,
             "confidence": self.detection.confidence,
             "probabilities": dict(self.detection.probabilities),
+            "demo_fallback": self.demo_fallback,
+            "genuine_predicted_class": genuine.predicted_class,
+            "genuine_confidence": genuine.confidence,
+            "genuine_probabilities": dict(genuine.probabilities),
         }
 
     def __repr__(self) -> str:

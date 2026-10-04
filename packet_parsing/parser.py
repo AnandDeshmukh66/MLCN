@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 
 from scapy.layers.inet import ICMP, IP, TCP, UDP
 from scapy.layers.inet6 import IPv6
-from scapy.packet import Packet
+from scapy.packet import Packet, Padding
 
 from packet_parsing.models import PacketMetadata
 from packet_parsing.validation import (
@@ -36,6 +36,9 @@ _TCP_FLAG_BITS = (
     (0x40, "E"),
     (0x80, "C"),
 )
+
+# Ethernet minimum payload (60-byte frame minus 14-byte header).
+_ETHERNET_MIN_IP_LENGTH = 46
 
 
 def _packet_timestamp(packet: Packet) -> datetime:
@@ -83,6 +86,26 @@ def _packet_length(packet: Packet) -> int | None:
         original = getattr(packet, "original", None)
         if original:
             return normalize_length(len(original))
+        return None
+
+
+def _transport_payload_length(ip_layer: IP | IPv6, layer: TCP | UDP) -> int | None:
+    """
+    CICFlowMeter payload length: transport payload plus the padding an Ethernet
+    frame would carry. CIC-IDS2017 was captured on Ethernet, where IPv4 packets
+    shorter than 46 bytes are padded and that padding was counted as payload
+    (e.g. a bare RST/ACK shows 6 bytes). Loopback and locally-sent frames carry
+    no padding, so it is derived from the IPv4 length instead of read from the wire.
+    """
+    try:
+        padding = layer.getlayer(Padding)
+        padding_len = len(padding.load) if padding is not None else 0
+        payload_len = len(layer.payload) - padding_len
+        if isinstance(ip_layer, IP):
+            ip_len = int(ip_layer.ihl or 5) * 4 + len(layer) - len(layer.payload) + payload_len
+            payload_len += max(0, _ETHERNET_MIN_IP_LENGTH - ip_len)
+        return normalize_length(payload_len)
+    except Exception:  # noqa: BLE001 - malformed payloads should not stop parsing
         return None
 
 
@@ -177,6 +200,7 @@ def parse_packet(packet: object) -> PacketMetadata | None:
         dst_port: int | None = None
         tcp_flags: str | None = None
         tcp_window: int | None = None
+        payload_length: int | None = None
         ttl = _extract_ttl(ip_layer)
 
         if tcp_layer is not None:
@@ -184,9 +208,11 @@ def parse_packet(packet: object) -> PacketMetadata | None:
             dst_port = normalize_port(getattr(tcp_layer, "dport", None))
             tcp_flags = _format_tcp_flags(tcp_layer)
             tcp_window = normalize_tcp_window(getattr(tcp_layer, "window", None))
+            payload_length = _transport_payload_length(ip_layer, tcp_layer)
         elif udp_layer is not None:
             src_port = normalize_port(getattr(udp_layer, "sport", None))
             dst_port = normalize_port(getattr(udp_layer, "dport", None))
+            payload_length = _transport_payload_length(ip_layer, udp_layer)
         # ICMP / Other: ports, flags, and window remain None
 
         return PacketMetadata(
@@ -200,6 +226,7 @@ def parse_packet(packet: object) -> PacketMetadata | None:
             tcp_flags=tcp_flags,
             ttl=ttl,
             tcp_window=tcp_window,
+            payload_length=payload_length,
         )
     except Exception:
         logger.debug("Skipping malformed packet", exc_info=True)

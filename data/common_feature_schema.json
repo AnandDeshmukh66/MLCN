@@ -1,11 +1,24 @@
 {
-  "schema_version": "1.0.0",
-  "description": "MLCN common flow feature schema for CICIDS2017, CIC-DDoS2019, and CTU-13 normalization. Derived from Module 2 PacketMetadata and Module 3 Flow.",
+  "schema_version": "2.0.0",
+  "description": "MLCN 24-feature schema: the CIC-IDS2017 (CICFlowMeter) columns the XGBoost model was trained on, derived from Module 2 PacketMetadata and Module 3 Flow. Times are microseconds, rates per second, lengths are payload bytes.",
   "activity_timeout_seconds": 5.0,
+  "flow_rules": {
+    "terminate_on_first_fin": true,
+    "flow_timeout_seconds": 120.0,
+    "min_flow_packets": 2,
+    "classified_protocols": [
+      "TCP",
+      "UDP"
+    ],
+    "zero_duration_rate_fill": {
+      "Flow Bytes/s": 3715.0378579999997,
+      "Flow Packets/s": 69.742244285
+    }
+  },
   "direction_conventions": {
     "forward": "Same orientation as the first packet observed in the flow.",
     "backward": "Opposite orientation from the forward direction.",
-    "down_up_ratio": "forward_packet_count / reverse_packet_count with 0.0 when either count is zero."
+    "down_up_ratio": "floor(reverse_packet_count / forward_packet_count), 0.0 when there are no forward packets."
   },
   "candidate_features_evaluated": 25,
   "features_retained": 24,
@@ -39,52 +52,52 @@
   "features": [
     {
       "canonical_name": "Flow Duration",
-      "formula": "max(0, (Flow.end_time - Flow.start_time) in seconds)",
+      "formula": "last packet timestamp - first packet timestamp, integer microseconds",
       "source_fields": [
         "Flow.start_time",
         "Flow.end_time"
       ],
-      "data_type": "float",
-      "unit": "seconds",
+      "data_type": "int",
+      "unit": "microseconds",
       "derivation": "direct",
       "edge_case_rules": {
-        "zero_duration_flow": "0.0 when start_time equals end_time",
-        "negative_clock_skew": "clamp to 0.0 if computed duration is negative"
+        "zero_duration_flow": "0 when all packets share one timestamp",
+        "negative_clock_skew": "clamp to 0 if computed duration is negative"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
-        "notes": "Matches CICFlowMeter flow duration (last_seen - flow_start)."
+        "notes": "CICFlowMeter flow duration in microseconds."
       },
       "status": "retained",
       "candidate_index": 1
     },
     {
       "canonical_name": "Total Fwd Packets",
-      "formula": "Flow.forward_packet_count",
+      "formula": "count of packets with the first packet's orientation",
       "source_fields": [
         "Flow.forward_packet_count"
       ],
       "data_type": "int",
-      "unit": "count",
+      "unit": "packets",
       "derivation": "direct",
       "edge_case_rules": {
         "empty_packet_collection": "0 when packet_count is 0"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
-        "notes": "CIC forward (client-to-server) packet count."
+        "notes": "Forward = direction of the first captured packet."
       },
       "status": "retained",
       "candidate_index": 2
     },
     {
       "canonical_name": "Total Backward Packets",
-      "formula": "Flow.reverse_packet_count",
+      "formula": "count of packets with the opposite orientation",
       "source_fields": [
         "Flow.reverse_packet_count"
       ],
       "data_type": "int",
-      "unit": "count",
+      "unit": "packets",
       "derivation": "direct",
       "edge_case_rules": {
         "zero_backward_packets": "0 when no reverse-direction packets observed",
@@ -99,139 +112,146 @@
     },
     {
       "canonical_name": "Fwd Packets Length Total",
-      "formula": "Flow.forward_byte_count",
+      "formula": "sum of forward transport payload bytes (Ethernet padding included)",
       "source_fields": [
-        "Flow.forward_byte_count"
+        "Flow.packets",
+        "Flow.packets[].payload_length",
+        "Flow.packets[].length"
       ],
       "data_type": "int",
-      "unit": "bytes",
-      "derivation": "direct",
+      "unit": "payload bytes",
+      "derivation": "derived",
       "edge_case_rules": {
-        "zero_forward_packets": "0 when forward_packet_count is 0"
+        "zero_forward_packets": "0 when forward_packet_count is 0",
+        "payload_length_missing": "fall back to PacketMetadata.length"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
-        "notes": "Total forward payload length."
+        "notes": "CIC counts TCP/UDP payload bytes, not wire length."
       },
       "status": "retained",
       "candidate_index": 4
     },
     {
       "canonical_name": "Bwd Packets Length Total",
-      "formula": "Flow.reverse_byte_count",
+      "formula": "sum of backward transport payload bytes (Ethernet padding included)",
       "source_fields": [
-        "Flow.reverse_byte_count"
+        "Flow.packets",
+        "Flow.packets[].payload_length",
+        "Flow.packets[].length"
       ],
       "data_type": "int",
-      "unit": "bytes",
-      "derivation": "direct",
+      "unit": "payload bytes",
+      "derivation": "derived",
       "edge_case_rules": {
-        "zero_backward_packets": "0 when reverse_packet_count is 0"
+        "zero_backward_packets": "0 when reverse_packet_count is 0",
+        "payload_length_missing": "fall back to PacketMetadata.length"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
-        "notes": "Total backward payload length."
+        "notes": "CIC counts TCP/UDP payload bytes, not wire length."
       },
       "status": "retained",
       "candidate_index": 5
     },
     {
       "canonical_name": "Fwd Packet Length Mean",
-      "formula": "Flow.forward_byte_count / Flow.forward_packet_count",
+      "formula": "Fwd Packets Length Total / Total Fwd Packets",
       "source_fields": [
-        "Flow.forward_byte_count",
-        "Flow.forward_packet_count"
+        "Flow.packets",
+        "Flow.packets[].payload_length",
+        "Flow.packets[].length"
       ],
       "data_type": "float",
-      "unit": "bytes",
+      "unit": "payload bytes",
       "derivation": "derived",
       "edge_case_rules": {
         "zero_forward_packets": "0.0 when forward_packet_count is 0"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
-        "notes": "Mean forward packet length."
+        "notes": "Mean forward payload length."
       },
       "status": "retained",
       "candidate_index": 6
     },
     {
       "canonical_name": "Bwd Packet Length Mean",
-      "formula": "Flow.reverse_byte_count / Flow.reverse_packet_count",
+      "formula": "Bwd Packets Length Total / Total Backward Packets",
       "source_fields": [
-        "Flow.reverse_byte_count",
-        "Flow.reverse_packet_count"
+        "Flow.packets",
+        "Flow.packets[].payload_length",
+        "Flow.packets[].length"
       ],
       "data_type": "float",
-      "unit": "bytes",
+      "unit": "payload bytes",
       "derivation": "derived",
       "edge_case_rules": {
         "zero_backward_packets": "0.0 when reverse_packet_count is 0"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
-        "notes": "Mean backward packet length."
+        "notes": "Mean backward payload length."
       },
       "status": "retained",
       "candidate_index": 7
     },
     {
       "canonical_name": "Flow Bytes/s",
-      "formula": "Flow.byte_count / Flow.duration",
+      "formula": "total payload bytes / (Flow Duration / 1e6)",
       "source_fields": [
-        "Flow.byte_count",
+        "Flow.packets",
+        "Flow.packets[].payload_length",
+        "Flow.packets[].length",
         "Flow.start_time",
         "Flow.end_time"
       ],
       "data_type": "float",
-      "unit": "bytes_per_second",
+      "unit": "payload bytes per second",
       "derivation": "derived",
       "edge_case_rules": {
-        "zero_duration_flow": "0.0 when duration is 0",
-        "one_packet_flow": "0.0 when the sole packet yields zero duration"
+        "zero_duration_flow": "3715.0378579999997 (training-set median used to fill NaN/inf)"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
-        "notes": "Total bytes divided by duration in seconds."
+        "notes": "Per second although durations are microseconds."
       },
       "status": "retained",
       "candidate_index": 8
     },
     {
       "canonical_name": "Flow Packets/s",
-      "formula": "Flow.packet_count / Flow.duration",
+      "formula": "packet_count / (Flow Duration / 1e6)",
       "source_fields": [
         "Flow.packet_count",
         "Flow.start_time",
         "Flow.end_time"
       ],
       "data_type": "float",
-      "unit": "packets_per_second",
+      "unit": "packets per second",
       "derivation": "derived",
       "edge_case_rules": {
-        "zero_duration_flow": "0.0 when duration is 0",
-        "one_packet_flow": "0.0 when the sole packet yields zero duration"
+        "zero_duration_flow": "69.742244285 (training-set median used to fill NaN/inf)"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
-        "notes": "Total packets divided by duration in seconds."
+        "notes": "Per second although durations are microseconds."
       },
       "status": "retained",
       "candidate_index": 9
     },
     {
       "canonical_name": "Flow IAT Mean",
-      "formula": "mean([t_i - t_{i-1} for i in 1..n-1]) over Flow.packets ordered by PacketMetadata.timestamp",
+      "formula": "mean of consecutive packet timestamp gaps, microseconds",
       "source_fields": [
         "Flow.packets",
         "Flow.packets[].timestamp"
       ],
       "data_type": "float",
-      "unit": "seconds",
+      "unit": "microseconds",
       "derivation": "derived",
       "edge_case_rules": {
-        "one_packet_flow": "0.0 when packet_count < 2",
-        "empty_packet_collection": "0.0 when packet_count is 0"
+        "one_packet_flow": "0.0 when packet_count < 2"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
@@ -242,28 +262,27 @@
     },
     {
       "canonical_name": "Flow IAT Std",
-      "formula": "sample_std([t_i - t_{i-1} for i in 1..n-1]) with ddof=1",
+      "formula": "sample std (ddof=1) of consecutive packet gaps, microseconds",
       "source_fields": [
         "Flow.packets",
         "Flow.packets[].timestamp"
       ],
       "data_type": "float",
-      "unit": "seconds",
+      "unit": "microseconds",
       "derivation": "derived",
       "edge_case_rules": {
-        "one_packet_flow": "0.0 when fewer than 2 inter-arrival intervals exist",
-        "empty_packet_collection": "0.0 when packet_count is 0"
+        "few_intervals": "0.0 when fewer than 2 inter-arrival intervals exist"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
-        "notes": "Sample standard deviation (n-1) of flow inter-arrival times."
+        "notes": "Sample standard deviation of flow inter-arrival times."
       },
       "status": "retained",
       "candidate_index": 11
     },
     {
       "canonical_name": "Fwd IAT Mean",
-      "formula": "mean inter-arrival times between consecutive forward-direction packets (same 5-tuple orientation as the first packet in the flow)",
+      "formula": "mean gap between consecutive forward packets, microseconds",
       "source_fields": [
         "Flow.packets",
         "Flow.packets[].timestamp",
@@ -273,11 +292,10 @@
         "Flow.packets[].dst_port"
       ],
       "data_type": "float",
-      "unit": "seconds",
+      "unit": "microseconds",
       "derivation": "derived",
       "edge_case_rules": {
-        "one_packet_flow": "0.0 when fewer than 2 forward packets exist",
-        "zero_forward_packets": "0.0 when forward_packet_count is 0"
+        "one_forward_packet": "0.0 when fewer than 2 forward packets exist"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
@@ -288,7 +306,7 @@
     },
     {
       "canonical_name": "Bwd IAT Mean",
-      "formula": "mean inter-arrival times between consecutive reverse-direction packets",
+      "formula": "mean gap between consecutive backward packets, microseconds",
       "source_fields": [
         "Flow.packets",
         "Flow.packets[].timestamp",
@@ -298,10 +316,10 @@
         "Flow.packets[].dst_port"
       ],
       "data_type": "float",
-      "unit": "seconds",
+      "unit": "microseconds",
       "derivation": "derived",
       "edge_case_rules": {
-        "zero_backward_packets": "0.0 when fewer than 2 reverse packets exist"
+        "one_backward_packet": "0.0 when fewer than 2 reverse packets exist"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
@@ -312,170 +330,187 @@
     },
     {
       "canonical_name": "Packet Length Mean",
-      "formula": "mean([PacketMetadata.length for each packet in Flow.packets])",
+      "formula": "mean of [first payload] + every payload (n + 1 values)",
       "source_fields": [
         "Flow.packets",
+        "Flow.packets[].payload_length",
         "Flow.packets[].length"
       ],
       "data_type": "float",
-      "unit": "bytes",
+      "unit": "payload bytes",
       "derivation": "derived",
       "edge_case_rules": {
-        "empty_packet_collection": "0.0 when packet_count is 0",
-        "one_packet_flow": "equals the single packet length"
+        "empty_packet_collection": "0.0 when packet_count is 0"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
-        "notes": "Mean of all packet lengths in the flow."
+        "notes": "CICFlowMeter adds the first packet's payload twice."
       },
       "status": "retained",
       "candidate_index": 14
     },
     {
       "canonical_name": "Packet Length Std",
-      "formula": "sample_std([PacketMetadata.length ...]) with ddof=1",
+      "formula": "sample std (ddof=1) of [first payload] + every payload",
       "source_fields": [
         "Flow.packets",
+        "Flow.packets[].payload_length",
         "Flow.packets[].length"
       ],
       "data_type": "float",
-      "unit": "bytes",
+      "unit": "payload bytes",
       "derivation": "derived",
       "edge_case_rules": {
-        "one_packet_flow": "0.0 when fewer than 2 packets exist",
         "empty_packet_collection": "0.0 when packet_count is 0"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
-        "notes": "Sample standard deviation of packet lengths."
+        "notes": "Computed over the same n + 1 values as Packet Length Mean."
       },
       "status": "retained",
       "candidate_index": 15
     },
     {
       "canonical_name": "FIN Flag Count",
-      "formula": "count(packets where 'F' in PacketMetadata.tcp_flags)",
+      "formula": "1 if the first packet is TCP and has flag 'R', else 0",
       "source_fields": [
         "Flow.packets",
-        "Flow.packets[].tcp_flags"
+        "Flow.packets[].tcp_flags",
+        "Flow.packets[].protocol"
       ],
       "data_type": "int",
-      "unit": "count",
+      "unit": "binary",
       "derivation": "derived",
       "edge_case_rules": {
-        "missing_tcp_flags": "non-TCP packets (tcp_flags is None) contribute 0",
+        "non_tcp_flow": "0 for UDP / non-TCP flows",
+        "later_packets": "flags of packets after the first are ignored",
         "empty_packet_collection": "0 when packet_count is 0"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
-        "notes": "Count of packets with FIN set."
+        "notes": "CIC-IDS2017 flag columns are binary first-packet bits written into permuted columns; this column carries the 'R' bit (verified on training rows)."
       },
       "status": "retained",
       "candidate_index": 16
     },
     {
       "canonical_name": "SYN Flag Count",
-      "formula": "count(packets where 'S' in PacketMetadata.tcp_flags)",
+      "formula": "1 if the first packet is TCP and has flag 'P', else 0",
       "source_fields": [
         "Flow.packets",
-        "Flow.packets[].tcp_flags"
+        "Flow.packets[].tcp_flags",
+        "Flow.packets[].protocol"
       ],
       "data_type": "int",
-      "unit": "count",
+      "unit": "binary",
       "derivation": "derived",
       "edge_case_rules": {
-        "missing_tcp_flags": "non-TCP packets (tcp_flags is None) contribute 0"
+        "non_tcp_flow": "0 for UDP / non-TCP flows",
+        "later_packets": "flags of packets after the first are ignored",
+        "empty_packet_collection": "0 when packet_count is 0"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
-        "notes": "Count of packets with SYN set."
+        "notes": "CIC-IDS2017 flag columns are binary first-packet bits written into permuted columns; this column carries the 'P' bit (verified on training rows)."
       },
       "status": "retained",
       "candidate_index": 17
     },
     {
       "canonical_name": "RST Flag Count",
-      "formula": "count(packets where 'R' in PacketMetadata.tcp_flags)",
+      "formula": "1 if the first packet is TCP and has flag 'C', else 0",
       "source_fields": [
         "Flow.packets",
-        "Flow.packets[].tcp_flags"
+        "Flow.packets[].tcp_flags",
+        "Flow.packets[].protocol"
       ],
       "data_type": "int",
-      "unit": "count",
+      "unit": "binary",
       "derivation": "derived",
       "edge_case_rules": {
-        "missing_tcp_flags": "non-TCP packets (tcp_flags is None) contribute 0"
+        "non_tcp_flow": "0 for UDP / non-TCP flows",
+        "later_packets": "flags of packets after the first are ignored",
+        "empty_packet_collection": "0 when packet_count is 0"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
-        "notes": "Count of packets with RST set."
+        "notes": "CIC-IDS2017 flag columns are binary first-packet bits written into permuted columns; this column carries the 'C' bit (verified on training rows)."
       },
       "status": "retained",
       "candidate_index": 18
     },
     {
       "canonical_name": "PSH Flag Count",
-      "formula": "count(packets where 'P' in PacketMetadata.tcp_flags)",
+      "formula": "1 if the first packet is TCP and has flag 'S', else 0",
       "source_fields": [
         "Flow.packets",
-        "Flow.packets[].tcp_flags"
+        "Flow.packets[].tcp_flags",
+        "Flow.packets[].protocol"
       ],
       "data_type": "int",
-      "unit": "count",
+      "unit": "binary",
       "derivation": "derived",
       "edge_case_rules": {
-        "missing_tcp_flags": "non-TCP packets (tcp_flags is None) contribute 0"
+        "non_tcp_flow": "0 for UDP / non-TCP flows",
+        "later_packets": "flags of packets after the first are ignored",
+        "empty_packet_collection": "0 when packet_count is 0"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
-        "notes": "Count of packets with PSH set."
+        "notes": "CIC-IDS2017 flag columns are binary first-packet bits written into permuted columns; this column carries the 'S' bit (verified on training rows)."
       },
       "status": "retained",
       "candidate_index": 19
     },
     {
       "canonical_name": "ACK Flag Count",
-      "formula": "count(packets where 'A' in PacketMetadata.tcp_flags)",
+      "formula": "1 if the first packet is TCP and has flag 'A', else 0",
       "source_fields": [
         "Flow.packets",
-        "Flow.packets[].tcp_flags"
+        "Flow.packets[].tcp_flags",
+        "Flow.packets[].protocol"
       ],
       "data_type": "int",
-      "unit": "count",
+      "unit": "binary",
       "derivation": "derived",
       "edge_case_rules": {
-        "missing_tcp_flags": "non-TCP packets (tcp_flags is None) contribute 0"
+        "non_tcp_flow": "0 for UDP / non-TCP flows",
+        "later_packets": "flags of packets after the first are ignored",
+        "empty_packet_collection": "0 when packet_count is 0"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
-        "notes": "Count of packets with ACK set."
+        "notes": "CIC-IDS2017 flag columns are binary first-packet bits written into permuted columns; this column carries the 'A' bit (verified on training rows)."
       },
       "status": "retained",
       "candidate_index": 20
     },
     {
       "canonical_name": "URG Flag Count",
-      "formula": "count(packets where 'U' in PacketMetadata.tcp_flags)",
+      "formula": "1 if the first packet is TCP and has flag 'F', else 0",
       "source_fields": [
         "Flow.packets",
-        "Flow.packets[].tcp_flags"
+        "Flow.packets[].tcp_flags",
+        "Flow.packets[].protocol"
       ],
       "data_type": "int",
-      "unit": "count",
+      "unit": "binary",
       "derivation": "derived",
       "edge_case_rules": {
-        "missing_tcp_flags": "non-TCP packets (tcp_flags is None) contribute 0"
+        "non_tcp_flow": "0 for UDP / non-TCP flows",
+        "later_packets": "flags of packets after the first are ignored",
+        "empty_packet_collection": "0 when packet_count is 0"
       },
       "cicflowmeter_compatibility": {
         "status": "compatible",
-        "notes": "Count of packets with URG set."
+        "notes": "CIC-IDS2017 flag columns are binary first-packet bits written into permuted columns; this column carries the 'F' bit (verified on training rows)."
       },
       "status": "retained",
       "candidate_index": 21
     },
     {
       "canonical_name": "Down/Up Ratio",
-      "formula": "Flow.forward_packet_count / Flow.reverse_packet_count",
+      "formula": "floor(Total Backward Packets / Total Fwd Packets)",
       "source_fields": [
         "Flow.forward_packet_count",
         "Flow.reverse_packet_count"
@@ -484,57 +519,55 @@
       "unit": "ratio",
       "derivation": "derived",
       "edge_case_rules": {
-        "zero_backward_packets": "0.0 when reverse_packet_count is 0",
         "zero_forward_packets": "0.0 when forward_packet_count is 0"
       },
       "cicflowmeter_compatibility": {
-        "status": "modified",
-        "notes": "CICFlowMeter uses backward/forward (integer division). MLCN common schema uses forward/backward (float division) per project convention."
+        "status": "compatible",
+        "notes": "CICFlowMeter integer division backward / forward."
       },
       "status": "retained",
-      "candidate_index": 23,
-      "modification_notes": "Inverted ratio direction relative to CICFlowMeter; safe 0.0 when either direction count is zero."
+      "candidate_index": 23
     },
     {
       "canonical_name": "Active Mean",
-      "formula": "mean duration of active periods where consecutive packet gaps are <= 5.0 seconds; active periods split when gap exceeds threshold; finalize trailing active period at flow end",
+      "formula": "mean active span recorded when a gap > 5 s starts an idle period, microseconds; the trailing active span is never recorded",
       "source_fields": [
         "Flow.packets",
         "Flow.packets[].timestamp",
-        "Flow.end_time"
+        "Flow.closed_by_fin"
       ],
       "data_type": "float",
-      "unit": "seconds",
+      "unit": "microseconds",
       "derivation": "derived",
       "edge_case_rules": {
-        "one_packet_flow": "0.0 when no completed active period spans > 0 seconds",
-        "zero_duration_flow": "0.0 when all packets share one timestamp",
-        "empty_packet_collection": "0.0 when packet_count is 0"
+        "no_idle_gap": "0.0 when no gap exceeds the activity timeout",
+        "closing_fin": "the FIN packet that closed the flow does not update activity"
       },
       "cicflowmeter_compatibility": {
-        "status": "compatible_with_notes",
-        "notes": "Uses CICFlowMeter activity timeout (5.0s). Does not append synthetic trailing idle to flow timeout because Module 3 already closes flows explicitly."
+        "status": "compatible",
+        "notes": "CICFlowMeter 5 s activity timeout."
       },
       "status": "retained",
       "candidate_index": 24
     },
     {
       "canonical_name": "Idle Mean",
-      "formula": "mean duration of idle gaps where consecutive packet gap > 5.0 seconds",
+      "formula": "mean gap > 5 s between packets, microseconds",
       "source_fields": [
         "Flow.packets",
-        "Flow.packets[].timestamp"
+        "Flow.packets[].timestamp",
+        "Flow.closed_by_fin"
       ],
       "data_type": "float",
-      "unit": "seconds",
+      "unit": "microseconds",
       "derivation": "derived",
       "edge_case_rules": {
-        "one_packet_flow": "0.0 when no idle gap exceeds activity threshold",
-        "empty_packet_collection": "0.0 when packet_count is 0"
+        "no_idle_gap": "0.0 when no gap exceeds the activity timeout",
+        "closing_fin": "the FIN packet that closed the flow does not update activity"
       },
       "cicflowmeter_compatibility": {
-        "status": "compatible_with_notes",
-        "notes": "Idle segments derived only from observed inter-packet gaps; no synthetic idle padding at flow close."
+        "status": "compatible",
+        "notes": "CICFlowMeter 5 s activity timeout."
       },
       "status": "retained",
       "candidate_index": 25
@@ -544,7 +577,7 @@
     {
       "candidate_index": 22,
       "canonical_name": "Average Packet Size",
-      "reason": "Algebraically equivalent to Packet Length Mean when Module 3 maintains byte_count == sum(PacketMetadata.length). Retain Packet Length Mean only to avoid duplicate schema columns."
+      "reason": "Near-duplicate of Packet Length Mean (same payload sum; n instead of n + 1 values). The trained model uses only Packet Length Mean."
     }
   ],
   "validation": {
@@ -556,6 +589,7 @@
       "dst_ip",
       "dst_port",
       "length",
+      "payload_length",
       "protocol",
       "src_ip",
       "src_port",
@@ -566,6 +600,7 @@
     ],
     "module3_fields_present": [
       "byte_count",
+      "closed_by_fin",
       "dst_ip",
       "dst_port",
       "duration",

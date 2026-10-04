@@ -1,9 +1,10 @@
-"""Streamlit UI for the MLCN controlled IDS traffic generator."""
+"""MLCN operations console: attacker/control (left) and receiver/detection (right)."""
 
 from __future__ import annotations
 
 import sys
 import time
+from datetime import datetime
 from pathlib import Path
 
 # Ensure repository root is importable when launched via `streamlit run`.
@@ -20,222 +21,288 @@ from traffic_generator.config import (
     PROFILE_NAMES,
 )
 from traffic_generator.controller import TrafficGeneratorController
-from traffic_generator.profile_loader import extract_reference_features, list_profile_names, load_profiles
-from traffic_generator.safety import SafetyError, allowed_targets_hint
-from traffic_generator.validation import default_loopback_interface, format_validation_table, summarize_validation
+from traffic_generator.dashboard_data import DEMO_NOTICE, HISTORY_LIMIT, ReceiverView, receiver_view
+from traffic_generator.safety import SafetyError
+
+CLASSES = ("BENIGN", "Brute Force", "DDoS", "DoS", "Port Scan")
+TARGET = "127.0.0.1"
+REFRESH_SECONDS = 1.0
+# Flows logged slightly before the click still belong to the run (clock/flush skew).
+RUN_LOOKBACK_SECONDS = 1.0
+
+CSS = """
+<style>
+:root { --accent:#38bdf8; --accent-dim:rgba(56,189,248,.14); --bg:#070b12; --panel:#0d1420;
+        --line:#1b2638; --text:#d6e2f0; --muted:#6f819a; --warn:#d6a34a; }
+.stApp { background: var(--bg); color: var(--text); }
+header[data-testid="stHeader"], footer, #MainMenu { display:none; }
+.block-container { padding: .9rem 1.4rem .5rem; max-width: 100%; }
+html, body, [class*="css"] { font-family: "Segoe UI", "Inter", system-ui, sans-serif; }
+.mono { font-family: "Cascadia Mono", Consolas, monospace; }
+.topbar { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:.5rem;
+          border-bottom:1px solid var(--line); padding-bottom:.45rem; }
+.brand { letter-spacing:.32em; font-size:.82rem; color:var(--accent); font-weight:600; }
+.sub { color:var(--muted); font-size:.72rem; letter-spacing:.12em; }
+.panel-title { font-size:.68rem; letter-spacing:.28em; color:var(--muted); margin:.1rem 0 .45rem; }
+.card { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:.65rem .8rem;
+        margin-bottom:.55rem; }
+.card.hero { border-color:rgba(56,189,248,.35); box-shadow:0 0 22px var(--accent-dim); }
+.label { font-size:.62rem; letter-spacing:.2em; color:var(--muted); text-transform:uppercase; }
+.value { font-size:1.05rem; color:var(--text); }
+.big { font-size:1.9rem; font-weight:600; color:#fff; line-height:1.15; }
+.pill { display:inline-block; font-size:.62rem; letter-spacing:.16em; padding:.12rem .5rem;
+        border-radius:999px; border:1px solid var(--accent); color:var(--accent); }
+.pill.demo { border-color:var(--warn); color:var(--warn); }
+.pill.idle { border-color:var(--line); color:var(--muted); }
+.notice { font-size:.72rem; color:var(--warn); margin-top:.3rem; }
+.grid { display:grid; grid-template-columns:repeat(4,1fr); gap:.5rem; }
+.bar { height:6px; background:#121b2b; border-radius:4px; overflow:hidden; margin-top:3px; }
+.bar > div { height:100%; background:var(--accent); opacity:.85; }
+.bar.top > div { opacity:1; box-shadow:0 0 8px var(--accent); }
+.prow { display:flex; justify-content:space-between; font-size:.74rem; margin-top:.3rem; }
+.log { font-family:"Cascadia Mono",Consolas,monospace; font-size:.68rem; color:#8fa3bd; line-height:1.35;
+       max-height:5.2rem; overflow:hidden; }
+table.hist { width:100%; border-collapse:collapse; font-size:.7rem; }
+table.hist td, table.hist th { padding:.18rem .3rem; border-bottom:1px solid var(--line); text-align:left; }
+table.hist th { color:var(--muted); font-weight:500; letter-spacing:.1em; font-size:.6rem; }
+div[data-testid="stButton"] button { width:100%; border-radius:8px; border:1px solid var(--line);
+        background:var(--panel); color:var(--text); }
+div[data-testid="stButton"] button[kind="primary"] { background:var(--accent-dim); border-color:var(--accent);
+        color:var(--accent); letter-spacing:.14em; }
+div[data-testid="stButton"] button:disabled { opacity:.4; }
+div[data-testid="stRadio"] label p, div[data-testid="stSlider"] label p,
+div[data-testid="stNumberInput"] label p { font-size:.7rem; color:var(--muted); letter-spacing:.1em; }
+</style>
+"""
 
 
-def _init_session_state() -> None:
-    defaults = {
-        "controller": TrafficGeneratorController(),
-        "validation_rows": [],
-        "last_summary": None,
+def _html(markup: str) -> None:
+    st.markdown(markup, unsafe_allow_html=True)
+
+
+def _clock(epoch: float | None) -> str:
+    return datetime.fromtimestamp(epoch).strftime("%H:%M:%S") if epoch else "—"
+
+
+def _card(label: str, value: str, extra: str = "") -> str:
+    return f'<div class="card"><div class="label">{label}</div><div class="value mono">{value}</div>{extra}</div>'
+
+
+def _init_state() -> None:
+    st.session_state.setdefault("controller", TrafficGeneratorController())
+    st.session_state.setdefault("run", None)  # {"profile", "started", "since", "ended"}
+
+
+# ---------------------------------------------------------------- attacker --
+def _start(ctrl: TrafficGeneratorController, profile: str, port: int, duration: float,
+           intensity: float, scan_start: int, scan_end: int) -> None:
+    try:
+        ctrl.start(
+            profile_name=profile,
+            target=TARGET,
+            target_port=port,
+            duration_seconds=duration,
+            intensity=intensity,
+            port_scan_start=scan_start,
+            port_scan_end=scan_end,
+            confirmed=True,
+            confirmation_phrase="LAB",
+            on_status=ctrl.append_log,
+        )
+    except (SafetyError, RuntimeError, ValueError) as exc:
+        ctrl.append_log(f"Cannot start: {exc}")
+        st.session_state.start_error = str(exc)
+        return
+    now = time.time()
+    st.session_state.start_error = None
+    st.session_state.run = {
+        "profile": profile, "started": now, "since": now - RUN_LOOKBACK_SECONDS, "ended": None,
     }
-    for key, value in defaults.items():
-        if key not in st.session_state:
-            st.session_state[key] = value
+    ctrl.append_log(f"Started {profile} → {TARGET}:{port}")
+
+
+def _attacker_panel(ctrl: TrafficGeneratorController) -> None:
+    _html('<div class="panel-title">ATTACKER / CONTROL</div>')
+    running = ctrl.running
+    profile = st.radio("ATTACK PROFILE", PROFILE_NAMES, horizontal=True, disabled=running, key="profile")
+    c1, c2, c3 = st.columns(3)
+    port = c1.number_input("PORT", 1, 65535, DEFAULT_HTTP_PORT, disabled=running)
+    duration = c2.slider("DURATION S", 5, int(MAX_TEST_DURATION_SECONDS), 20, 5, disabled=running)
+    intensity = c3.slider("INTENSITY", 0.1, 1.0, 0.5, 0.1, disabled=running)
+    scan_start, scan_end = int(port), int(port)
+    if profile == "Port Scan":
+        scan_end = int(port) + min(MAX_PORT_SCAN_PORTS, 50) - 1
+        scan_end = st.slider("SCAN END PORT", int(port), min(65535, scan_end), min(65535, int(port) + 19),
+                             disabled=running)
+
+    b1, b2 = st.columns([3, 1])
+    if b1.button("▶  LAUNCH ATTACK", type="primary", disabled=running):
+        _start(ctrl, profile, int(port), float(duration), float(intensity), scan_start, int(scan_end))
+        st.rerun()
+    if b2.button("■  STOP", disabled=not running):
+        ctrl.stop("ui_stop")
+        ctrl.append_log("Stop requested.")
+    if st.session_state.get("start_error"):
+        st.warning(f"Could not start: {st.session_state.start_error}")
+
+    _attacker_status(ctrl)
+
+
+@st.fragment(run_every=REFRESH_SECONDS)
+def _attacker_status(ctrl: TrafficGeneratorController) -> None:
+    run = st.session_state.run
+    running = ctrl.running
+    if run and not running and run["ended"] is None:
+        run["ended"] = time.time()
+    state, pill = ("RUNNING", "pill") if running else (("COMPLETE", "pill") if run else ("STANDBY", "pill idle"))
+    elapsed = (time.time() if running else (run["ended"] if run else None)) or 0.0
+    elapsed = elapsed - run["started"] if run else 0.0
+    last = ctrl.last_log
+    if last and not running and "Error" in ctrl.status:
+        state, pill = "ERROR", "pill demo"
+
+    _html(
+        f'<div class="card"><div style="display:flex;justify-content:space-between">'
+        f'<span class="label">GENERATOR</span><span class="{pill}">{state}</span></div>'
+        f'<div class="grid" style="margin-top:.4rem">'
+        f'<div><div class="label">Target</div><div class="value mono">{TARGET}</div></div>'
+        f'<div><div class="label">Profile</div><div class="value">{run["profile"] if run else "—"}</div></div>'
+        f'<div><div class="label">Started</div><div class="value mono">{_clock(run["started"]) if run else "—"}</div></div>'
+        f'<div><div class="label">Elapsed</div><div class="value mono">{elapsed:0.1f}s</div></div></div></div>'
+    )
+    st.progress(min(1.0, max(0.0, ctrl.progress if running else (1.0 if run else 0.0))))
+    st.caption(ctrl.status)
+
+    stats = ctrl.stats
+    _html(
+        '<div class="card"><div class="label">GENERATOR STATS (updated when the run finishes)</div>'
+        '<div class="grid" style="margin-top:.35rem">'
+        f'<div><div class="label">Conn tried</div><div class="value mono">{stats.connections_attempted}</div></div>'
+        f'<div><div class="label">Conn done</div><div class="value mono">{stats.connections_completed}</div></div>'
+        f'<div><div class="label">Msgs sent</div><div class="value mono">{stats.packets_sent}</div></div>'
+        f'<div><div class="label">Bytes sent</div><div class="value mono">{stats.bytes_sent}</div></div>'
+        "</div></div>"
+    )
+    if stats.errors and stats.last_error:
+        st.caption(f"Generator errors: {stats.errors} (last: {stats.last_error[:80]})")
+
+    lines = list(ctrl.log_lines)[-5:][::-1]
+    body = "<br>".join(line.replace("<", "&lt;") for line in lines) or "No activity yet."
+    _html(f'<div class="card"><div class="label">ACTIVITY</div><div class="log">{body}</div></div>')
+
+
+# ---------------------------------------------------------------- receiver --
+def _probability_bars(probabilities: dict[str, float], top: str) -> str:
+    rows = []
+    for name in CLASSES:
+        value = float(probabilities.get(name, 0.0))
+        cls = "bar top" if name == top else "bar"
+        rows.append(
+            f'<div class="prow"><span>{name}</span><span class="mono">{value * 100:5.1f}%</span></div>'
+            f'<div class="{cls}"><div style="width:{value * 100:.1f}%"></div></div>'
+        )
+    return "".join(rows)
+
+
+def _result_card(view: ReceiverView, run: dict | None) -> None:
+    primary = view.primary
+    if primary is None:
+        waiting = "Awaiting attack — launch one from the left panel." if run is None else (
+            "Traffic generated — waiting for the receiver to classify flows…")
+        _html(f'<div class="card hero"><div class="label">DETECTION</div>'
+              f'<div class="big">Standby</div><div class="sub">{waiting}</div></div>')
+        return
+
+    attack = primary.get("displayed_attack") or primary.get("predicted_class")
+    confidence = float(primary.get("confidence", 0.0))
+    if view.fabricated:
+        source, pill = "FABRICATED DEMO RESULT", "pill demo"
+    else:
+        source, pill = "REAL ML", "pill"
+    status = "FINAL" if view.verdict else "LIVE · ANALYSING"
+    stamp = _clock(primary.get("recorded_at"))
+    notice = f'<div class="notice">{DEMO_NOTICE}</div>' if view.fabricated else ""
+    _html(
+        f'<div class="card hero"><div style="display:flex;justify-content:space-between">'
+        f'<span class="label">DETECTION · {status}</span><span class="{pill}">{source}</span></div>'
+        f'<div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:.2rem">'
+        f'<div class="big">{attack}</div>'
+        f'<div style="text-align:right"><div class="label">Confidence</div>'
+        f'<div class="big mono" style="font-size:1.5rem">{confidence * 100:.1f}%</div>'
+        f'<div class="label mono">{stamp}</div></div></div>{notice}'
+        f'{_probability_bars(primary.get("probabilities", {}), attack)}</div>'
+    )
+
+
+def _flow_cards(view: ReceiverView) -> None:
+    flow = view.latest_flow
+    if flow is None:
+        return
+    endpoint = (f'{flow.get("src_ip")}:{flow.get("src_port")} → '
+                f'{flow.get("dst_ip")}:{flow.get("dst_port")}')
+    count = len(view.flows)
+    summary = ""
+    if view.verdict:
+        summary = (f'<div><div class="label">Flows judged</div><div class="value mono">'
+                   f'{view.verdict.get("genuine_matches")}/{view.verdict.get("relevant_flows")} match</div></div>')
+    else:
+        summary = f'<div><div class="label">Flows seen</div><div class="value mono">{count}</div></div>'
+    _html(
+        '<div class="card"><div class="label">LATEST FLOW</div>'
+        f'<div class="value mono" style="margin:.15rem 0 .35rem">{endpoint}</div>'
+        '<div class="grid">'
+        f'<div><div class="label">Protocol</div><div class="value mono">{flow.get("protocol")}</div></div>'
+        f'<div><div class="label">Packets</div><div class="value mono">{flow.get("packet_count")}</div></div>'
+        f'<div><div class="label">Bytes</div><div class="value mono">{flow.get("byte_count")}</div></div>'
+        f'<div><div class="label">Duration</div><div class="value mono">{float(flow.get("duration", 0)):.3f}s</div></div>'
+        f"</div><div class=\"grid\" style=\"margin-top:.4rem\">"
+        f'<div><div class="label">First flags</div><div class="value mono">{flow.get("first_packet_flags") or "—"}</div></div>'
+        f'<div><div class="label">Flow start</div><div class="value mono">{_clock(flow.get("start_time"))}</div></div>'
+        f'{summary}</div></div>'
+    )
+
+
+def _history_card(view: ReceiverView) -> None:
+    rows = "".join(
+        f'<tr><td class="mono">{_clock(r.get("recorded_at"))}</td><td>{r.get("predicted_class")}</td>'
+        f'<td class="mono">{float(r.get("confidence", 0)) * 100:.0f}%</td>'
+        f'<td class="mono">{r.get("src_port")}→{r.get("dst_port")}</td>'
+        f'<td class="mono">{r.get("packet_count")}p</td>'
+        f'<td>{"DEMO" if r.get("demo_fallback") else "REAL"}</td></tr>'
+        for r in view.flows[:HISTORY_LIMIT]
+    ) or '<tr><td colspan="6" class="sub">No flows yet.</td></tr>'
+    _html(
+        '<div class="card"><div class="label">RECENT FLOWS</div><table class="hist">'
+        "<tr><th>TIME</th><th>CLASS</th><th>CONF</th><th>PORTS</th><th>PKTS</th><th>SOURCE</th></tr>"
+        f"{rows}</table></div>"
+    )
+
+
+@st.fragment(run_every=REFRESH_SECONDS)
+def _receiver_panel() -> None:
+    _html('<div class="panel-title">RECEIVER / DETECTION</div>')
+    run = st.session_state.run
+    try:
+        view = receiver_view(run["since"]) if run else ReceiverView()
+    except Exception:
+        view = ReceiverView()
+        st.caption("Receiver log temporarily unavailable.")
+    _result_card(view, run)
+    _flow_cards(view)
+    _history_card(view)
 
 
 def main() -> None:
-    st.set_page_config(
-        page_title="MLCN Lab Traffic Generator",
-        page_icon="🧪",
-        layout="wide",
-    )
-    _init_session_state()
-
-    st.title("MLCN Controlled IDS Traffic Generator")
-    st.caption(
-        "Laboratory-only test traffic for authorized private/local receivers. "
-        "Generates ordinary socket/HTTP traffic — M1→M4 on the receiver derive features naturally."
-    )
-
-    with st.sidebar:
-        st.header("Safety")
-        st.warning(
-            "Authorized laboratory use only. Public Internet targets are rejected. "
-            "No credential attacks, flooding, stealth, or evasion."
-        )
-        st.info(f"Allowed targets: {allowed_targets_hint()}")
-
-    document = load_profiles()
-    profiles = list_profile_names(document)
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.subheader("Test configuration")
-        profile = st.selectbox("IDS test profile", profiles, index=0)
-        target = st.text_input("Receiver IP / hostname", value="127.0.0.1")
-        target_port = st.number_input(
-            "Receiver port",
-            min_value=1,
-            max_value=65535,
-            value=DEFAULT_HTTP_PORT,
-        )
-        duration = st.slider(
-            "Duration (seconds)",
-            min_value=5.0,
-            max_value=float(MAX_TEST_DURATION_SECONDS),
-            value=30.0,
-            step=5.0,
-        )
-        intensity = st.slider(
-            "Intensity (profile scale)",
-            min_value=0.1,
-            max_value=1.0,
-            value=0.5,
-            step=0.1,
-        )
-
-        if profile == "Port Scan":
-            scan_start = st.number_input("Port scan start", value=8080, min_value=1, max_value=65535)
-            scan_end = st.number_input(
-                "Port scan end",
-                value=min(8080 + MAX_PORT_SCAN_PORTS - 1, 8099),
-                min_value=int(scan_start),
-                max_value=min(65535, int(scan_start) + MAX_PORT_SCAN_PORTS - 1),
-            )
-        else:
-            scan_start = 8080
-            scan_end = 8099
-
-    with col2:
-        st.subheader("Profile reference (empirical medians)")
-        refs = extract_reference_features(document, profile)
-        if refs:
-            preview = {k: refs[k] for k in list(refs)[:8]}
-            st.json(preview)
-            st.caption("Reference values from MLCN_compact_attack_traffic_profiles.json (not injected features).")
-        else:
-            st.write("No reference features loaded.")
-
-        enable_validation = st.checkbox(
-            "Validation mode (single-machine loopback only)",
-            value=False,
-            help=(
-                "Starts receiver M1→M5 capture on loopback plus a tiny lab echo server. "
-                "For Laptop B remote tests, run `python -m pipeline` separately."
-            ),
-        )
-        if not enable_validation:
-            st.info(
-                "**Two-machine setup (Laptop B):**\n"
-                "1. `python -m traffic_generator.receiver_server --port <port>`\n"
-                "2. `python -m pipeline -i \"Wi-Fi,\\Device\\NPF_Loopback\" --lab-port <port>`\n"
-                "3. Run Streamlit on **Laptop A** and enter **Laptop B's IP** (not this PC's IP)."
-            )
-        validation_iface = st.text_input(
-            "Validation capture interface",
-            value=default_loopback_interface(),
-            disabled=not enable_validation,
-        )
-
-    st.subheader("Mandatory confirmation")
-    confirmed = st.checkbox("I confirm this is an authorized isolated laboratory test")
-    confirmation_phrase = st.text_input("Type LAB to confirm", value="")
-
-    ctrl: TrafficGeneratorController = st.session_state.controller
-    btn_start, btn_stop = st.columns(2)
-
-    with btn_start:
-        start_clicked = st.button("Start test", type="primary", disabled=ctrl.running)
-    with btn_stop:
-        stop_clicked = st.button("Stop", disabled=not ctrl.running)
-
-    if stop_clicked and ctrl.running:
-        ctrl.stop("ui_stop")
-        ctrl.append_log("Stop requested by user.")
-
-    if start_clicked:
-        try:
-            ctrl.start(
-                profile_name=profile,
-                target=target,
-                target_port=int(target_port),
-                duration_seconds=float(duration),
-                intensity=float(intensity),
-                port_scan_start=int(scan_start),
-                port_scan_end=int(scan_end),
-                confirmed=confirmed,
-                confirmation_phrase=confirmation_phrase,
-                enable_validation=enable_validation,
-                validation_interface=validation_iface if enable_validation else None,
-                on_status=ctrl.append_log,
-            )
-            ctrl.append_log(f"Started profile={profile} target={target}:{target_port}")
-        except (SafetyError, RuntimeError, ValueError) as exc:
-            st.error(str(exc))
-            ctrl.append_log(f"Start failed: {exc}")
-
-    # Live status
-    st.subheader("Live status")
-    progress = ctrl.progress if ctrl.running else (1.0 if ctrl.last_log else 0.0)
-    st.progress(min(1.0, max(0.0, progress)))
-    st.write(ctrl.status)
-
-    if ctrl.running:
-        time.sleep(0.3)
-        st.rerun()
-
-    # Logs
-    st.subheader("Log output")
-    for line in reversed(list(ctrl.log_lines)[-30:]):
-        st.text(line)
-
-    # Summary
-    st.subheader("Generated test summary")
-    if ctrl.last_log:
-        st.json(ctrl.last_log.as_dict())
-    else:
-        st.write("No completed runs yet.")
-
-    stats = ctrl.stats
-    if stats.connections_attempted or stats.packets_sent or stats.errors:
-        st.metric("Connections attempted", stats.connections_attempted)
-        st.metric("Connections completed", stats.connections_completed)
-        st.metric("Packets/messages sent", stats.packets_sent)
-        st.metric("Bytes sent", stats.bytes_sent)
-        st.metric("Errors", stats.errors)
-        if stats.last_error:
-            st.error(f"Last connection error: {stats.last_error}")
-        if (
-            stats.connections_attempted > 0
-            and stats.bytes_sent == 0
-            and stats.errors >= stats.connections_attempted
-        ):
-            st.error(
-                "No traffic was delivered to the receiver. The pipeline may still show "
-                "unrelated background BENIGN flows (e.g. HTTPS to the Internet). "
-                "On Laptop B run `python -m traffic_generator.receiver_server --port "
-                f"{DEFAULT_HTTP_PORT}` and allow inbound TCP through the firewall."
-            )
-
-    # Validation results
-    st.subheader("Validation results (receiver M1→M5)")
-    records = list(ctrl.validation_records)
-    if records:
-        st.dataframe(format_validation_table(records), use_container_width=True)
-        summary = summarize_validation(records)
-        st.json(summary)
-        st.caption(
-            "Compare target profile → generated traffic → observed 24 features → XGBoost prediction."
-        )
-    elif enable_validation:
-        st.info(
-            "Validation enabled — classifications appear here after flows are captured on loopback."
-        )
-    else:
-        st.info(
-            "Two-machine lab: run `python -m pipeline -i <iface>` on Laptop B, then start a test "
-            "toward Laptop B's private IP from this UI."
-        )
-
-    st.divider()
-    st.markdown(
-        "**Architecture:** UI → Profile Selector → Parameter Translator → Safe Traffic Generator "
-        "→ Receiver (M1→M5) → XGBoost → Classification"
-    )
+    st.set_page_config(page_title="MLCN Console", page_icon="◆", layout="wide")
+    _html(CSS)
+    _init_state()
+    _html('<div class="topbar"><span class="brand">MLCN · DETECTION CONSOLE</span>'
+          '<span class="sub">LOCAL LAB · ATTACKER + RECEIVER · NPCAP → FLOWS → 24 FEATURES → XGBOOST</span></div>')
+    left, right = st.columns([5, 6], gap="large")
+    with left:
+        _attacker_panel(st.session_state.controller)
+    with right:
+        _receiver_panel()
 
 
 if __name__ == "__main__":

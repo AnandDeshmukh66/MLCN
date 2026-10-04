@@ -170,15 +170,18 @@ def map_profile_to_parameters(
         idle_gap = 0.0
 
     elif profile_name == "DoS":
-        # Empirical: long flows, low packet rate, large idle gaps (>5s in features).
+        # Hulk-like: every request is its own short page-fetch connection, so the
+        # flow shape comes from the request/response sizes, not from these gaps.
+        # Bursts of requests (intensity shortens the in-burst gap) separated by
+        # >5 s pauses keep the profile bursty but rate-limited.
         payload = int(_clamp(packet_len_mean or 64, 16, MAX_PAYLOAD_BYTES))
-        request_cycles = max(3, min(total_fwd, 8))
-        inter_message = _clamp(inter_message, 0.5, 10.0)
-        forward_inter = _clamp(forward_inter, 0.5, 15.0)
-        idle_gap = _clamp(idle_gap, 5.5, 15.0)  # >5s for Module 4 idle feature
-        jitter = _clamp(jitter, 0.1, 2.0)
+        request_cycles = 8
+        inter_message = _clamp(0.5 - 0.35 * intensity, 0.15, 0.5)
+        forward_inter = inter_message
+        idle_gap = 5.5
+        jitter = inter_message * 0.2
         max_concurrent = 1
-        connection_rate = _clamp(connection_rate * 0.3, 0.1, 1.0)
+        connection_rate = request_cycles / (request_cycles * inter_message + idle_gap)
         # Allow longer sessions but still bounded by global max duration.
         duration_seconds = min(
             max(duration_seconds, _microseconds_to_seconds(flow_duration_us) * 0.001),

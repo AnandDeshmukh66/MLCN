@@ -3,12 +3,26 @@
 from __future__ import annotations
 
 import json
+import os
+import socket
 import tempfile
+import time
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from traffic_generator.config import DEFAULT_PROFILES_PATH, MAX_TEST_DURATION_SECONDS, PROFILE_NAMES
+from traffic_generator.config import (
+    BRUTE_FORCE_ATTEMPT_PREFIX,
+    BRUTE_FORCE_ATTEMPTS_PER_SESSION,
+    DDOS_REQUEST,
+    DEFAULT_PROFILES_PATH,
+    DOS_REQUEST_BYTES,
+    LAB_PAGE_RESPONSE_BYTES,
+    MAX_TEST_DURATION_SECONDS,
+    PORT_SCAN_PROBE_TIMEOUT_SECONDS,
+    PROFILE_NAMES,
+)
+from traffic_generator.lab_server import LabEchoServer
 from traffic_generator.parameter_mapper import map_profile_to_parameters
 from traffic_generator.profile_loader import (
     extract_reference_features,
@@ -22,7 +36,7 @@ from traffic_generator.safety import (
     resolve_target_host,
     validate_test_limits,
 )
-from traffic_generator.traffic_generator import build_generator
+from traffic_generator.traffic_generator import _build_dos_request, _line_session, build_generator
 from traffic_generator.traffic_profile import TrafficParameters
 import threading
 
@@ -114,6 +128,14 @@ class TestParameterMapper(unittest.TestCase):
         )
         self.assertGreaterEqual(params.idle_gap_seconds, 5.0)
 
+    def test_dos_produces_about_one_connection_per_second(self) -> None:
+        for intensity, minimum in ((0.1, 0.8), (0.5, 0.9), (1.0, 1.1)):
+            params = map_profile_to_parameters("DoS", target_host="127.0.0.1", intensity=intensity)
+            burst = params.request_response_cycles * params.inter_message_delay_seconds
+            rate = params.request_response_cycles / (burst + params.idle_gap_seconds)
+            self.assertGreaterEqual(rate, minimum, msg=intensity)
+            self.assertAlmostEqual(params.connection_rate_per_sec, rate)
+
     def test_intensity_scales_rates(self) -> None:
         doc = load_profiles()
         low = map_profile_to_parameters(
@@ -165,6 +187,92 @@ class TestTrafficGenerators(unittest.TestCase):
         stats = gen.run()
         self.assertGreater(stats.connections_attempted, 0)
         self.assertGreater(stats.packets_sent, 0)
+
+
+class TestProfileWireShapes(unittest.TestCase):
+    def _fast(self, name: str) -> TrafficParameters:
+        params = map_profile_to_parameters(name, target_host="127.0.0.1", duration_seconds=0.1)
+        return TrafficParameters(
+            **{
+                **params.as_dict(),
+                "inter_message_delay_seconds": 0.01,
+                "forward_inter_delay_seconds": 0.01,
+                "idle_gap_seconds": 0.0,
+                "reference": params.reference,
+            }
+        )
+
+    @patch("traffic_generator.traffic_generator._line_session")
+    def test_brute_force_uses_one_session_of_short_attempt_lines(self, mock_session) -> None:
+        mock_session.return_value = (78, 12)
+        build_generator(self._fast("Brute Force"), threading.Event()).run()
+        lines = mock_session.call_args.args[2]
+        self.assertEqual(len(lines), BRUTE_FORCE_ATTEMPTS_PER_SESSION)
+        self.assertTrue(all(line.startswith(BRUTE_FORCE_ATTEMPT_PREFIX) and len(line) <= 16 for line in lines))
+
+    @patch("traffic_generator.traffic_generator._tcp_exchange")
+    def test_ddos_sends_tiny_page_request(self, mock_exchange) -> None:
+        mock_exchange.return_value = (len(DDOS_REQUEST), 2)
+        build_generator(self._fast("DDoS"), threading.Event()).run()
+        self.assertEqual(mock_exchange.call_args.args[2], DDOS_REQUEST)
+
+    @patch("traffic_generator.traffic_generator._tcp_exchange")
+    def test_dos_sends_full_header_page_request(self, mock_exchange) -> None:
+        stop = threading.Event()
+
+        def exchange(*_args, **_kwargs):
+            stop.set()  # skip the >5 s idle gap
+            return DOS_REQUEST_BYTES, 2
+
+        mock_exchange.side_effect = exchange
+        build_generator(self._fast("DoS"), stop).run()
+        request = mock_exchange.call_args.args[2]
+        self.assertEqual(len(request), DOS_REQUEST_BYTES)
+        self.assertTrue(request.startswith(b"GET /lab/dos/"))
+
+    @patch("traffic_generator.traffic_generator._tcp_probe")
+    def test_port_scan_probe_timeout_below_windows_syn_retry(self, mock_probe) -> None:
+        build_generator(self._fast("Port Scan"), threading.Event()).run()
+        self.assertTrue(mock_probe.called)
+        self.assertLess(PORT_SCAN_PROBE_TIMEOUT_SECONDS, 0.5)
+
+
+class TestLabEchoServerShapes(unittest.TestCase):
+    def setUp(self) -> None:
+        with socket.socket() as probe:
+            probe.bind(("127.0.0.1", 0))
+            self.port = probe.getsockname()[1]
+        self.server = LabEchoServer(port=self.port)
+        self.server.start()
+        deadline = time.monotonic() + 3.0
+        while time.monotonic() < deadline:
+            try:
+                socket.create_connection(("127.0.0.1", self.port), timeout=0.2).close()
+                break
+            except OSError:
+                time.sleep(0.05)
+
+    def tearDown(self) -> None:
+        self.server.stop()
+
+    def _fetch(self, request: bytes) -> bytes:
+        with socket.create_connection(("127.0.0.1", self.port), timeout=3.0) as sock:
+            sock.sendall(request)
+            chunks = []
+            while chunk := sock.recv(65536):
+                chunks.append(chunk)
+        return b"".join(chunks)
+
+    def test_page_paths_return_lab_page(self) -> None:
+        self.assertEqual(len(self._fetch(DDOS_REQUEST)), LAB_PAGE_RESPONSE_BYTES)
+        dos = _build_dos_request("127.0.0.1", self.port, 1)
+        self.assertEqual(len(self._fetch(dos)), LAB_PAGE_RESPONSE_BYTES)
+
+    def test_brute_force_line_session_gets_one_deny_per_attempt(self) -> None:
+        lines = [BRUTE_FORCE_ATTEMPT_PREFIX + b"%02d\r\n" % i for i in range(1, 4)]
+        sent, packets = _line_session("127.0.0.1", self.port, lines, lambda: 0.0, time.sleep)
+        self.assertEqual(sent, sum(len(line) for line in lines))
+        self.assertEqual(packets, 2 * len(lines))
 
 
 class TestControllerIntegration(unittest.TestCase):
@@ -242,6 +350,20 @@ class TestConnectivity(unittest.TestCase):
             use_http=True,
             enable_validation=True,
         )
+
+    @patch("traffic_generator.connectivity.probe_tcp_endpoint", return_value=(True, ""))
+    def test_single_pc_mode_allows_same_machine_but_still_probes(self, mock_probe) -> None:
+        from traffic_generator.connectivity import SINGLE_PC_ENV, require_two_machine_receiver
+
+        with patch.dict(os.environ, {SINGLE_PC_ENV: "1"}):
+            require_two_machine_receiver(
+                resolved_target="127.0.0.1",
+                target_port=8080,
+                profile_name="DDoS",
+                use_http=True,
+                enable_validation=False,
+            )
+        mock_probe.assert_called_once_with("127.0.0.1", 8080)
 
     @patch("traffic_generator.connectivity.probe_tcp_endpoint", return_value=(False, "connection refused"))
     def test_unreachable_receiver_rejected(self, _mock_probe) -> None:

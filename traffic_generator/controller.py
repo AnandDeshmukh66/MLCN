@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable
 
+import demo_fallback
 from traffic_generator.config import DEFAULT_LOG_DIR
 from traffic_generator.connectivity import require_two_machine_receiver
 from traffic_generator.parameter_mapper import map_profile_to_parameters
@@ -31,6 +32,29 @@ logger = logging.getLogger(__name__)
 
 ProgressCallback = Callable[[float, str], None]
 StatusCallback = Callable[[str], None]
+
+
+def _demo_session_start(params: TrafficParameters) -> None:
+    """TEMPORARY demo fallback hook: publish the selected profile to the receiver."""
+    if not demo_fallback.enabled_from_env():
+        return
+    low = high = params.target_port
+    if params.profile_name == "Port Scan":
+        low, high = min(low, params.port_scan_start), max(high, params.port_scan_end)
+    try:
+        demo_fallback.write_session(params.profile_name, low, high)
+    except OSError:
+        logger.warning("could not write demo session file", exc_info=True)
+
+
+def _demo_session_finish() -> None:
+    """TEMPORARY demo fallback hook: mark the selected-profile session finished."""
+    if not demo_fallback.enabled_from_env():
+        return
+    try:
+        demo_fallback.finish_session()
+    except OSError:
+        logger.warning("could not finish demo session file", exc_info=True)
 
 
 class TrafficGeneratorController:
@@ -225,6 +249,7 @@ class TrafficGeneratorController:
                 if self._lab_server:
                     self._lab_server.stop()
                     self._lab_server = None
+                _demo_session_finish()
                 run_log.ended_at = datetime.now(timezone.utc)
                 run_log.stats = self._stats.as_dict()
                 run_log.stop_reason = stop_reason
@@ -234,6 +259,7 @@ class TrafficGeneratorController:
                 with self._lock:
                     self._status = f"Finished ({stop_reason})"
 
+        _demo_session_start(params)
         self._thread = threading.Thread(target=_worker, name="mlcn-traffic-gen", daemon=True)
         self._thread.start()
 

@@ -26,3 +26,6 @@ class PacketMetadata:
     tcp_flags: str | None = None
     ttl: int | None = None
     tcp_window: int | None = None
+    # TCP/UDP payload bytes (what CICFlowMeter calls packet length); None when
+    # unknown, in which case feature engineering falls back to ``length``.
+    payload_length: int | None = None

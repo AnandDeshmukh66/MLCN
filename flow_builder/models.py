@@ -43,6 +43,8 @@ class Flow:
     forward_byte_count: int
     reverse_byte_count: int
     packets: tuple[PacketMetadata, ...]
+    # True when the last packet carried FIN and terminated the flow (CICFlowMeter rule).
+    closed_by_fin: bool = False
 
     @property
     def duration(self) -> float:

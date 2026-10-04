@@ -10,17 +10,20 @@ Network → Module 1: Packet Capture → Module 2: Packet Parsing → Module 3: 
 ## Responsibility
 
 Module 4 consumes `Flow` objects from Module 3 and emits a deterministic,
-ML-ready `FeatureVector` whose values follow the exact order and formulas in
-`data/common_feature_schema.json`.
+ML-ready `FeatureVector` whose values follow the exact order, units and
+formulas in `feature_engineering/contract.py` (documented in
+`data/common_feature_schema.json`).
 
 | Concern | Behavior |
 |---------|----------|
-| Feature count / order | Fixed 24 features matching the schema / XGBoost input |
-| Direction | Forward = first packet orientation; backward = opposite |
-| Rates | Bytes/s and packets/s are `0.0` when duration is 0 |
+| Feature count / order | Fixed 24 features matching `feature_engineering/contract.py` / XGBoost input |
+| Units | Durations, IATs, Active/Idle in **microseconds**; Bytes/s and Packets/s per second |
+| Lengths | Transport payload bytes (Ethernet padding included); Packet Length Mean/Std over n + 1 values |
+| Direction | Forward = first packet orientation; backward = opposite; Down/Up = floor(bwd / fwd) |
+| Rates | Zero-duration flows use the training-set medians (`ZERO_DURATION_RATE_FILL`) |
 | IAT / length std | Sample standard deviation (`ddof=1`); `0.0` with < 2 samples |
-| TCP flags | Counts `F/S/R/P/A/U` in `PacketMetadata.tcp_flags`; non-TCP → 0 |
-| Active / Idle | Gaps vs 5.0s threshold; no synthetic idle padding at flow close |
+| TCP flags | Binary bits of the **first** packet in CICFlowMeter's permuted columns; non-TCP → 0 |
+| Active / Idle | Recorded only at gaps > 5 s; no trailing active span; closing FIN ignored |
 | Bad input | Non-`Flow` raises `TypeError`; empty flows yield zeros where defined |
 
 ## Usage

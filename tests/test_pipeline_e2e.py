@@ -24,6 +24,22 @@ def _stamp(packet, seconds: float) -> None:
     packet.time = 1_700_000_000.0 + seconds
 
 
+def _tcp_pair(
+    *,
+    src: str = "10.0.0.1",
+    dst: str = "10.0.0.2",
+    sport: int = 54321,
+    dport: int = 80,
+    at: float = 0.0,
+) -> list:
+    """SYN + SYN/ACK: the smallest flow CICFlowMeter (and the pipeline) classifies."""
+    syn = make_tcp_packet(src=src, dst=dst, sport=sport, dport=dport, flags="S")
+    syn_ack = make_tcp_packet(src=dst, dst=src, sport=dport, dport=sport, flags="SA")
+    _stamp(syn, at)
+    _stamp(syn_ack, at + 0.001)
+    return [syn, syn_ack]
+
+
 class TestModuleHandoffs(unittest.TestCase):
     def test_module1_to_module2_handoff(self) -> None:
         """Module 1 parse path yields Module 2 PacketMetadata."""
@@ -43,25 +59,46 @@ class TestModuleHandoffs(unittest.TestCase):
 
     def test_module2_to_module3_handoff(self) -> None:
         pipeline = IntrusionDetectionPipeline(inactivity_timeout=60.0)
-        raw = make_tcp_packet(flags="S")
-        _stamp(raw, 0.0)
-        meta = parse_packet(raw)
-        self.assertIsNotNone(meta)
-
-        completed = pipeline.process_metadata(meta)
-        self.assertEqual(completed, [])
+        for raw in _tcp_pair():
+            meta = parse_packet(raw)
+            self.assertIsNotNone(meta)
+            completed = pipeline.process_metadata(meta)
+            self.assertEqual(completed, [])
         self.assertEqual(pipeline.active_flow_count, 1)
 
         flushed = pipeline.flush()
         self.assertEqual(len(flushed), 1)
         self.assertIsInstance(flushed[0].flow, Flow)
-        self.assertEqual(flushed[0].flow.packet_count, 1)
+        self.assertEqual(flushed[0].flow.packet_count, 2)
+
+    def test_single_packet_flows_are_not_classified(self) -> None:
+        pipeline = IntrusionDetectionPipeline()
+        raw = make_tcp_packet(flags="S")
+        _stamp(raw, 0.0)
+        self.assertEqual(pipeline.process_raw_packets([raw], flush=True), [])
+        self.assertEqual(pipeline.flows_skipped, 1)
+        self.assertEqual(pipeline.flows_detected, 0)
+
+    def test_fin_terminates_flow(self) -> None:
+        pipeline = IntrusionDetectionPipeline()
+        packets = _tcp_pair()
+        fin = make_tcp_packet(flags="FA")
+        _stamp(fin, 0.002)
+        packets.append(fin)
+        completed: list[PipelineResult] = []
+        for raw in packets:
+            completed.extend(pipeline.process_raw_packet(raw))
+        self.assertEqual(len(completed), 1)
+        self.assertTrue(completed[0].flow.closed_by_fin)
+        self.assertEqual(pipeline.active_flow_count, 0)
 
     def test_module3_to_module4_handoff(self) -> None:
         pipeline = IntrusionDetectionPipeline()
         raw = make_tcp_packet(flags="SA", payload=b"abc")
+        ack = make_tcp_packet(src="10.0.0.2", dst="10.0.0.1", sport=80, dport=54321, flags="A")
         _stamp(raw, 0.0)
-        results = pipeline.process_raw_packets([raw], flush=True)
+        _stamp(ack, 0.01)
+        results = pipeline.process_raw_packets([raw, ack], flush=True)
         self.assertEqual(len(results), 1)
 
         features = results[0].features
@@ -97,13 +134,17 @@ class TestModuleHandoffs(unittest.TestCase):
 class TestPipelineBehaviors(unittest.TestCase):
     def test_multiple_flows(self) -> None:
         pipeline = IntrusionDetectionPipeline(inactivity_timeout=60.0)
-        packets = [
-            make_tcp_packet(src="10.0.0.1", dst="10.0.0.2", sport=1111, dport=80, flags="S"),
-            make_tcp_packet(src="10.0.0.3", dst="10.0.0.4", sport=2222, dport=443, flags="S"),
+        udp = [
             make_udp_packet(src="10.0.0.5", dst="10.0.0.6", sport=3333, dport=53),
+            make_udp_packet(src="10.0.0.6", dst="10.0.0.5", sport=53, dport=3333),
         ]
-        for index, pkt in enumerate(packets):
-            _stamp(pkt, float(index))
+        _stamp(udp[0], 2.0)
+        _stamp(udp[1], 2.1)
+        packets = [
+            *_tcp_pair(src="10.0.0.1", dst="10.0.0.2", sport=1111, dport=80, at=0.0),
+            *_tcp_pair(src="10.0.0.3", dst="10.0.0.4", sport=2222, dport=443, at=1.0),
+            *udp,
+        ]
 
         results = pipeline.process_raw_packets(packets, flush=True)
         self.assertEqual(len(results), 3)
@@ -114,10 +155,10 @@ class TestPipelineBehaviors(unittest.TestCase):
 
     def test_flush_at_shutdown_closes_active_flows(self) -> None:
         pipeline = IntrusionDetectionPipeline(inactivity_timeout=600.0)
-        pkt = make_tcp_packet(flags="S")
-        _stamp(pkt, 0.0)
+        pair = _tcp_pair()
+        pkt = pair[0]
 
-        mid = pipeline.process_raw_packets([pkt], flush=False)
+        mid = pipeline.process_raw_packets(pair, flush=False)
         self.assertEqual(mid, [])
         self.assertEqual(pipeline.active_flow_count, 1)
 
@@ -197,9 +238,11 @@ class TestPipelineBehaviors(unittest.TestCase):
             seen.append(result.predicted_class)
 
         pipeline = IntrusionDetectionPipeline(on_detection=on_detection)
-        pkt = make_udp_packet()
-        _stamp(pkt, 0.0)
-        results = pipeline.process_raw_packets([pkt], flush=True)
+        query = make_udp_packet()
+        reply = make_udp_packet(src="192.168.1.20", dst="192.168.1.10", sport=53, dport=53000)
+        _stamp(query, 0.0)
+        _stamp(reply, 0.05)
+        results = pipeline.process_raw_packets([query, reply], flush=True)
 
         self.assertEqual(len(results), 1)
         self.assertEqual(seen, [results[0].predicted_class])
@@ -211,10 +254,8 @@ class TestPipelineBehaviors(unittest.TestCase):
     def test_live_path_wires_capture_metadata_and_flushes(self) -> None:
         """Exercise run_live wiring without opening a real sniffer."""
         pipeline = IntrusionDetectionPipeline(interface=None)
-        raw = make_tcp_packet(flags="S")
-        _stamp(raw, 0.0)
-        meta = parse_packet(raw)
-        self.assertIsNotNone(meta)
+        metas = [parse_packet(raw) for raw in _tcp_pair()]
+        self.assertTrue(all(meta is not None for meta in metas))
 
         class _FakeCapture:
             def __init__(self, interface=None, bpf_filter=None) -> None:
@@ -222,7 +263,8 @@ class TestPipelineBehaviors(unittest.TestCase):
                 self.bpf_filter = bpf_filter
 
             def capture_metadata(self, callback) -> None:
-                callback(meta)
+                for meta in metas:
+                    callback(meta)
 
         with patch("pipeline.engine.PacketCaptureEngine", _FakeCapture):
             results = pipeline.run_live()
@@ -235,13 +277,13 @@ class TestPipelineBehaviors(unittest.TestCase):
 class TestPipelineResultShape(unittest.TestCase):
     def test_as_dict_contains_detection_fields(self) -> None:
         pipeline = IntrusionDetectionPipeline()
-        pkt = make_tcp_packet(flags="S")
-        _stamp(pkt, 0.0)
-        result = pipeline.process_raw_packets([pkt], flush=True)[0]
+        result = pipeline.process_raw_packets(_tcp_pair(), flush=True)[0]
         payload = result.as_dict()
         self.assertEqual(payload["predicted_class"], result.predicted_class)
         self.assertIn("probabilities", payload)
         self.assertEqual(len(payload["probabilities"]), 5)
+        self.assertFalse(payload["demo_fallback"])
+        self.assertEqual(payload["genuine_predicted_class"], result.predicted_class)
 
 
 if __name__ == "__main__":

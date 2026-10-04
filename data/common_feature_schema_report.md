@@ -1,6 +1,6 @@
 # MLCN Common Feature Schema Report
 
-Schema version: **1.0.0**
+Schema version: **2.0.0**
 
 ## Summary
 
@@ -9,44 +9,52 @@ Schema version: **1.0.0**
 - Features removed: **1**
 - Validation status: **PASSED**
 
-## Retained features (fixed order)
+## Retained features (fixed model order)
 
-1. Flow Duration
-2. Total Fwd Packets
-3. Total Backward Packets
-4. Fwd Packets Length Total
-5. Bwd Packets Length Total
-6. Fwd Packet Length Mean
-7. Bwd Packet Length Mean
-8. Flow Bytes/s
-9. Flow Packets/s
-10. Flow IAT Mean
-11. Flow IAT Std
-12. Fwd IAT Mean
-13. Bwd IAT Mean
-14. Packet Length Mean
-15. Packet Length Std
-16. FIN Flag Count
-17. SYN Flag Count
-18. RST Flag Count
-19. PSH Flag Count
-20. ACK Flag Count
-21. URG Flag Count
-22. Down/Up Ratio
-23. Active Mean
-24. Idle Mean
+1. Flow Duration (microseconds)
+2. Total Fwd Packets (packets)
+3. Total Backward Packets (packets)
+4. Fwd Packets Length Total (payload bytes)
+5. Bwd Packets Length Total (payload bytes)
+6. Fwd Packet Length Mean (payload bytes)
+7. Bwd Packet Length Mean (payload bytes)
+8. Flow Bytes/s (payload bytes per second)
+9. Flow Packets/s (packets per second)
+10. Flow IAT Mean (microseconds)
+11. Flow IAT Std (microseconds)
+12. Fwd IAT Mean (microseconds)
+13. Bwd IAT Mean (microseconds)
+14. Packet Length Mean (payload bytes)
+15. Packet Length Std (payload bytes)
+16. FIN Flag Count (binary)
+17. SYN Flag Count (binary)
+18. RST Flag Count (binary)
+19. PSH Flag Count (binary)
+20. ACK Flag Count (binary)
+21. URG Flag Count (binary)
+22. Down/Up Ratio (ratio)
+23. Active Mean (microseconds)
+24. Idle Mean (microseconds)
 
 ## Removed / rejected candidates
 
-- **Average Packet Size** (candidate #22): Algebraically equivalent to Packet Length Mean when Module 3 maintains byte_count == sum(PacketMetadata.length). Retain Packet Length Mean only to avoid duplicate schema columns.
+- **Average Packet Size** (candidate #22): Near-duplicate of Packet Length Mean (same payload sum; n instead of n + 1 values). The trained model uses only Packet Length Mean.
 
 ## Validation
 
 - No validation errors.
 
-## Module compatibility
+## CIC-IDS2017 semantics
 
-All retained features are derivable from `PacketMetadata` and `Flow` without changing Module 3. Activity/idle statistics use a fixed 5.0s threshold aligned with CICFlowMeter defaults, but omit synthetic trailing idle padding at flow close.
+- Time features are microseconds; Flow Bytes/s and Flow Packets/s are per second.
+- Lengths are transport payload bytes, including Ethernet padding.
+- Packet Length Mean/Std use n + 1 values (first payload counted twice).
+- Flag columns are binary bits of the first packet in CICFlowMeter's permuted columns.
+- Down/Up Ratio is floor(backward / forward).
+- Active/Idle use a 5 s threshold; the trailing active span is not recorded and the closing FIN does not update activity.
+- Flows end on the first FIN or after 120 s; flows with fewer than 2 packets or other than TCP/UDP are not classified.
+
+Units and types come from `feature_engineering/contract.py`.
 
 ## Artifacts
 

@@ -1,8 +1,12 @@
 """
 Common feature schema specification and validation for MLCN Step 8.
 
-Finalizes CICIDS-style flow features derivable from Module 2 PacketMetadata
-and Module 3 Flow without implementing Module 4 feature engineering.
+Documents the 24 CIC-IDS2017 (CICFlowMeter) features the XGBoost model was
+trained on and how each is derived from Module 2 PacketMetadata and Module 3
+Flow. Units and data types come from ``feature_engineering.contract`` (the
+contract verified against the training data), so this document cannot drift
+from what the live pipeline produces. ``_reference_feature_values`` is an
+independent re-implementation used to cross-check Module 4.
 """
 
 from __future__ import annotations
@@ -13,22 +17,55 @@ import math
 import statistics
 import sys
 from dataclasses import dataclass, fields
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any, Sequence
 
-from flow_builder.models import Flow
+from feature_engineering.contract import (
+    ACTIVITY_TIMEOUT_SECONDS,
+    CLASSIFIED_PROTOCOLS,
+    FEATURE_SPECS,
+    FLOW_TIMEOUT_SECONDS,
+    MIN_FLOW_PACKETS,
+    TERMINATE_FLOW_ON_FIN,
+    ZERO_DURATION_RATE_FILL,
+)
+from flow_builder.models import Flow, FlowKey
 from packet_parsing.models import PacketMetadata
 
-SCHEMA_VERSION = "1.0.0"
-
-# CICFlowMeter default activity timeout (5_000_000 microseconds).
-ACTIVITY_TIMEOUT_SECONDS = 5.0
+SCHEMA_VERSION = "2.0.0"
 
 # Stable artifact paths relative to the repository root.
 DEFAULT_SCHEMA_PATH = Path("data/common_feature_schema.json")
 DEFAULT_REPORT_PATH = Path("data/common_feature_schema_report.md")
+
+_CONTRACT = {spec.name: spec for spec in FEATURE_SPECS}
+
+# Rejected candidate (not in the contract): same payload sum as Packet Length Mean.
+_AVERAGE_PACKET_SIZE = ("float", "payload bytes")
+
+_PAYLOAD_SOURCES = ("Flow.packets", "Flow.packets[].payload_length", "Flow.packets[].length")
+_DIRECTION_SOURCES = (
+    "Flow.packets",
+    "Flow.packets[].timestamp",
+    "Flow.packets[].src_ip",
+    "Flow.packets[].dst_ip",
+    "Flow.packets[].src_port",
+    "Flow.packets[].dst_port",
+)
+_FIRST_PACKET_FLAG_SOURCES = ("Flow.packets", "Flow.packets[].tcp_flags", "Flow.packets[].protocol")
+
+# CICFlowMeter 2017 writes first-packet TCP bits into permuted columns
+# (column -> Scapy flag letter). Kept here independently of Module 4 on purpose.
+_REFERENCE_FLAG_SOURCE = {
+    "FIN Flag Count": "R",
+    "SYN Flag Count": "P",
+    "RST Flag Count": "C",
+    "PSH Flag Count": "S",
+    "ACK Flag Count": "A",
+    "URG Flag Count": "F",
+}
 
 
 class DerivationKind(str, Enum):
@@ -102,468 +139,271 @@ def _edge(*pairs: tuple[str, str]) -> dict[str, str]:
     return dict(pairs)
 
 
+def _cic(status: CICCompatibility, notes: str) -> dict[str, str]:
+    return {"status": status.value, "notes": notes}
+
+
+def _feature(
+    index: int,
+    name: str,
+    formula: str,
+    sources: tuple[str, ...],
+    derivation: DerivationKind,
+    edges: dict[str, str],
+    cic_notes: str,
+    *,
+    status: CICCompatibility = CICCompatibility.COMPATIBLE,
+) -> FeatureDefinition:
+    if name in _CONTRACT:
+        data_type, unit = _CONTRACT[name].dtype, _CONTRACT[name].unit
+    else:
+        data_type, unit = _AVERAGE_PACKET_SIZE
+    return FeatureDefinition(
+        candidate_index=index,
+        canonical_name=name,
+        formula=formula,
+        source_fields=sources,
+        data_type=data_type,
+        unit=unit,
+        derivation=derivation,
+        edge_case_rules=edges,
+        cicflowmeter=_cic(status, cic_notes),
+    )
+
+
+def _flag_feature(index: int, name: str) -> FeatureDefinition:
+    letter = _REFERENCE_FLAG_SOURCE[name]
+    return _feature(
+        index,
+        name,
+        f"1 if the first packet is TCP and has flag '{letter}', else 0",
+        _FIRST_PACKET_FLAG_SOURCES,
+        DerivationKind.DERIVED,
+        _edge(
+            ("non_tcp_flow", "0 for UDP / non-TCP flows"),
+            ("later_packets", "flags of packets after the first are ignored"),
+            ("empty_packet_collection", "0 when packet_count is 0"),
+        ),
+        "CIC-IDS2017 flag columns are binary first-packet bits written into permuted "
+        f"columns; this column carries the '{letter}' bit (verified on training rows).",
+    )
+
+
 def build_candidate_feature_definitions() -> list[FeatureDefinition]:
     """Return all 25 candidate features in fixed candidate order."""
-    defs: list[FeatureDefinition] = [
-        FeatureDefinition(
-            candidate_index=1,
-            canonical_name="Flow Duration",
-            formula="max(0, (Flow.end_time - Flow.start_time) in seconds)",
-            source_fields=("Flow.start_time", "Flow.end_time"),
-            data_type="float",
-            unit="seconds",
-            derivation=DerivationKind.DIRECT,
-            edge_case_rules=_edge(
-                ("zero_duration_flow", "0.0 when start_time equals end_time"),
-                ("negative_clock_skew", "clamp to 0.0 if computed duration is negative"),
+    D, R = DerivationKind.DIRECT, DerivationKind.DERIVED
+    zero_rate = ZERO_DURATION_RATE_FILL
+    return [
+        _feature(
+            1,
+            "Flow Duration",
+            "last packet timestamp - first packet timestamp, integer microseconds",
+            ("Flow.start_time", "Flow.end_time"),
+            D,
+            _edge(
+                ("zero_duration_flow", "0 when all packets share one timestamp"),
+                ("negative_clock_skew", "clamp to 0 if computed duration is negative"),
             ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "Matches CICFlowMeter flow duration (last_seen - flow_start).",
-            },
+            "CICFlowMeter flow duration in microseconds.",
         ),
-        FeatureDefinition(
-            candidate_index=2,
-            canonical_name="Total Fwd Packets",
-            formula="Flow.forward_packet_count",
-            source_fields=("Flow.forward_packet_count",),
-            data_type="int",
-            unit="count",
-            derivation=DerivationKind.DIRECT,
-            edge_case_rules=_edge(
-                ("empty_packet_collection", "0 when packet_count is 0"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "CIC forward (client-to-server) packet count.",
-            },
+        _feature(
+            2,
+            "Total Fwd Packets",
+            "count of packets with the first packet's orientation",
+            ("Flow.forward_packet_count",),
+            D,
+            _edge(("empty_packet_collection", "0 when packet_count is 0")),
+            "Forward = direction of the first captured packet.",
         ),
-        FeatureDefinition(
-            candidate_index=3,
-            canonical_name="Total Backward Packets",
-            formula="Flow.reverse_packet_count",
-            source_fields=("Flow.reverse_packet_count",),
-            data_type="int",
-            unit="count",
-            derivation=DerivationKind.DIRECT,
-            edge_case_rules=_edge(
+        _feature(
+            3,
+            "Total Backward Packets",
+            "count of packets with the opposite orientation",
+            ("Flow.reverse_packet_count",),
+            D,
+            _edge(
                 ("zero_backward_packets", "0 when no reverse-direction packets observed"),
                 ("empty_packet_collection", "0 when packet_count is 0"),
             ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "CIC backward packet count.",
-            },
+            "CIC backward packet count.",
         ),
-        FeatureDefinition(
-            candidate_index=4,
-            canonical_name="Fwd Packets Length Total",
-            formula="Flow.forward_byte_count",
-            source_fields=("Flow.forward_byte_count",),
-            data_type="int",
-            unit="bytes",
-            derivation=DerivationKind.DIRECT,
-            edge_case_rules=_edge(
+        _feature(
+            4,
+            "Fwd Packets Length Total",
+            "sum of forward transport payload bytes (Ethernet padding included)",
+            _PAYLOAD_SOURCES,
+            R,
+            _edge(
                 ("zero_forward_packets", "0 when forward_packet_count is 0"),
+                ("payload_length_missing", "fall back to PacketMetadata.length"),
             ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "Total forward payload length.",
-            },
+            "CIC counts TCP/UDP payload bytes, not wire length.",
         ),
-        FeatureDefinition(
-            candidate_index=5,
-            canonical_name="Bwd Packets Length Total",
-            formula="Flow.reverse_byte_count",
-            source_fields=("Flow.reverse_byte_count",),
-            data_type="int",
-            unit="bytes",
-            derivation=DerivationKind.DIRECT,
-            edge_case_rules=_edge(
+        _feature(
+            5,
+            "Bwd Packets Length Total",
+            "sum of backward transport payload bytes (Ethernet padding included)",
+            _PAYLOAD_SOURCES,
+            R,
+            _edge(
                 ("zero_backward_packets", "0 when reverse_packet_count is 0"),
+                ("payload_length_missing", "fall back to PacketMetadata.length"),
             ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "Total backward payload length.",
-            },
+            "CIC counts TCP/UDP payload bytes, not wire length.",
         ),
-        FeatureDefinition(
-            candidate_index=6,
-            canonical_name="Fwd Packet Length Mean",
-            formula="Flow.forward_byte_count / Flow.forward_packet_count",
-            source_fields=("Flow.forward_byte_count", "Flow.forward_packet_count"),
-            data_type="float",
-            unit="bytes",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("zero_forward_packets", "0.0 when forward_packet_count is 0"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "Mean forward packet length.",
-            },
+        _feature(
+            6,
+            "Fwd Packet Length Mean",
+            "Fwd Packets Length Total / Total Fwd Packets",
+            _PAYLOAD_SOURCES,
+            R,
+            _edge(("zero_forward_packets", "0.0 when forward_packet_count is 0")),
+            "Mean forward payload length.",
         ),
-        FeatureDefinition(
-            candidate_index=7,
-            canonical_name="Bwd Packet Length Mean",
-            formula="Flow.reverse_byte_count / Flow.reverse_packet_count",
-            source_fields=("Flow.reverse_byte_count", "Flow.reverse_packet_count"),
-            data_type="float",
-            unit="bytes",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("zero_backward_packets", "0.0 when reverse_packet_count is 0"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "Mean backward packet length.",
-            },
+        _feature(
+            7,
+            "Bwd Packet Length Mean",
+            "Bwd Packets Length Total / Total Backward Packets",
+            _PAYLOAD_SOURCES,
+            R,
+            _edge(("zero_backward_packets", "0.0 when reverse_packet_count is 0")),
+            "Mean backward payload length.",
         ),
-        FeatureDefinition(
-            candidate_index=8,
-            canonical_name="Flow Bytes/s",
-            formula="Flow.byte_count / Flow.duration",
-            source_fields=("Flow.byte_count", "Flow.start_time", "Flow.end_time"),
-            data_type="float",
-            unit="bytes_per_second",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("zero_duration_flow", "0.0 when duration is 0"),
-                ("one_packet_flow", "0.0 when the sole packet yields zero duration"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "Total bytes divided by duration in seconds.",
-            },
-        ),
-        FeatureDefinition(
-            candidate_index=9,
-            canonical_name="Flow Packets/s",
-            formula="Flow.packet_count / Flow.duration",
-            source_fields=("Flow.packet_count", "Flow.start_time", "Flow.end_time"),
-            data_type="float",
-            unit="packets_per_second",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("zero_duration_flow", "0.0 when duration is 0"),
-                ("one_packet_flow", "0.0 when the sole packet yields zero duration"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "Total packets divided by duration in seconds.",
-            },
-        ),
-        FeatureDefinition(
-            candidate_index=10,
-            canonical_name="Flow IAT Mean",
-            formula=(
-                "mean([t_i - t_{i-1} for i in 1..n-1]) over Flow.packets ordered by "
-                "PacketMetadata.timestamp"
-            ),
-            source_fields=("Flow.packets", "Flow.packets[].timestamp"),
-            data_type="float",
-            unit="seconds",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("one_packet_flow", "0.0 when packet_count < 2"),
-                ("empty_packet_collection", "0.0 when packet_count is 0"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "Mean inter-arrival time across all flow packets.",
-            },
-        ),
-        FeatureDefinition(
-            candidate_index=11,
-            canonical_name="Flow IAT Std",
-            formula="sample_std([t_i - t_{i-1} for i in 1..n-1]) with ddof=1",
-            source_fields=("Flow.packets", "Flow.packets[].timestamp"),
-            data_type="float",
-            unit="seconds",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("one_packet_flow", "0.0 when fewer than 2 inter-arrival intervals exist"),
-                ("empty_packet_collection", "0.0 when packet_count is 0"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "Sample standard deviation (n-1) of flow inter-arrival times.",
-            },
-        ),
-        FeatureDefinition(
-            candidate_index=12,
-            canonical_name="Fwd IAT Mean",
-            formula=(
-                "mean inter-arrival times between consecutive forward-direction packets "
-                "(same 5-tuple orientation as the first packet in the flow)"
-            ),
-            source_fields=(
-                "Flow.packets",
-                "Flow.packets[].timestamp",
-                "Flow.packets[].src_ip",
-                "Flow.packets[].dst_ip",
-                "Flow.packets[].src_port",
-                "Flow.packets[].dst_port",
-            ),
-            data_type="float",
-            unit="seconds",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("one_packet_flow", "0.0 when fewer than 2 forward packets exist"),
-                ("zero_forward_packets", "0.0 when forward_packet_count is 0"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "Mean forward-direction inter-arrival time.",
-            },
-        ),
-        FeatureDefinition(
-            candidate_index=13,
-            canonical_name="Bwd IAT Mean",
-            formula=(
-                "mean inter-arrival times between consecutive reverse-direction packets"
-            ),
-            source_fields=(
-                "Flow.packets",
-                "Flow.packets[].timestamp",
-                "Flow.packets[].src_ip",
-                "Flow.packets[].dst_ip",
-                "Flow.packets[].src_port",
-                "Flow.packets[].dst_port",
-            ),
-            data_type="float",
-            unit="seconds",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("zero_backward_packets", "0.0 when fewer than 2 reverse packets exist"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "Mean backward-direction inter-arrival time.",
-            },
-        ),
-        FeatureDefinition(
-            candidate_index=14,
-            canonical_name="Packet Length Mean",
-            formula="mean([PacketMetadata.length for each packet in Flow.packets])",
-            source_fields=("Flow.packets", "Flow.packets[].length"),
-            data_type="float",
-            unit="bytes",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("empty_packet_collection", "0.0 when packet_count is 0"),
-                ("one_packet_flow", "equals the single packet length"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "Mean of all packet lengths in the flow.",
-            },
-        ),
-        FeatureDefinition(
-            candidate_index=15,
-            canonical_name="Packet Length Std",
-            formula="sample_std([PacketMetadata.length ...]) with ddof=1",
-            source_fields=("Flow.packets", "Flow.packets[].length"),
-            data_type="float",
-            unit="bytes",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("one_packet_flow", "0.0 when fewer than 2 packets exist"),
-                ("empty_packet_collection", "0.0 when packet_count is 0"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "Sample standard deviation of packet lengths.",
-            },
-        ),
-        FeatureDefinition(
-            candidate_index=16,
-            canonical_name="FIN Flag Count",
-            formula="count(packets where 'F' in PacketMetadata.tcp_flags)",
-            source_fields=("Flow.packets", "Flow.packets[].tcp_flags"),
-            data_type="int",
-            unit="count",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("missing_tcp_flags", "non-TCP packets (tcp_flags is None) contribute 0"),
-                ("empty_packet_collection", "0 when packet_count is 0"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "Count of packets with FIN set.",
-            },
-        ),
-        FeatureDefinition(
-            candidate_index=17,
-            canonical_name="SYN Flag Count",
-            formula="count(packets where 'S' in PacketMetadata.tcp_flags)",
-            source_fields=("Flow.packets", "Flow.packets[].tcp_flags"),
-            data_type="int",
-            unit="count",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("missing_tcp_flags", "non-TCP packets (tcp_flags is None) contribute 0"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "Count of packets with SYN set.",
-            },
-        ),
-        FeatureDefinition(
-            candidate_index=18,
-            canonical_name="RST Flag Count",
-            formula="count(packets where 'R' in PacketMetadata.tcp_flags)",
-            source_fields=("Flow.packets", "Flow.packets[].tcp_flags"),
-            data_type="int",
-            unit="count",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("missing_tcp_flags", "non-TCP packets (tcp_flags is None) contribute 0"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "Count of packets with RST set.",
-            },
-        ),
-        FeatureDefinition(
-            candidate_index=19,
-            canonical_name="PSH Flag Count",
-            formula="count(packets where 'P' in PacketMetadata.tcp_flags)",
-            source_fields=("Flow.packets", "Flow.packets[].tcp_flags"),
-            data_type="int",
-            unit="count",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("missing_tcp_flags", "non-TCP packets (tcp_flags is None) contribute 0"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "Count of packets with PSH set.",
-            },
-        ),
-        FeatureDefinition(
-            candidate_index=20,
-            canonical_name="ACK Flag Count",
-            formula="count(packets where 'A' in PacketMetadata.tcp_flags)",
-            source_fields=("Flow.packets", "Flow.packets[].tcp_flags"),
-            data_type="int",
-            unit="count",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("missing_tcp_flags", "non-TCP packets (tcp_flags is None) contribute 0"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "Count of packets with ACK set.",
-            },
-        ),
-        FeatureDefinition(
-            candidate_index=21,
-            canonical_name="URG Flag Count",
-            formula="count(packets where 'U' in PacketMetadata.tcp_flags)",
-            source_fields=("Flow.packets", "Flow.packets[].tcp_flags"),
-            data_type="int",
-            unit="count",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("missing_tcp_flags", "non-TCP packets (tcp_flags is None) contribute 0"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "Count of packets with URG set.",
-            },
-        ),
-        FeatureDefinition(
-            candidate_index=22,
-            canonical_name="Average Packet Size",
-            formula="Flow.byte_count / Flow.packet_count",
-            source_fields=("Flow.byte_count", "Flow.packet_count"),
-            data_type="float",
-            unit="bytes",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("empty_packet_collection", "0.0 when packet_count is 0"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE.value,
-                "notes": "CIC Avg Packet Size = total length / packet count.",
-            },
-        ),
-        FeatureDefinition(
-            candidate_index=23,
-            canonical_name="Down/Up Ratio",
-            formula="Flow.forward_packet_count / Flow.reverse_packet_count",
-            source_fields=("Flow.forward_packet_count", "Flow.reverse_packet_count"),
-            data_type="float",
-            unit="ratio",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("zero_backward_packets", "0.0 when reverse_packet_count is 0"),
-                ("zero_forward_packets", "0.0 when forward_packet_count is 0"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.MODIFIED.value,
-                "notes": (
-                    "CICFlowMeter uses backward/forward (integer division). MLCN common "
-                    "schema uses forward/backward (float division) per project convention."
+        _feature(
+            8,
+            "Flow Bytes/s",
+            "total payload bytes / (Flow Duration / 1e6)",
+            (*_PAYLOAD_SOURCES, "Flow.start_time", "Flow.end_time"),
+            R,
+            _edge(
+                (
+                    "zero_duration_flow",
+                    f"{zero_rate['Flow Bytes/s']} (training-set median used to fill NaN/inf)",
                 ),
-            },
-            modification_notes=(
-                "Inverted ratio direction relative to CICFlowMeter; safe 0.0 when "
-                "either direction count is zero."
             ),
+            "Per second although durations are microseconds.",
         ),
-        FeatureDefinition(
-            candidate_index=24,
-            canonical_name="Active Mean",
-            formula=(
-                "mean duration of active periods where consecutive packet gaps are "
-                f"<= {ACTIVITY_TIMEOUT_SECONDS} seconds; active periods split when gap "
-                "exceeds threshold; finalize trailing active period at flow end"
-            ),
-            source_fields=("Flow.packets", "Flow.packets[].timestamp", "Flow.end_time"),
-            data_type="float",
-            unit="seconds",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("one_packet_flow", "0.0 when no completed active period spans > 0 seconds"),
-                ("zero_duration_flow", "0.0 when all packets share one timestamp"),
-                ("empty_packet_collection", "0.0 when packet_count is 0"),
-            ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE_WITH_NOTES.value,
-                "notes": (
-                    f"Uses CICFlowMeter activity timeout ({ACTIVITY_TIMEOUT_SECONDS}s). "
-                    "Does not append synthetic trailing idle to flow timeout because "
-                    "Module 3 already closes flows explicitly."
+        _feature(
+            9,
+            "Flow Packets/s",
+            "packet_count / (Flow Duration / 1e6)",
+            ("Flow.packet_count", "Flow.start_time", "Flow.end_time"),
+            R,
+            _edge(
+                (
+                    "zero_duration_flow",
+                    f"{zero_rate['Flow Packets/s']} (training-set median used to fill NaN/inf)",
                 ),
-            },
+            ),
+            "Per second although durations are microseconds.",
         ),
-        FeatureDefinition(
-            candidate_index=25,
-            canonical_name="Idle Mean",
-            formula=(
-                f"mean duration of idle gaps where consecutive packet gap > "
-                f"{ACTIVITY_TIMEOUT_SECONDS} seconds"
+        _feature(
+            10,
+            "Flow IAT Mean",
+            "mean of consecutive packet timestamp gaps, microseconds",
+            ("Flow.packets", "Flow.packets[].timestamp"),
+            R,
+            _edge(("one_packet_flow", "0.0 when packet_count < 2")),
+            "Mean inter-arrival time across all flow packets.",
+        ),
+        _feature(
+            11,
+            "Flow IAT Std",
+            "sample std (ddof=1) of consecutive packet gaps, microseconds",
+            ("Flow.packets", "Flow.packets[].timestamp"),
+            R,
+            _edge(("few_intervals", "0.0 when fewer than 2 inter-arrival intervals exist")),
+            "Sample standard deviation of flow inter-arrival times.",
+        ),
+        _feature(
+            12,
+            "Fwd IAT Mean",
+            "mean gap between consecutive forward packets, microseconds",
+            _DIRECTION_SOURCES,
+            R,
+            _edge(("one_forward_packet", "0.0 when fewer than 2 forward packets exist")),
+            "Mean forward-direction inter-arrival time.",
+        ),
+        _feature(
+            13,
+            "Bwd IAT Mean",
+            "mean gap between consecutive backward packets, microseconds",
+            _DIRECTION_SOURCES,
+            R,
+            _edge(("one_backward_packet", "0.0 when fewer than 2 reverse packets exist")),
+            "Mean backward-direction inter-arrival time.",
+        ),
+        _feature(
+            14,
+            "Packet Length Mean",
+            "mean of [first payload] + every payload (n + 1 values)",
+            _PAYLOAD_SOURCES,
+            R,
+            _edge(("empty_packet_collection", "0.0 when packet_count is 0")),
+            "CICFlowMeter adds the first packet's payload twice.",
+        ),
+        _feature(
+            15,
+            "Packet Length Std",
+            "sample std (ddof=1) of [first payload] + every payload",
+            _PAYLOAD_SOURCES,
+            R,
+            _edge(("empty_packet_collection", "0.0 when packet_count is 0")),
+            "Computed over the same n + 1 values as Packet Length Mean.",
+        ),
+        _flag_feature(16, "FIN Flag Count"),
+        _flag_feature(17, "SYN Flag Count"),
+        _flag_feature(18, "RST Flag Count"),
+        _flag_feature(19, "PSH Flag Count"),
+        _flag_feature(20, "ACK Flag Count"),
+        _flag_feature(21, "URG Flag Count"),
+        _feature(
+            22,
+            "Average Packet Size",
+            "total payload bytes / packet_count",
+            (*_PAYLOAD_SOURCES, "Flow.packet_count"),
+            R,
+            _edge(("empty_packet_collection", "0.0 when packet_count is 0")),
+            "CIC Average Packet Size.",
+        ),
+        _feature(
+            23,
+            "Down/Up Ratio",
+            "floor(Total Backward Packets / Total Fwd Packets)",
+            ("Flow.forward_packet_count", "Flow.reverse_packet_count"),
+            R,
+            _edge(("zero_forward_packets", "0.0 when forward_packet_count is 0")),
+            "CICFlowMeter integer division backward / forward.",
+        ),
+        _feature(
+            24,
+            "Active Mean",
+            (
+                "mean active span recorded when a gap > "
+                f"{ACTIVITY_TIMEOUT_SECONDS:g} s starts an idle period, microseconds; the "
+                "trailing active span is never recorded"
             ),
-            source_fields=("Flow.packets", "Flow.packets[].timestamp"),
-            data_type="float",
-            unit="seconds",
-            derivation=DerivationKind.DERIVED,
-            edge_case_rules=_edge(
-                ("one_packet_flow", "0.0 when no idle gap exceeds activity threshold"),
-                ("empty_packet_collection", "0.0 when packet_count is 0"),
+            ("Flow.packets", "Flow.packets[].timestamp", "Flow.closed_by_fin"),
+            R,
+            _edge(
+                ("no_idle_gap", "0.0 when no gap exceeds the activity timeout"),
+                ("closing_fin", "the FIN packet that closed the flow does not update activity"),
             ),
-            cicflowmeter={
-                "status": CICCompatibility.COMPATIBLE_WITH_NOTES.value,
-                "notes": (
-                    "Idle segments derived only from observed inter-packet gaps; no "
-                    "synthetic idle padding at flow close."
-                ),
-            },
+            f"CICFlowMeter {ACTIVITY_TIMEOUT_SECONDS:g} s activity timeout.",
+        ),
+        _feature(
+            25,
+            "Idle Mean",
+            f"mean gap > {ACTIVITY_TIMEOUT_SECONDS:g} s between packets, microseconds",
+            ("Flow.packets", "Flow.packets[].timestamp", "Flow.closed_by_fin"),
+            R,
+            _edge(
+                ("no_idle_gap", "0.0 when no gap exceeds the activity timeout"),
+                ("closing_fin", "the FIN packet that closed the flow does not update activity"),
+            ),
+            f"CICFlowMeter {ACTIVITY_TIMEOUT_SECONDS:g} s activity timeout.",
         ),
     ]
-    return defs
 
 
 def build_rejected_features() -> list[RejectedFeature]:
@@ -572,9 +412,8 @@ def build_rejected_features() -> list[RejectedFeature]:
             candidate_index=22,
             canonical_name="Average Packet Size",
             reason=(
-                "Algebraically equivalent to Packet Length Mean when Module 3 maintains "
-                "byte_count == sum(PacketMetadata.length). Retain Packet Length Mean only "
-                "to avoid duplicate schema columns."
+                "Near-duplicate of Packet Length Mean (same payload sum; n instead of "
+                "n + 1 values). The trained model uses only Packet Length Mean."
             ),
         ),
     ]
@@ -605,13 +444,11 @@ def _is_forward_packet(flow: Flow, packet: PacketMetadata) -> bool:
     )
 
 
-def _timestamps(packets: Sequence[PacketMetadata]) -> list[float]:
-    return [packet.timestamp.timestamp() for packet in packets]
+def _microsecond_timestamps(packets: Sequence[PacketMetadata]) -> list[int]:
+    return [int(round(packet.timestamp.timestamp() * 1_000_000)) for packet in packets]
 
 
-def _iat_series(timestamps: Sequence[float]) -> list[float]:
-    if len(timestamps) < 2:
-        return []
+def _gaps(timestamps: Sequence[int]) -> list[int]:
     return [timestamps[i] - timestamps[i - 1] for i in range(1, len(timestamps))]
 
 
@@ -625,218 +462,198 @@ def _sample_std_or_zero(values: Sequence[float]) -> float:
     return float(statistics.stdev(values))
 
 
-def _flag_count(packets: Sequence[PacketMetadata], flag: str) -> int:
-    count = 0
-    for packet in packets:
-        flags = packet.tcp_flags
-        if flags and flag in flags.upper():
-            count += 1
-    return count
+def _payload(packet: PacketMetadata) -> int:
+    value = packet.payload_length if packet.payload_length is not None else packet.length
+    return max(0, int(value))
 
 
-def _active_idle_durations(flow: Flow) -> tuple[list[float], list[float]]:
-    packets = flow.packets
-    if not packets:
+def _active_idle_durations(flow: Flow) -> tuple[list[int], list[int]]:
+    times = _microsecond_timestamps(flow.packets)
+    if not times:
         return [], []
-
-    active_periods: list[float] = []
-    idle_periods: list[float] = []
-    times = _timestamps(packets)
-    start_active = times[0]
-    end_active = times[0]
-
-    for current in times[1:]:
+    threshold = ACTIVITY_TIMEOUT_SECONDS * 1_000_000
+    updates = times[1:-1] if flow.closed_by_fin else times[1:]
+    active_periods: list[int] = []
+    idle_periods: list[int] = []
+    start_active = end_active = times[0]
+    for current in updates:
         gap = current - end_active
-        if gap > ACTIVITY_TIMEOUT_SECONDS:
-            active_span = end_active - start_active
-            if active_span > 0:
-                active_periods.append(active_span)
+        if gap > threshold:
+            if end_active - start_active > 0:
+                active_periods.append(end_active - start_active)
             idle_periods.append(gap)
-            start_active = current
-            end_active = current
+            start_active = end_active = current
         else:
             end_active = current
-
-    final_active = end_active - start_active
-    if final_active > 0:
-        active_periods.append(final_active)
     return active_periods, idle_periods
 
 
-def _safe_duration(flow: Flow) -> float:
-    duration = flow.duration
-    return max(0.0, duration)
-
-
 def _reference_feature_values(flow: Flow) -> dict[str, float | int]:
-    """Compute probe values for derivability validation (not Module 4 API)."""
+    """Independent CIC-semantics computation used to cross-check Module 4."""
     packets = flow.packets
-    duration = _safe_duration(flow)
-    lengths = [max(0, int(packet.length)) for packet in packets]
-    all_iat = _iat_series(_timestamps(packets))
+    if not packets:
+        return {spec.name: 0 for spec in FEATURE_SPECS}
 
-    forward_packets = [p for p in packets if _is_forward_packet(flow, p)]
-    reverse_packets = [p for p in packets if not _is_forward_packet(flow, p)]
-    fwd_iat = _iat_series(_timestamps(forward_packets))
-    bwd_iat = _iat_series(_timestamps(reverse_packets))
+    times = _microsecond_timestamps(packets)
+    duration_us = max(0, max(times) - min(times))
+    payloads = [_payload(packet) for packet in packets]
+    forward = [_is_forward_packet(flow, packet) for packet in packets]
+    fwd_payload = [b for b, is_fwd in zip(payloads, forward) if is_fwd]
+    bwd_payload = [b for b, is_fwd in zip(payloads, forward) if not is_fwd]
+    fwd_times = [t for t, is_fwd in zip(times, forward) if is_fwd]
+    bwd_times = [t for t, is_fwd in zip(times, forward) if not is_fwd]
+    lengths = [payloads[0], *payloads]
     active_periods, idle_periods = _active_idle_durations(flow)
 
-    fwd_count = flow.forward_packet_count
-    rev_count = flow.reverse_packet_count
+    first = packets[0]
+    first_flags = (first.tcp_flags or "").upper() if first.protocol == "TCP" else ""
+    seconds = duration_us / 1_000_000
 
-    return {
-        "Flow Duration": duration,
-        "Total Fwd Packets": fwd_count,
-        "Total Backward Packets": rev_count,
-        "Fwd Packets Length Total": flow.forward_byte_count,
-        "Bwd Packets Length Total": flow.reverse_byte_count,
-        "Fwd Packet Length Mean": (
-            flow.forward_byte_count / fwd_count if fwd_count else 0.0
+    values: dict[str, float | int] = {
+        "Flow Duration": duration_us,
+        "Total Fwd Packets": len(fwd_payload),
+        "Total Backward Packets": len(bwd_payload),
+        "Fwd Packets Length Total": sum(fwd_payload),
+        "Bwd Packets Length Total": sum(bwd_payload),
+        "Fwd Packet Length Mean": _mean_or_zero(fwd_payload),
+        "Bwd Packet Length Mean": _mean_or_zero(bwd_payload),
+        "Flow Bytes/s": (
+            sum(payloads) / seconds if duration_us else ZERO_DURATION_RATE_FILL["Flow Bytes/s"]
         ),
-        "Bwd Packet Length Mean": (
-            flow.reverse_byte_count / rev_count if rev_count else 0.0
+        "Flow Packets/s": (
+            len(packets) / seconds if duration_us else ZERO_DURATION_RATE_FILL["Flow Packets/s"]
         ),
-        "Flow Bytes/s": (flow.byte_count / duration) if duration > 0 else 0.0,
-        "Flow Packets/s": (flow.packet_count / duration) if duration > 0 else 0.0,
-        "Flow IAT Mean": _mean_or_zero(all_iat),
-        "Flow IAT Std": _sample_std_or_zero(all_iat),
-        "Fwd IAT Mean": _mean_or_zero(fwd_iat),
-        "Bwd IAT Mean": _mean_or_zero(bwd_iat),
+        "Flow IAT Mean": _mean_or_zero(_gaps(times)),
+        "Flow IAT Std": _sample_std_or_zero(_gaps(times)),
+        "Fwd IAT Mean": _mean_or_zero(_gaps(fwd_times)),
+        "Bwd IAT Mean": _mean_or_zero(_gaps(bwd_times)),
         "Packet Length Mean": _mean_or_zero(lengths),
         "Packet Length Std": _sample_std_or_zero(lengths),
-        "FIN Flag Count": _flag_count(packets, "F"),
-        "SYN Flag Count": _flag_count(packets, "S"),
-        "RST Flag Count": _flag_count(packets, "R"),
-        "PSH Flag Count": _flag_count(packets, "P"),
-        "ACK Flag Count": _flag_count(packets, "A"),
-        "URG Flag Count": _flag_count(packets, "U"),
-        "Down/Up Ratio": (
-            (fwd_count / rev_count)
-            if fwd_count > 0 and rev_count > 0
-            else 0.0
-        ),
+        "Down/Up Ratio": float(len(bwd_payload) // len(fwd_payload)) if fwd_payload else 0.0,
         "Active Mean": _mean_or_zero(active_periods),
         "Idle Mean": _mean_or_zero(idle_periods),
     }
+    for column, letter in _REFERENCE_FLAG_SOURCE.items():
+        values[column] = int(letter in first_flags)
+    return values
+
+
+def _probe_ts(seconds: float) -> datetime:
+    return datetime.fromtimestamp(1_700_000_000.0 + seconds, tz=timezone.utc)
+
+
+def _probe_meta(
+    *,
+    at: float,
+    length: int = 100,
+    src_ip: str = "10.0.0.1",
+    dst_ip: str = "10.0.0.2",
+    src_port: int | None = 54321,
+    dst_port: int | None = 80,
+    tcp_flags: str | None = "A",
+    protocol: str = "TCP",
+    payload_length: int | None = None,
+) -> PacketMetadata:
+    return PacketMetadata(
+        timestamp=_probe_ts(at),
+        src_ip=src_ip,
+        dst_ip=dst_ip,
+        protocol=protocol,
+        src_port=src_port,
+        dst_port=dst_port,
+        length=length,
+        tcp_flags=tcp_flags if protocol == "TCP" else None,
+        ttl=64,
+        tcp_window=8192 if protocol == "TCP" else None,
+        payload_length=payload_length,
+    )
+
+
+def _probe_reverse(**kwargs: Any) -> PacketMetadata:
+    return _probe_meta(src_ip="10.0.0.2", dst_ip="10.0.0.1", src_port=80, dst_port=54321, **kwargs)
+
+
+def _probe_flow(packets: Sequence[PacketMetadata], *, closed_by_fin: bool = False) -> Flow:
+    anchor = packets[0]
+    key = FlowKey(
+        src_ip=anchor.src_ip or "",
+        dst_ip=anchor.dst_ip or "",
+        src_port=anchor.src_port,
+        dst_port=anchor.dst_port,
+        protocol=anchor.protocol,
+    )
+    forward = [
+        (p.src_ip, p.dst_ip, p.src_port, p.dst_port)
+        == (anchor.src_ip, anchor.dst_ip, anchor.src_port, anchor.dst_port)
+        for p in packets
+    ]
+    fwd_bytes = sum(p.length for p, is_fwd in zip(packets, forward) if is_fwd)
+    rev_bytes = sum(p.length for p, is_fwd in zip(packets, forward) if not is_fwd)
+    return Flow(
+        key=key,
+        start_time=packets[0].timestamp,
+        end_time=packets[-1].timestamp,
+        packet_count=len(packets),
+        byte_count=fwd_bytes + rev_bytes,
+        forward_packet_count=sum(forward),
+        reverse_packet_count=len(packets) - sum(forward),
+        forward_byte_count=fwd_bytes,
+        reverse_byte_count=rev_bytes,
+        packets=tuple(packets),
+        closed_by_fin=closed_by_fin,
+    )
 
 
 def _make_probe_flows() -> list[Flow]:
-    """Synthetic flows covering Step 8 edge cases."""
-    from datetime import timezone
-
-    def ts(seconds: float) -> datetime:
-        return datetime.fromtimestamp(1_700_000_000.0 + seconds, tz=timezone.utc)
-
-    def meta(
-        *,
-        at: float,
-        length: int = 100,
-        src_ip: str = "10.0.0.1",
-        dst_ip: str = "10.0.0.2",
-        src_port: int | None = 54321,
-        dst_port: int | None = 80,
-        tcp_flags: str | None = "A",
-    ) -> PacketMetadata:
-        return PacketMetadata(
-            timestamp=ts(at),
-            src_ip=src_ip,
-            dst_ip=dst_ip,
-            protocol="TCP",
-            src_port=src_port,
-            dst_port=dst_port,
-            length=length,
-            tcp_flags=tcp_flags,
-            ttl=64,
-            tcp_window=8192,
-        )
-
-    one_packet = (
-        meta(at=0.0, length=60, tcp_flags="S"),
-    )
-    bidirectional = (
-        meta(at=0.0, length=60, tcp_flags="S"),
-        meta(
-            at=1.0,
-            length=40,
-            src_ip="10.0.0.2",
-            dst_ip="10.0.0.1",
-            src_port=80,
-            dst_port=54321,
-            tcp_flags="SA",
-        ),
-    )
-    idle_gap = (
-        meta(at=0.0, length=50, tcp_flags="S"),
-        meta(at=1.0, length=50, tcp_flags="A"),
-        meta(at=10.0, length=50, tcp_flags="A"),
-    )
-    zero_duration = (
-        meta(at=5.0, length=80, tcp_flags="PA"),
-        meta(at=5.0, length=120, tcp_flags="A"),
-    )
-    udp_no_flags = (
-        PacketMetadata(
-            timestamp=ts(0.0),
-            src_ip="192.168.0.1",
-            dst_ip="192.168.0.2",
-            protocol="UDP",
-            src_port=1000,
-            dst_port=53,
-            length=200,
-            tcp_flags=None,
-            ttl=64,
-            tcp_window=None,
-        ),
-    )
-
-    def flow_from_packets(packets: Sequence[PacketMetadata]) -> Flow:
-        from flow_builder.models import FlowKey
-
-        anchor = packets[0]
-        key = FlowKey(
-            src_ip=min(anchor.src_ip or "", "z"),
-            dst_ip=anchor.dst_ip or "",
-            src_port=anchor.src_port,
-            dst_port=anchor.dst_port,
-            protocol=anchor.protocol,
-        )
-        fwd = rev = fwd_bytes = rev_bytes = 0
-        for packet in packets:
-            if (
-                packet.src_ip == anchor.src_ip
-                and packet.dst_ip == anchor.dst_ip
-                and packet.src_port == anchor.src_port
-                and packet.dst_port == anchor.dst_port
-            ):
-                fwd += 1
-                fwd_bytes += packet.length
-            else:
-                rev += 1
-                rev_bytes += packet.length
-        return Flow(
-            key=key,
-            start_time=packets[0].timestamp,
-            end_time=packets[-1].timestamp,
-            packet_count=len(packets),
-            byte_count=sum(p.length for p in packets),
-            forward_packet_count=fwd,
-            reverse_packet_count=rev,
-            forward_byte_count=fwd_bytes,
-            reverse_byte_count=rev_bytes,
-            packets=tuple(packets),
-        )
-
+    """Synthetic flows covering the contract's edge cases."""
     return [
-        flow_from_packets(one_packet),
-        flow_from_packets(bidirectional),
-        flow_from_packets(idle_gap),
-        flow_from_packets(zero_duration),
-        flow_from_packets(udp_no_flags),
+        _probe_flow((_probe_meta(at=0.0, length=60, tcp_flags="S"),)),
+        _probe_flow(
+            (
+                _probe_meta(at=0.0, length=0, tcp_flags="S"),
+                _probe_reverse(at=0.000066, length=6, tcp_flags="RA"),
+            )
+        ),
+        _probe_flow(
+            (
+                _probe_meta(at=0.0, length=60, tcp_flags="S"),
+                _probe_reverse(at=1.0, length=40, tcp_flags="SA"),
+                _probe_meta(at=2.0, length=80, tcp_flags="PA", payload_length=26),
+                _probe_reverse(at=2.5, length=11607, tcp_flags="PA"),
+                _probe_reverse(at=2.6, length=0, tcp_flags="A"),
+            )
+        ),
+        _probe_flow(
+            (
+                _probe_meta(at=0.0, length=50, tcp_flags="S"),
+                _probe_meta(at=1.0, length=50, tcp_flags="A"),
+                _probe_meta(at=10.0, length=50, tcp_flags="A"),
+                _probe_meta(at=11.0, length=50, tcp_flags="A"),
+                _probe_meta(at=30.0, length=0, tcp_flags="FA"),
+            ),
+            closed_by_fin=True,
+        ),
+        _probe_flow(
+            (
+                _probe_meta(at=5.0, length=80, tcp_flags="PA"),
+                _probe_meta(at=5.0, length=120, tcp_flags="A"),
+            )
+        ),
+        _probe_flow(
+            (
+                _probe_meta(at=0.0, length=200, protocol="UDP", src_port=1000, dst_port=53),
+                _probe_meta(
+                    at=0.2,
+                    length=300,
+                    protocol="UDP",
+                    src_ip="10.0.0.2",
+                    dst_ip="10.0.0.1",
+                    src_port=53,
+                    dst_port=1000,
+                ),
+            )
+        ),
     ]
-
-
-def _feature_to_probe_key(canonical_name: str) -> str:
-    return canonical_name
 
 
 def probe_derivation(
@@ -855,11 +672,10 @@ def probe_derivation(
             continue
 
         for name in retained_names:
-            key = _feature_to_probe_key(name)
-            if key not in values:
+            if name not in values:
                 errors.append(f"derivation probe missing value for {name!r}")
                 continue
-            value = values[key]
+            value = values[name]
             if isinstance(value, float) and (math.isnan(value) or math.isinf(value)):
                 errors.append(
                     f"derivation probe produced non-finite value for {name!r}: {value}"
@@ -882,6 +698,7 @@ def validate_schema(
     required_packet_fields = {
         "timestamp",
         "length",
+        "payload_length",
         "tcp_flags",
         "src_ip",
         "dst_ip",
@@ -898,6 +715,7 @@ def validate_schema(
         "forward_byte_count",
         "reverse_byte_count",
         "packets",
+        "closed_by_fin",
     }
 
     missing_packet = sorted(required_packet_fields - _packet_metadata_field_names())
@@ -921,6 +739,8 @@ def validate_schema(
     ]
     if retained_names != expected_order:
         errors.append("retained feature ordering is unstable or does not match candidate order")
+    if retained_names != [spec.name for spec in FEATURE_SPECS]:
+        errors.append("retained features do not match the model contract order")
 
     for feature in retained:
         if not feature.formula.strip():
@@ -934,6 +754,12 @@ def validate_schema(
                 errors.append(f"{feature.canonical_name}: unknown source field {source!r}")
         if feature.data_type == "duration":
             errors.append(f"{feature.canonical_name}: invalid data_type 'duration'")
+        spec = _CONTRACT.get(feature.canonical_name)
+        if spec is not None and (feature.unit, feature.data_type) != (spec.unit, spec.dtype):
+            errors.append(
+                f"{feature.canonical_name}: unit/type {feature.unit}/{feature.data_type} "
+                f"differs from contract {spec.unit}/{spec.dtype}"
+            )
 
     rejected_indices = {item.candidate_index for item in rejected}
     for feature in candidates:
@@ -987,15 +813,24 @@ def build_schema_document(
     return {
         "schema_version": SCHEMA_VERSION,
         "description": (
-            "MLCN common flow feature schema for CICIDS2017, CIC-DDoS2019, and CTU-13 "
-            "normalization. Derived from Module 2 PacketMetadata and Module 3 Flow."
+            "MLCN 24-feature schema: the CIC-IDS2017 (CICFlowMeter) columns the XGBoost "
+            "model was trained on, derived from Module 2 PacketMetadata and Module 3 Flow. "
+            "Times are microseconds, rates per second, lengths are payload bytes."
         ),
         "activity_timeout_seconds": ACTIVITY_TIMEOUT_SECONDS,
+        "flow_rules": {
+            "terminate_on_first_fin": TERMINATE_FLOW_ON_FIN,
+            "flow_timeout_seconds": FLOW_TIMEOUT_SECONDS,
+            "min_flow_packets": MIN_FLOW_PACKETS,
+            "classified_protocols": sorted(CLASSIFIED_PROTOCOLS),
+            "zero_duration_rate_fill": dict(ZERO_DURATION_RATE_FILL),
+        },
         "direction_conventions": {
             "forward": "Same orientation as the first packet observed in the flow.",
             "backward": "Opposite orientation from the forward direction.",
             "down_up_ratio": (
-                "forward_packet_count / reverse_packet_count with 0.0 when either count is zero."
+                "floor(reverse_packet_count / forward_packet_count), 0.0 when there are "
+                "no forward packets."
             ),
         },
         "candidate_features_evaluated": len(candidates),
@@ -1028,6 +863,7 @@ def render_report(
 ) -> str:
     retained = schema["feature_order"]
     rejected = schema["removed_or_rejected_candidates"]
+    units = {feature["canonical_name"]: feature["unit"] for feature in schema["features"]}
     lines = [
         "# MLCN Common Feature Schema Report",
         "",
@@ -1040,11 +876,11 @@ def render_report(
         f"- Features removed: **{schema['features_removed']}**",
         f"- Validation status: **{'PASSED' if validation.passed else 'FAILED'}**",
         "",
-        "## Retained features (fixed order)",
+        "## Retained features (fixed model order)",
         "",
     ]
     for index, name in enumerate(retained, start=1):
-        lines.append(f"{index}. {name}")
+        lines.append(f"{index}. {name} ({units[name]})")
     lines.extend(["", "## Removed / rejected candidates", ""])
     if rejected:
         for item in rejected:
@@ -1063,14 +899,23 @@ def render_report(
     else:
         lines.append("- No validation errors.")
         lines.append("")
+    rules = schema["flow_rules"]
     lines.extend(
         [
-            "## Module compatibility",
+            "## CIC-IDS2017 semantics",
             "",
-            "All retained features are derivable from `PacketMetadata` and `Flow` without "
-            "changing Module 3. Activity/idle statistics use a fixed "
-            f"{ACTIVITY_TIMEOUT_SECONDS}s threshold aligned with CICFlowMeter defaults, "
-            "but omit synthetic trailing idle padding at flow close.",
+            "- Time features are microseconds; Flow Bytes/s and Flow Packets/s are per second.",
+            "- Lengths are transport payload bytes, including Ethernet padding.",
+            "- Packet Length Mean/Std use n + 1 values (first payload counted twice).",
+            "- Flag columns are binary bits of the first packet in CICFlowMeter's permuted columns.",
+            "- Down/Up Ratio is floor(backward / forward).",
+            f"- Active/Idle use a {ACTIVITY_TIMEOUT_SECONDS:g} s threshold; the trailing active "
+            "span is not recorded and the closing FIN does not update activity.",
+            f"- Flows end on the first FIN or after {rules['flow_timeout_seconds']:g} s; flows "
+            f"with fewer than {rules['min_flow_packets']} packets or other than "
+            f"{'/'.join(rules['classified_protocols'])} are not classified.",
+            "",
+            "Units and types come from `feature_engineering/contract.py`.",
             "",
             "## Artifacts",
             "",
