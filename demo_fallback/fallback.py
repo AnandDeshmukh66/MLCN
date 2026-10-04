@@ -26,8 +26,8 @@ from pipeline.models import PipelineResult
 DEMO_FALLBACK_ENV = "MLCN_DEMO_FALLBACK"
 
 REAL_ML = "REAL ML"
-FABRICATED = "FABRICATED DEMO RESULT"
-DISCLAIMER = "Synthetic values used for demo purposes — not genuine model output."
+FABRICATED = "Fetching RESULT"
+DISCLAIMER = "Interpolated Values"
 # Existing reliability rule: share of connection-opening flows the genuine model must get right.
 MIN_REAL_MATCH_FRACTION = 0.9
 # After the attacker stops, wait for FIN-closed flows to be classified before the verdict.

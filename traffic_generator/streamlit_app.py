@@ -7,10 +7,16 @@ import time
 from datetime import datetime
 from pathlib import Path
 
-# Ensure repository root is importable when launched via `streamlit run`.
-_REPO_ROOT = Path(__file__).resolve().parents[1]
-if str(_REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(_REPO_ROOT))
+# `streamlit run` puts this folder first on sys.path, so `import traffic_generator`
+# would pick up traffic_generator/traffic_generator.py (a module, not a package).
+# Drop this folder and force the repository root to the front.
+_HERE = Path(__file__).resolve().parent
+_REPO_ROOT = _HERE.parent
+sys.path[:] = [p for p in sys.path if p and Path(p).resolve() != _HERE]
+if str(_REPO_ROOT) in sys.path:
+    sys.path.remove(str(_REPO_ROOT))
+sys.path.insert(0, str(_REPO_ROOT))
+sys.modules.pop("traffic_generator", None) if not hasattr(sys.modules.get("traffic_generator"), "__path__") else None
 
 import streamlit as st
 

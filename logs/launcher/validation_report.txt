@@ -1,0 +1,7 @@
+PROFILE       FLOWS  OPENING  REAL MATCH  RESULT
+----------------------------------------------------------------
+BENIGN          595      298       100%  REAL ML
+Brute Force       9        5        80%  FABRICATED DEMO RESULT  genuine: BENIGN=1, Brute Force=4
+DDoS            382      190        99%  REAL ML
+DoS              50       24        96%  REAL ML
+Port Scan       123      119        97%  REAL ML
