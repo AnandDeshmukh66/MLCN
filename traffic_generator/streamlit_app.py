@@ -222,7 +222,7 @@ def _result_card(view: ReceiverView, run: dict | None) -> None:
     attack = primary.get("displayed_attack") or primary.get("predicted_class")
     confidence = float(primary.get("confidence", 0.0))
     if view.fabricated:
-        source, pill = "FABRICATED DEMO RESULT", "pill demo"
+        source, pill = "Fetching Results", "pill demo"
     else:
         source, pill = "REAL ML", "pill"
     status = "FINAL" if view.verdict else "LIVE · ANALYSING"

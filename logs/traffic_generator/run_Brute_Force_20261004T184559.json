@@ -1,0 +1,36 @@
+{
+  "profile_name": "Brute Force",
+  "target": "127.0.0.1:8080",
+  "started_at": "2026-10-04T18:45:59.687939+00:00",
+  "ended_at": "2026-10-04T18:46:22.910974+00:00",
+  "parameters": {
+    "profile_name": "Brute Force",
+    "target_host": "127.0.0.1",
+    "target_port": 8080,
+    "duration_seconds": 20.0,
+    "intensity": 0.5,
+    "connection_rate_per_sec": 0.2,
+    "packets_per_flow": 9,
+    "payload_size_bytes": 32,
+    "inter_message_delay_seconds": 0.54991341665,
+    "forward_inter_delay_seconds": 0.54991341665,
+    "idle_gap_seconds": 0.0,
+    "timing_jitter_seconds": 0.5,
+    "max_concurrent_connections": 1,
+    "port_scan_start": 8080,
+    "port_scan_end": 8080,
+    "request_response_cycles": 9,
+    "use_http": true,
+    "send_syn_only": false
+  },
+  "stats": {
+    "connections_attempted": 4,
+    "connections_completed": 4,
+    "packets_sent": 48,
+    "bytes_sent": 312,
+    "errors": 0,
+    "last_error": ""
+  },
+  "stop_reason": "completed",
+  "error_messages": []
+}

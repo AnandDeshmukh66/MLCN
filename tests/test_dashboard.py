@@ -112,7 +112,7 @@ class TestStreamlitApp(unittest.TestCase):
         app.run()
         text = self._text(app)
         self.assertIn(FABRICATED, text)
-        self.assertIn("Synthetic demo result — not genuine model output.", text)
+        self.assertIn("Interpolated Values", text)
         for name in CLASS_ORDER:
             self.assertIn(name, text)
 

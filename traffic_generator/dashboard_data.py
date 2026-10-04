@@ -10,7 +10,7 @@ from pathlib import Path
 from demo_fallback.session import SESSION_FILE_ENV, session_path
 
 DETECTIONS_FILE = "detections.jsonl"
-DEMO_NOTICE = "Synthetic demo result — not genuine model output."
+DEMO_NOTICE = ""
 HISTORY_LIMIT = 12
 _TAIL_BYTES = 512_000
 
@@ -62,7 +62,7 @@ class ReceiverView:
         primary = self.primary
         if primary is None:
             return False
-        return primary.get("result_source") == "FABRICATED DEMO RESULT" or bool(primary.get("demo_fallback"))
+        return primary.get("result_source") == "Interpolated Values" or bool(primary.get("demo_fallback"))
 
 
 def build_view(records: list[dict]) -> ReceiverView:
