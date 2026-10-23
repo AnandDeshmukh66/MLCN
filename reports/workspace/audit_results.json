@@ -1,0 +1,562 @@
+{
+  "environment": {
+    "python": "3.9.6 (default, Aug 25 2026, 21:26:21) \n[Clang 21.0.0 (clang-2100.3.34.2)]",
+    "platform": "macOS-26.7.1-arm64-arm-64bit",
+    "xgboost": "2.1.4"
+  },
+  "files": 133,
+  "samples": 251812,
+  "features": [
+    "Flow Duration",
+    "Total Fwd Packets",
+    "Total Backward Packets",
+    "Fwd Packets Length Total",
+    "Bwd Packets Length Total",
+    "Fwd Packet Length Mean",
+    "Bwd Packet Length Mean",
+    "Flow Bytes/s",
+    "Flow Packets/s",
+    "Flow IAT Mean",
+    "Flow IAT Std",
+    "Fwd IAT Mean",
+    "Bwd IAT Mean",
+    "Packet Length Mean",
+    "Packet Length Std",
+    "FIN Flag Count",
+    "SYN Flag Count",
+    "RST Flag Count",
+    "PSH Flag Count",
+    "ACK Flag Count",
+    "URG Flag Count",
+    "Down/Up Ratio",
+    "Active Mean",
+    "Idle Mean"
+  ],
+  "classes": [
+    "BENIGN",
+    "Brute Force",
+    "DDoS",
+    "DoS",
+    "Port Scan"
+  ],
+  "finite_features": true,
+  "booster_rounds": 521,
+  "booster_attrs": {
+    "best_iteration": "520",
+    "best_score": "0.02570706015121968",
+    "scikit_learn": "{\"_estimator_type\": \"classifier\"}"
+  },
+  "accuracy": 0.9942377646815879,
+  "balanced_accuracy": 0.995567960447555,
+  "classification_report": {
+    "BENIGN": {
+      "precision": 0.9994721942325224,
+      "recall": 0.993617569333804,
+      "f1-score": 0.9965362829148806,
+      "support": 209638.0
+    },
+    "Brute Force": {
+      "precision": 0.5313782991202346,
+      "recall": 0.9901639344262295,
+      "f1-score": 0.6916030534351145,
+      "support": 915.0
+    },
+    "DDoS": {
+      "precision": 0.9964185611958891,
+      "recall": 0.9996875488204968,
+      "f1-score": 0.998050378226624,
+      "support": 12802.0
+    },
+    "DoS": {
+      "precision": 0.9796281243649665,
+      "recall": 0.9952516129032258,
+      "f1-score": 0.9873780690749892,
+      "support": 19375.0
+    },
+    "Port Scan": {
+      "precision": 0.9896390009815683,
+      "recall": 0.999119136754019,
+      "f1-score": 0.9943564736178839,
+      "support": 9082.0
+    },
+    "accuracy": 0.9942377646815879,
+    "macro avg": {
+      "precision": 0.8993072359790361,
+      "recall": 0.995567960447555,
+      "f1-score": 0.9335848514538985,
+      "support": 251812.0
+    },
+    "weighted avg": {
+      "precision": 0.9957345548866938,
+      "recall": 0.9942377646815879,
+      "f1-score": 0.994721961603838,
+      "support": 251812.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      208300,
+      799,
+      46,
+      398,
+      95
+    ],
+    [
+      9,
+      906,
+      0,
+      0,
+      0
+    ],
+    [
+      4,
+      0,
+      12798,
+      0,
+      0
+    ],
+    [
+      92,
+      0,
+      0,
+      19283,
+      0
+    ],
+    [
+      5,
+      0,
+      0,
+      3,
+      9074
+    ]
+  ],
+  "saved_confusion_agrees": true,
+  "regenerated_label_disagreements": 0,
+  "confidence_max_abs_difference": 0.0005974186461639164,
+  "roc_auc_macro": 0.9999122996837709,
+  "roc_auc_weighted": 0.9998861379255933,
+  "log_loss": 0.024470387604145247,
+  "batch_inference_seconds": 3.1601989999999986,
+  "correct_confidence_mean": 0.9884687584643775,
+  "incorrect_confidence_mean": 0.72097247452102,
+  "per_class_auc": {
+    "BENIGN": 0.999870967902648,
+    "Brute Force": 0.999801135384165,
+    "DDoS": 0.9999989762422913,
+    "DoS": 0.9999580760766671,
+    "Port Scan": 0.9999323428130829
+  },
+  "per_class_ap": {
+    "BENIGN": 0.9999737560440822,
+    "Brute Force": 0.9903650259791192,
+    "DDoS": 0.9999806770068618,
+    "DoS": 0.9995185373666996,
+    "Port Scan": 0.9979801516705278
+  },
+  "logs": {
+    "logs/launcher/validation_detections.jsonl": {
+      "records": 1159,
+      "record_types": {
+        "flow": 1159
+      },
+      "sources": {
+        "REAL ML": 1159
+      },
+      "genuine_predictions": {
+        "BENIGN": 826,
+        "Brute Force": 4,
+        "DDoS": 190,
+        "DoS": 24,
+        "Port Scan": 115
+      },
+      "fallback": 0,
+      "first": [
+        {
+          "recorded_at": 1791089495.081141,
+          "protocol": "TCP",
+          "src_ip": "127.0.0.1",
+          "dst_ip": "127.0.0.1",
+          "src_port": 8080,
+          "dst_port": 62851,
+          "packet_count": 8,
+          "byte_count": 568,
+          "duration": 0.017376,
+          "start_time": 1791089495.058218,
+          "first_packet_flags": "S",
+          "predicted_class": "BENIGN",
+          "predicted_class_id": 0,
+          "confidence": 0.9992738366127014,
+          "probabilities": {
+            "BENIGN": 0.9992738366127014,
+            "Brute Force": 0.00010308878700016066,
+            "DDoS": 2.2266358428169042e-05,
+            "DoS": 3.789264883380383e-05,
+            "Port Scan": 0.0005629114457406104
+          },
+          "demo_fallback": false,
+          "genuine_predicted_class": "BENIGN",
+          "genuine_confidence": 0.9992738366127014,
+          "genuine_probabilities": {
+            "BENIGN": 0.9992738366127014,
+            "Brute Force": 0.00010308878700016066,
+            "DDoS": 2.2266358428169042e-05,
+            "DoS": 3.789264883380383e-05,
+            "Port Scan": 0.0005629114457406104
+          },
+          "result_source": "REAL ML"
+        }
+      ],
+      "session_records": []
+    },
+    "logs/launcher/detections.jsonl": {
+      "records": 1554,
+      "record_types": {
+        "flow": 1546,
+        "session_result": 8
+      },
+      "sources": {
+        "REAL ML": 1330,
+        "FABRICATED DEMO RESULT": 197,
+        "Fetching RESULT": 27
+      },
+      "genuine_predictions": {
+        "BENIGN": 1339,
+        "Brute Force": 25,
+        "Port Scan": 2,
+        "DDoS": 188
+      },
+      "fallback": 219,
+      "first": [
+        {
+          "recorded_at": 1791090304.2402925,
+          "protocol": "TCP",
+          "src_ip": "127.0.0.1",
+          "dst_ip": "127.0.0.1",
+          "src_port": 8080,
+          "dst_port": 49297,
+          "packet_count": 4,
+          "byte_count": 200,
+          "duration": 0.000197,
+          "start_time": 1791090304.224536,
+          "first_packet_flags": "S",
+          "predicted_class": "BENIGN",
+          "predicted_class_id": 0,
+          "confidence": 0.686351478099823,
+          "probabilities": {
+            "BENIGN": 0.686351478099823,
+            "Brute Force": 0.0007180392858572304,
+            "DDoS": 0.0001182996784336865,
+            "DoS": 0.004171679262071848,
+            "Port Scan": 0.3086405098438263
+          },
+          "demo_fallback": false,
+          "genuine_predicted_class": "BENIGN",
+          "genuine_confidence": 0.686351478099823,
+          "genuine_probabilities": {
+            "BENIGN": 0.686351478099823,
+            "Brute Force": 0.0007180392858572304,
+            "DDoS": 0.0001182996784336865,
+            "DoS": 0.004171679262071848,
+            "Port Scan": 0.3086405098438263
+          },
+          "result_source": "REAL ML"
+        }
+      ],
+      "session_records": [
+        {
+          "recorded_at": 1791090327.6198356,
+          "record_type": "session_result",
+          "selected_attack": "BENIGN",
+          "displayed_attack": "BENIGN",
+          "result_source": "REAL ML",
+          "confidence": 0.9980912516097203,
+          "probabilities": {
+            "BENIGN": 0.9980912516097203,
+            "Brute Force": 0.0001083281018842957,
+            "DDoS": 2.7511602292957703e-05,
+            "DoS": 9.353275430472113e-05,
+            "Port Scan": 0.0016793759317976695
+          },
+          "relevant_flows": 280,
+          "genuine_matches": 280,
+          "genuine_predicted_class": "BENIGN",
+          "genuine_confidence": 0.9980912516097203,
+          "genuine_probabilities": {
+            "BENIGN": 0.9980912516097203,
+            "Brute Force": 0.0001083281018842957,
+            "DDoS": 2.7511602292957703e-05,
+            "DoS": 9.353275430472113e-05,
+            "Port Scan": 0.0016793759317976695
+          }
+        },
+        {
+          "recorded_at": 1791090378.001233,
+          "record_type": "session_result",
+          "selected_attack": "Brute Force",
+          "displayed_attack": "Brute Force",
+          "result_source": "FABRICATED DEMO RESULT",
+          "confidence": 0.9365701675415039,
+          "probabilities": {
+            "BENIGN": 0.003490447998046875,
+            "Brute Force": 0.9365701675415039,
+            "DDoS": 0.0055637359619140625,
+            "DoS": 0.03223419189453125,
+            "Port Scan": 0.022141456604003906
+          },
+          "relevant_flows": 5,
+          "genuine_matches": 4,
+          "genuine_predicted_class": "Brute Force",
+          "genuine_confidence": 0.7632875944467153,
+          "genuine_probabilities": {
+            "BENIGN": 0.23220769169802938,
+            "Brute Force": 0.7632875944467153,
+            "DDoS": 0.0007037138577284078,
+            "DoS": 0.0030744770477554983,
+            "Port Scan": 0.0007265229497713966
+          },
+          "disclaimer": "Synthetic values used for demo purposes \u2014 not genuine model output."
+        },
+        {
+          "recorded_at": 1791090406.868726,
+          "record_type": "session_result",
+          "selected_attack": "BENIGN",
+          "displayed_attack": "BENIGN",
+          "result_source": "REAL ML",
+          "confidence": 0.9970737980699154,
+          "probabilities": {
+            "BENIGN": 0.9970737980699154,
+            "Brute Force": 7.198255067574085e-05,
+            "DDoS": 2.421044650856303e-05,
+            "DoS": 6.237197977029131e-05,
+            "Port Scan": 0.002767636953130074
+          },
+          "relevant_flows": 282,
+          "genuine_matches": 281,
+          "genuine_predicted_class": "BENIGN",
+          "genuine_confidence": 0.9970737980699154,
+          "genuine_probabilities": {
+            "BENIGN": 0.9970737980699154,
+            "Brute Force": 7.198255067574085e-05,
+            "DDoS": 2.421044650856303e-05,
+            "DoS": 6.237197977029131e-05,
+            "Port Scan": 0.002767636953130074
+          }
+        },
+        {
+          "recorded_at": 1791090686.5075028,
+          "record_type": "session_result",
+          "selected_attack": "DDoS",
+          "displayed_attack": "DDoS",
+          "result_source": "REAL ML",
+          "confidence": 0.984092455716068,
+          "probabilities": {
+            "BENIGN": 0.014664580554050765,
+            "Brute Force": 3.9225685687281665e-05,
+            "DDoS": 0.984092455716068,
+            "DoS": 0.00014661538329540112,
+            "Port Scan": 0.0010571226608985494
+          },
+          "relevant_flows": 190,
+          "genuine_matches": 187,
+          "genuine_predicted_class": "DDoS",
+          "genuine_confidence": 0.984092455716068,
+          "genuine_probabilities": {
+            "BENIGN": 0.014664580554050765,
+            "Brute Force": 3.9225685687281665e-05,
+            "DDoS": 0.984092455716068,
+            "DoS": 0.00014661538329540112,
+            "Port Scan": 0.0010571226608985494
+          }
+        },
+        {
+          "recorded_at": 1791139410.450632,
+          "record_type": "session_result",
+          "selected_attack": "Brute Force",
+          "displayed_attack": "Brute Force",
+          "result_source": "Fetching RESULT",
+          "confidence": 0.9290227890014648,
+          "probabilities": {
+            "BENIGN": 0.0051708221435546875,
+            "Brute Force": 0.9290227890014648,
+            "DDoS": 0.02575206756591797,
+            "DoS": 0.02610301971435547,
+            "Port Scan": 0.013951301574707031
+          },
+          "relevant_flows": 5,
+          "genuine_matches": 4,
+          "genuine_predicted_class": "Brute Force",
+          "genuine_confidence": 0.7639493363856915,
+          "genuine_probabilities": {
+            "BENIGN": 0.21036060900388634,
+            "Brute Force": 0.7639493363856915,
+            "DDoS": 0.0006928286386498596,
+            "DoS": 0.0007361441590246038,
+            "Port Scan": 0.024261081812747727
+          },
+          "disclaimer": "Interpolated Values"
+        },
+        {
+          "recorded_at": 1791139532.5961998,
+          "record_type": "session_result",
+          "selected_attack": "Brute Force",
+          "displayed_attack": "Brute Force",
+          "result_source": "Fetching RESULT",
+          "confidence": 0.951420783996582,
+          "probabilities": {
+            "BENIGN": 0.017731666564941406,
+            "Brute Force": 0.951420783996582,
+            "DDoS": 0.013287544250488281,
+            "DoS": 0.014586448669433594,
+            "Port Scan": 0.0029735565185546875
+          },
+          "relevant_flows": 5,
+          "genuine_matches": 4,
+          "genuine_predicted_class": "Brute Force",
+          "genuine_confidence": 0.761061465442886,
+          "genuine_probabilities": {
+            "BENIGN": 0.16524955167461242,
+            "Brute Force": 0.761061465442886,
+            "DDoS": 0.0006688594533125248,
+            "DoS": 0.0004751544340154091,
+            "Port Scan": 0.07254496899517367
+          },
+          "disclaimer": "Interpolated Values"
+        },
+        {
+          "recorded_at": 1791139585.9964151,
+          "record_type": "session_result",
+          "selected_attack": "Brute Force",
+          "displayed_attack": "Brute Force",
+          "result_source": "Fetching RESULT",
+          "confidence": 0.9493694305419922,
+          "probabilities": {
+            "BENIGN": 0.0030584335327148438,
+            "Brute Force": 0.9493694305419922,
+            "DDoS": 0.01985454559326172,
+            "DoS": 0.007699012756347656,
+            "Port Scan": 0.020018577575683594
+          },
+          "relevant_flows": 5,
+          "genuine_matches": 4,
+          "genuine_predicted_class": "Brute Force",
+          "genuine_confidence": 0.7631040896686422,
+          "genuine_probabilities": {
+            "BENIGN": 0.11096000112950627,
+            "Brute Force": 0.7631040896686422,
+            "DDoS": 0.0006831732817793805,
+            "DoS": 0.0008503035963179082,
+            "Port Scan": 0.12440243232375424
+          },
+          "disclaimer": "Interpolated Values"
+        },
+        {
+          "recorded_at": 1791139736.5893126,
+          "record_type": "session_result",
+          "selected_attack": "Brute Force",
+          "displayed_attack": "Brute Force",
+          "result_source": "Fetching RESULT",
+          "confidence": 0.9191198348999023,
+          "probabilities": {
+            "BENIGN": 0.0029363632202148438,
+            "Brute Force": 0.9191198348999023,
+            "DDoS": 0.03281879425048828,
+            "DoS": 0.008139610290527344,
+            "Port Scan": 0.03698539733886719
+          },
+          "relevant_flows": 5,
+          "genuine_matches": 4,
+          "genuine_predicted_class": "Brute Force",
+          "genuine_confidence": 0.7637937624776369,
+          "genuine_probabilities": {
+            "BENIGN": 0.18174218499164485,
+            "Brute Force": 0.7637937624776369,
+            "DDoS": 0.0006181742998196322,
+            "DoS": 0.0007731460368668439,
+            "Port Scan": 0.05307273219403183
+          },
+          "disclaimer": "Interpolated Values"
+        }
+      ]
+    }
+  },
+  "raw_csvs": [
+    {
+      "file": "MachineLearningCVE/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv",
+      "rows": 225745,
+      "labels": {
+        "DDoS": 128027,
+        "BENIGN": 97718
+      },
+      "negative_duration": 2
+    },
+    {
+      "file": "MachineLearningCVE/Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv",
+      "rows": 286467,
+      "labels": {
+        "PortScan": 158930,
+        "BENIGN": 127537
+      },
+      "negative_duration": 36
+    },
+    {
+      "file": "MachineLearningCVE/Friday-WorkingHours-Morning.pcap_ISCX.csv",
+      "rows": 191033,
+      "labels": {
+        "BENIGN": 189067,
+        "Bot": 1966
+      },
+      "negative_duration": 9
+    },
+    {
+      "file": "MachineLearningCVE/Monday-WorkingHours.pcap_ISCX.csv",
+      "rows": 529918,
+      "labels": {
+        "BENIGN": 529918
+      },
+      "negative_duration": 15
+    },
+    {
+      "file": "MachineLearningCVE/Thursday-WorkingHours-Afternoon-Infilteration.pcap_ISCX.csv",
+      "rows": 288602,
+      "labels": {
+        "BENIGN": 288566,
+        "Infiltration": 36
+      },
+      "negative_duration": 4
+    },
+    {
+      "file": "MachineLearningCVE/Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv",
+      "rows": 170366,
+      "labels": {
+        "BENIGN": 168186,
+        "Web Attack \ufffd Brute Force": 1507,
+        "Web Attack \ufffd XSS": 652,
+        "Web Attack \ufffd Sql Injection": 21
+      },
+      "negative_duration": 11
+    },
+    {
+      "file": "MachineLearningCVE/Tuesday-WorkingHours.pcap_ISCX.csv",
+      "rows": 445909,
+      "labels": {
+        "BENIGN": 432074,
+        "FTP-Patator": 7938,
+        "SSH-Patator": 5897
+      },
+      "negative_duration": 17
+    },
+    {
+      "file": "MachineLearningCVE/Wednesday-workingHours.pcap_ISCX.csv",
+      "rows": 692703,
+      "labels": {
+        "BENIGN": 440031,
+        "DoS Hulk": 231073,
+        "DoS GoldenEye": 10293,
+        "DoS slowloris": 5796,
+        "DoS Slowhttptest": 5499,
+        "Heartbleed": 11
+      },
+      "negative_duration": 21
+    }
+  ]
+}

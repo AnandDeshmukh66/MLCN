@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Module1" script:language="StarBasic">Sub RenderReport
+Dim props(0) As New com.sun.star.beans.PropertyValue
+Dim saveProps(1) As New com.sun.star.beans.PropertyValue
+Dim pdfProps(1) As New com.sun.star.beans.PropertyValue
+Dim doc As Object, indexes As Object
+Dim i As Integer, pass As Integer
+props(0).Name = "Hidden"
+props(0).Value = True
+doc = StarDesktop.loadComponentFromURL("file:///Users/anand/Desktop/Anand/MLCN/reports/MLCN_Final_Mini_Project_Report.docx", "_blank", 0, props())
+For pass = 1 To 3
+ doc.refresh()
+ doc.TextFields.refresh()
+ indexes = doc.getDocumentIndexes()
+ For i = 0 To indexes.getCount() - 1
+  indexes.getByIndex(i).update()
+ Next i
+Next pass
+saveProps(0).Name = "FilterName"
+saveProps(0).Value = "Office Open XML Text"
+saveProps(1).Name = "Overwrite"
+saveProps(1).Value = True
+doc.storeAsURL("file:///Users/anand/Desktop/Anand/MLCN/reports/MLCN_Final_Mini_Project_Report.docx", saveProps())
+pdfProps(0).Name = "FilterName"
+pdfProps(0).Value = "writer_pdf_Export"
+pdfProps(1).Name = "Overwrite"
+pdfProps(1).Value = True
+doc.storeToURL("file:///Users/anand/Desktop/Anand/MLCN/reports/MLCN_Final_Mini_Project_Report.pdf", pdfProps())
+doc.close(True)
+StarDesktop.terminate()
+End Sub
+</script:module>

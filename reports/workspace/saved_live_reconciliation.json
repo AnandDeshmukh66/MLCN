@@ -1,0 +1,69 @@
+{
+  "method": "Consecutive file blocks using per-profile total-flow counts in saved validation_report.txt; corroborates counts but original ProfileWindow objects are not persisted.",
+  "groups": [
+    {
+      "profile": "BENIGN",
+      "flows": 595,
+      "opening": 298,
+      "matches": 298,
+      "match_rate": 1.0,
+      "classes": {
+        "BENIGN": 298
+      },
+      "min_start": 1791089495.058218,
+      "max_start": 1791089515.018952
+    },
+    {
+      "profile": "Brute Force",
+      "flows": 9,
+      "opening": 5,
+      "matches": 4,
+      "match_rate": 0.8,
+      "classes": {
+        "BENIGN": 1,
+        "Brute Force": 4
+      },
+      "min_start": 1791089521.079951,
+      "max_start": 1791089544.03865
+    },
+    {
+      "profile": "DDoS",
+      "flows": 382,
+      "opening": 190,
+      "matches": 188,
+      "match_rate": 0.9894736842105263,
+      "classes": {
+        "BENIGN": 2,
+        "DDoS": 188
+      },
+      "min_start": 1791089550.239499,
+      "max_start": 1791089570.112122
+    },
+    {
+      "profile": "DoS",
+      "flows": 50,
+      "opening": 24,
+      "matches": 23,
+      "match_rate": 0.9583333333333334,
+      "classes": {
+        "BENIGN": 1,
+        "DoS": 23
+      },
+      "min_start": 1791089576.278773,
+      "max_start": 1791089595.358566
+    },
+    {
+      "profile": "Port Scan",
+      "flows": 123,
+      "opening": 119,
+      "matches": 115,
+      "match_rate": 0.9663865546218487,
+      "classes": {
+        "BENIGN": 4,
+        "Port Scan": 115
+      },
+      "min_start": 1791089607.18096,
+      "max_start": 1791089627.136563
+    }
+  ]
+}

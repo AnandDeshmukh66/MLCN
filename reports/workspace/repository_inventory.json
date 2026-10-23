@@ -1,0 +1,1632 @@
+[
+  {
+    "path": ".gitignore",
+    "bytes": 100,
+    "sha256": "8353219769557c8a2621162967221703605c6645271bc45815c9f263419d64e1"
+  },
+  {
+    "path": "MINI_PROJECT_REPORT_Guidelines_2025-26 (1).docx.pdf",
+    "bytes": 259515,
+    "sha256": "b765489208af696ea06fc2e5ec52928f26e37a4856f3e72c838b6408056d1e76"
+  },
+  {
+    "path": "MachineLearningCVE/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv",
+    "bytes": 77123859,
+    "sha256": "6ff1580f5f81c0ae28a26f7631721018577f5f7c5e0feac28b795fcfe7b411ee"
+  },
+  {
+    "path": "MachineLearningCVE/Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv",
+    "bytes": 76906168,
+    "sha256": "ca1824c51bfbb7b3c72290a11be04366ba8815878c6a1cc5c44cb1cee269e99b"
+  },
+  {
+    "path": "MachineLearningCVE/Friday-WorkingHours-Morning.pcap_ISCX.csv",
+    "bytes": 58316725,
+    "sha256": "53a41c24d570ea83b7ac55b2e94df94e7a8216aeb80a2af0246b6bc8bb543000"
+  },
+  {
+    "path": "MachineLearningCVE/Monday-WorkingHours.pcap_ISCX.csv",
+    "bytes": 176927918,
+    "sha256": "852c4beb34eda186f32561fa79df7a0747e92e1a6535b01270820dd9ffe17f34"
+  },
+  {
+    "path": "MachineLearningCVE/Thursday-WorkingHours-Afternoon-Infilteration.pcap_ISCX.csv",
+    "bytes": 83102436,
+    "sha256": "6bcda3857c2504676034e3ea57762d38393cc734cb377a726bd5cb153961b1b5"
+  },
+  {
+    "path": "MachineLearningCVE/Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv",
+    "bytes": 52023263,
+    "sha256": "d67066211fb1689c78406f1506f4c44704ecb92088353d5c96d96d6474eb819d"
+  },
+  {
+    "path": "MachineLearningCVE/Tuesday-WorkingHours.pcap_ISCX.csv",
+    "bytes": 135078995,
+    "sha256": "52b8692ae8c7d2ed04671fe2b98335693c0a92c7ab157d8c8b534d6523080851"
+  },
+  {
+    "path": "MachineLearningCVE/Wednesday-workingHours.pcap_ISCX.csv",
+    "bytes": 225166395,
+    "sha256": "893c27dc968bf7a8adef1689f90be55ca4a4dc3088fb63d6ff247ac56856df2a"
+  },
+  {
+    "path": "PROJECT_IMPLEMENTATION_GUIDE.md",
+    "bytes": 19092,
+    "sha256": "399b3879fdbee962b2d22eaf30ac1f4a9d93f9a424ab7e3a9e597f9d9b1c0c31"
+  },
+  {
+    "path": "README.md",
+    "bytes": 9906,
+    "sha256": "61f10967749fa9fbed3d7aece2e3b6fc1b38af4ab61aa9bf00ee91b80cc161e2"
+  },
+  {
+    "path": "Untitled-1.ipynb",
+    "bytes": 292170,
+    "sha256": "14ac5fab64715ce8d46569552e5095517a4fe080272dad90f95bdeecada860e4"
+  },
+  {
+    "path": "assets/Gemini_Generated_Image_4il9wq4il9wq4il9.png",
+    "bytes": 6010926,
+    "sha256": "803dcd7848a303c315b272a8cd7020897c62d42f864af7e80d9baae96a4f9f3e"
+  },
+  {
+    "path": "assets/MLCN Overview.png",
+    "bytes": 160571,
+    "sha256": "bd84bcfe3cedcf89efd87dd4b7414a942a77bd04e464a0e097c3a8bca21c11f0"
+  },
+  {
+    "path": "assets/MLCN_compact_attack_traffic_profiles.json",
+    "bytes": 63450,
+    "sha256": "df25d8abd42304ad6844cf87716a23ba30348a72c19309a9a1b695add6bdee34"
+  },
+  {
+    "path": "assets/diagram.png",
+    "bytes": 5162426,
+    "sha256": "342ffc518d0307725587acb92aeeac09a40ff507fc49cf8d0d550929540f6a88"
+  },
+  {
+    "path": "assets/diagram2.png",
+    "bytes": 5261323,
+    "sha256": "b839eb90ddda7a25f3ed07eb9cd93104a979eae5b03b63db1b342c0cd3c458eb"
+  },
+  {
+    "path": "data/03_finalize_common_feature_schema.py",
+    "bytes": 643,
+    "sha256": "20e85b30e6c99a4dc549554d1bf0ad9e49b66f93146f6bb29f99749f1727051b",
+    "symbols": [],
+    "doc": "Step 8 \u2014 Finalize and validate the MLCN common feature schema.\n\nThird data-preparation script. Produces deterministic JSON schema and markdown\nreport artifacts without implementing Module 4 feature engineering."
+  },
+  {
+    "path": "data/__init__.py",
+    "bytes": 75,
+    "sha256": "359ce0884e1822f1d059fcfef4555da3f921b43517c78b7186966e04dbf7582a",
+    "symbols": [],
+    "doc": "Data preparation scripts and shared artifacts for the MLCN pipeline."
+  },
+  {
+    "path": "data/common_feature_schema.json",
+    "bytes": 20090,
+    "sha256": "ed42e011c7e859e7bdd8c2a073cc9e1a51051c4a29465e0834861e35af41b611"
+  },
+  {
+    "path": "data/common_feature_schema.py",
+    "bytes": 36105,
+    "sha256": "216f38f182460442c881d60c83a34628f92297e45ac68f5d3441575081bd6102",
+    "symbols": [
+      "DerivationKind",
+      "CICCompatibility",
+      "FeatureDefinition",
+      "RejectedFeature",
+      "ValidationResult",
+      "_packet_metadata_field_names",
+      "_flow_field_names",
+      "_resolve_source_field",
+      "_edge",
+      "_cic",
+      "_feature",
+      "_flag_feature",
+      "build_candidate_feature_definitions",
+      "build_rejected_features",
+      "finalize_feature_list",
+      "_is_forward_packet",
+      "_microsecond_timestamps",
+      "_gaps",
+      "_mean_or_zero",
+      "_sample_std_or_zero",
+      "_payload",
+      "_active_idle_durations",
+      "_reference_feature_values",
+      "_probe_ts",
+      "_probe_meta",
+      "_probe_reverse",
+      "_probe_flow",
+      "_make_probe_flows",
+      "probe_derivation",
+      "validate_schema",
+      "_feature_to_dict",
+      "build_schema_document",
+      "render_report",
+      "write_schema_artifacts",
+      "print_completion_summary",
+      "main"
+    ],
+    "doc": "Common feature schema specification and validation for MLCN Step 8.\n\nDocuments the 24 CIC-IDS2017 (CICFlowMeter) features the XGBoost model was\ntrained on and how each is derived from Module 2 PacketMetadata and Module 3\nFlow. Units and data types come from ``feature_engineering.contract`` (the\ncontract verified against the training data), so this document cannot drift\nfrom what the live pipeline produces. ``_reference_feature_values`` is an\nindependent re-implementation used to cross-check Module 4."
+  },
+  {
+    "path": "data/common_feature_schema_report.md",
+    "bytes": 2122,
+    "sha256": "6473fa1b5bfb3b5218629b8a4d2a002815462479321430cee585d7a6ab256c60"
+  },
+  {
+    "path": "demo_fallback/__init__.py",
+    "bytes": 1219,
+    "sha256": "9e6097a6c51541a5a5e092410ec291c850254dc90449e093ea3f25de9c2b5627",
+    "symbols": [],
+    "doc": "TEMPORARY demo fallback (removable).\n\nMakes the receiver display the attacker-selected profile when the genuine\nXGBoost prediction disagrees. Real inference always runs first and is kept on\n``PipelineResult.genuine_detection``; display results built here carry\n``demo_fallback=True``.\n\nTo remove: delete this package and its three call sites \u2014\n``pipeline/cli.py`` (``--demo-fallback``), ``traffic_generator/controller.py``\n(session start/finish hooks) and ``mlcn_launcher`` (``--demo-fallback`` flag)."
+  },
+  {
+    "path": "demo_fallback/fallback.py",
+    "bytes": 8850,
+    "sha256": "dff9c985b6188dac980653f80b23e5ea4f5193ea8688074221bcbf4d2eb2b567",
+    "symbols": [
+      "Decision",
+      "enabled_from_env",
+      "decide",
+      "synthetic_detection",
+      "result_source",
+      "SessionResult",
+      "_mean_detection",
+      "session_result",
+      "_is_opening_flow",
+      "DemoFallback",
+      "disclaimer",
+      "as_dict",
+      "__init__",
+      "_session",
+      "__call__",
+      "poll"
+    ],
+    "doc": "Real-vs-demo display decision and synthetic probability generation.\n\nGenuine XGBoost inference always runs first and is never altered; this module\nonly builds an alternative *display* result when the genuine prediction does\nnot match the attacker's selected profile."
+  },
+  {
+    "path": "demo_fallback/session.py",
+    "bytes": 3111,
+    "sha256": "5ff3201ea9473e5e5af50123029b70160bd1c73e9647311303717abba25b9e08",
+    "symbols": [
+      "DemoSession",
+      "session_path",
+      "_write",
+      "write_session",
+      "finish_session",
+      "read_session",
+      "covers"
+    ],
+    "doc": "File handoff of the attacker's selected profile to the receiver process.\n\nThe Streamlit/attacker process writes the active session; the receiver\npipeline (a separate process) reads it to know which profile was selected."
+  },
+  {
+    "path": "feature_engineering/README.md",
+    "bytes": 2527,
+    "sha256": "de0d52a3cc8fe995904a1e8c1cb747a799e15451f569ba9da306615a959aa40b"
+  },
+  {
+    "path": "feature_engineering/__init__.py",
+    "bytes": 574,
+    "sha256": "9fa5e4792437c3b2f25ef22a8df67d2fb9c293e3d7e076a56ee323e5c4336c4f",
+    "symbols": [],
+    "doc": "Feature Engineering \u2014 Module 4 of the MLCN cybersecurity project."
+  },
+  {
+    "path": "feature_engineering/contract.py",
+    "bytes": 5758,
+    "sha256": "3e1f4b5ebe00136ee881689a3784d2b221206adcd4daee5157754161593cdd06",
+    "symbols": [
+      "FeatureSpec"
+    ],
+    "doc": "Canonical 24-feature contract between the trained XGBoost model and live MLCN flows.\n\nThis module is the single source of truth for what the model expects.\n``data/common_feature_schema.json`` (generated by ``data/common_feature_schema.py``)\ndocuments the same contract and takes its units and types from here.\n\nEvidence (``Untitled-1.ipynb`` + ``MachineLearningCVE/*.csv``):\n\n* The model was trained on the raw CIC-IDS2017 MachineLearningCVE columns\n  (CICFlowMeter output). No scaling or transformation was applied; NaN/inf in\n  ``Flow Bytes/s`` / ``Flow Packets/s`` were median-filled, rows with negative\n  durations were dropped, and features were cast to float32.\n* ``Flow Packets/s == packets / (Flow Duration / 1e6)`` for every row, so all\n  time features are **microseconds** while rates are **per second**.\n* Packet lengths are **transport payload bytes** (TCP/UDP payload, including\n  any Ethernet padding Scapy exposes after the transport header).\n* ``Packet Length Mean/Std`` are computed over ``n + 1`` values because\n  CICFlowMeter adds the first packet's payload twice.\n* ``Down/Up Ratio == floor(backward / forward)`` (integer division).\n* The six ``* Flag Count`` columns are binary and describe only the **first\n  packet** of the flow, with CICFlowMeter's permuted bit mapping\n  (see :data:`CIC_FLAG_COLUMN_SOURCE`). Verified with ``Init_Win_bytes_forward``:\n  ``PSH Flag Count`` rows carry SYN windows, ``FIN Flag Count`` rows carry\n  RST windows (0), UDP rows are all zero.\n* ``Active Mean`` / ``Idle Mean`` only record periods split by a gap\n  > 5,000,000 \u00b5s; the trailing active period is never added, and the FIN\n  packet that terminates a flow does not update active/idle state.\n* Flows terminate on the first FIN packet (CICFlowMeter 2017 behaviour) or\n  after 120 s from flow start; no training row has fewer than 2 packets."
+  },
+  {
+    "path": "feature_engineering/engine.py",
+    "bytes": 8707,
+    "sha256": "d24c74380e4e47f91e4dbad46bd94fb494dd4c190894f714451f387edf1d7f39",
+    "symbols": [
+      "_micros",
+      "_same_orientation",
+      "_payload_bytes",
+      "_ordered_packets",
+      "_gaps",
+      "_mean_or_zero",
+      "_sample_std_or_zero",
+      "_first_packet_flags",
+      "_active_idle_periods",
+      "compute_feature_map",
+      "extract_features",
+      "FeatureEngineeringEngine",
+      "__init__",
+      "extract",
+      "extract_many",
+      "try_extract"
+    ],
+    "doc": "Feature Engineering Engine \u2014 Module 4 of the MLCN pipeline.\n\nConverts completed Module 3 ``Flow`` objects into the 24-feature vector defined\nby :mod:`feature_engineering.contract` (CICFlowMeter / CIC-IDS2017 semantics:\nmicrosecond timings, payload-byte lengths, first-packet binary flags)."
+  },
+  {
+    "path": "feature_engineering/models.py",
+    "bytes": 3052,
+    "sha256": "fc7e009c4f328005f38f58fc60d2bc3a9c28892b2ba23bffd5757741c6971f16",
+    "symbols": [
+      "FeatureVector",
+      "coerce_feature_value",
+      "__post_init__",
+      "names",
+      "feature_count",
+      "as_list",
+      "as_tuple",
+      "as_dict",
+      "get",
+      "items",
+      "from_mapping",
+      "zeros",
+      "__len__",
+      "__iter__",
+      "__getitem__",
+      "__repr__"
+    ],
+    "doc": "Feature vector model for Module 4 of the MLCN pipeline."
+  },
+  {
+    "path": "feature_engineering/schema.py",
+    "bytes": 492,
+    "sha256": "a27c6bfc477a75d8a4a57c678d73b4c07dc0b66a0d1edfce57e1ea3f815477bd",
+    "symbols": [],
+    "doc": "Canonical 24-feature schema constants for Module 4.\n\nRe-exported from :mod:`feature_engineering.contract`, the verified\ntraining/live feature contract. Do not rename, reorder, add, or remove entries."
+  },
+  {
+    "path": "flow_builder/README.md",
+    "bytes": 2026,
+    "sha256": "30bc5008251e67aa0a0d47d315a5a6efba814bf376af7e859827f7181479bcaa"
+  },
+  {
+    "path": "flow_builder/__init__.py",
+    "bytes": 344,
+    "sha256": "3c97dca4d379c92062294be1ccd170e0a9f1a692451cc63b462332431cdfbc22",
+    "symbols": [],
+    "doc": "Flow Builder \u2014 Module 3 of the MLCN cybersecurity project."
+  },
+  {
+    "path": "flow_builder/builder.py",
+    "bytes": 9526,
+    "sha256": "1681fd5277429ce237cff494dc7f96f57fbf6be7f559a32ad3cbb09c68634995",
+    "symbols": [
+      "_endpoint_order_key",
+      "canonicalize_flow_key",
+      "flow_key_from_packet",
+      "_has_fin",
+      "_ensure_aware",
+      "_ActiveFlow",
+      "FlowBuilder",
+      "is_forward",
+      "add",
+      "to_flow",
+      "__init__",
+      "active_count",
+      "add_packet",
+      "add_packets",
+      "expire",
+      "flush",
+      "_start_flow",
+      "_close",
+      "_evict_if_needed"
+    ],
+    "doc": "Module 3 \u2014 Flow Builder.\n\nConsume :class:`~packet_parsing.models.PacketMetadata` from Module 2 and\nassemble bidirectional network flows for Feature Engineering."
+  },
+  {
+    "path": "flow_builder/models.py",
+    "bytes": 1841,
+    "sha256": "371a3c2f0d520e98dd422d2f5074b5df5e24cc7cdb2f293a538dffdeb1929786",
+    "symbols": [
+      "FlowKey",
+      "Flow",
+      "duration",
+      "protocol",
+      "src_ip",
+      "dst_ip",
+      "src_port",
+      "dst_port"
+    ],
+    "doc": "Flow data models for Module 3 of the MLCN pipeline."
+  },
+  {
+    "path": "logs/launcher/demo_session.json",
+    "bytes": 129,
+    "sha256": "0b3b1b913a30a2f3cd225289d45a271fef91ebc41adfb1f3d44baff85e20d443"
+  },
+  {
+    "path": "logs/launcher/detections.jsonl",
+    "bytes": 1346504,
+    "sha256": "de44a31579df7250ff8012efebbd4475260967b5ad6ea6ca6c6e52e715723ece"
+  },
+  {
+    "path": "logs/launcher/streamlit.log",
+    "bytes": 248,
+    "sha256": "795476e7ff48af4473078190ea1f4543030fe62ce3d571165f3805db139a5f86"
+  },
+  {
+    "path": "logs/launcher/validation_detections.jsonl",
+    "bytes": 990777,
+    "sha256": "ea0018e81dc55139c35729174527bda9e8b1e294aa65f4c3adbaef90d6a4f24f"
+  },
+  {
+    "path": "logs/launcher/validation_report.txt",
+    "bytes": 408,
+    "sha256": "87744266fb495c854028d7c5f9dabdf181803bb33e9a284da9c2b05f797b2389"
+  },
+  {
+    "path": "logs/traffic_generator/run_BENIGN_20260901T191249.json",
+    "bytes": 978,
+    "sha256": "12ef253aa2c460586aefcac13a3a3d6c7cf9ff46bace416aec7a4322625a8626"
+  },
+  {
+    "path": "logs/traffic_generator/run_BENIGN_20260901T192146.json",
+    "bytes": 975,
+    "sha256": "9e376e30b05125d965373ba1fd1aa3cfaf148138e6bc887397d13f20def38a89"
+  },
+  {
+    "path": "logs/traffic_generator/run_BENIGN_20260902T031720.json",
+    "bytes": 999,
+    "sha256": "b2c24a1ca0ea7e274c73b17495af44d14a946edd9a60c0030dde95abeb5bb3aa"
+  },
+  {
+    "path": "logs/traffic_generator/run_BENIGN_20260902T033150.json",
+    "bytes": 999,
+    "sha256": "018024ae184ce3d37ca15936c30eab5fde1ab86b65116d53470a81380a6777e7"
+  },
+  {
+    "path": "logs/traffic_generator/run_BENIGN_20261002T121904.json",
+    "bytes": 999,
+    "sha256": "3d0d7fa9afe8f3504f4a1fecbf89cc5eb55d7bfa32e0439727f3ba1133ca3dee"
+  },
+  {
+    "path": "logs/traffic_generator/run_BENIGN_20261004T050504.json",
+    "bytes": 999,
+    "sha256": "a23e8b6cd414bb6d5ae328bf583325547922d4f23674596f5f895eb987727af8"
+  },
+  {
+    "path": "logs/traffic_generator/run_BENIGN_20261004T050623.json",
+    "bytes": 999,
+    "sha256": "1c06cabcfa8ed9e95c379319b69c6f84eec47727525fb79354d60bb6ce389389"
+  },
+  {
+    "path": "logs/traffic_generator/run_Brute_Force_20260901T191550.json",
+    "bytes": 970,
+    "sha256": "3a9a9eed3fcccfbd1431b45579b5743c3a411f4419f190fa832439942b0c1e49"
+  },
+  {
+    "path": "logs/traffic_generator/run_Brute_Force_20261004T050550.json",
+    "bytes": 987,
+    "sha256": "fbf55218f18b4bdef38be1354ba926ec47923e3e0d15397753f6183518898387"
+  },
+  {
+    "path": "logs/traffic_generator/run_Brute_Force_20261004T184304.json",
+    "bytes": 987,
+    "sha256": "feac315c1d0a0b00bbfccaf4659d73b991c30d4e6084066f82a0832809bbeeac"
+  },
+  {
+    "path": "logs/traffic_generator/run_Brute_Force_20261004T184507.json",
+    "bytes": 987,
+    "sha256": "e926f6c182e96a2b61e7089dbe72602fd137c7fd64c8142af5c3f0212743a2e4"
+  },
+  {
+    "path": "logs/traffic_generator/run_Brute_Force_20261004T184559.json",
+    "bytes": 987,
+    "sha256": "2010696beccb32bf4e8beacd2b40fe1b4428a59a8b7a22a5c05d354092d39ffd"
+  },
+  {
+    "path": "logs/traffic_generator/run_Brute_Force_20261004T184829.json",
+    "bytes": 987,
+    "sha256": "02f4789d2a3cf856f2b565620ce19138727b6c9f97c0d816259627c730b43d04"
+  },
+  {
+    "path": "logs/traffic_generator/run_DDoS_20260901T192341.json",
+    "bytes": 959,
+    "sha256": "681e7b57ce31662bbe73771ac42b7241a01c609adf0ca302d2dc3f8b5c2e6454"
+  },
+  {
+    "path": "logs/traffic_generator/run_DDoS_20260901T194952.json",
+    "bytes": 989,
+    "sha256": "f82f3fcb010c514074f3d63d48330e63c9e338379421713f9cd1909864aef7b2"
+  },
+  {
+    "path": "logs/traffic_generator/run_DDoS_20261004T051102.json",
+    "bytes": 982,
+    "sha256": "6b9b02ec0b21a06202363c50a675a039d2b8a9cba50594388c14a2c2bd75939a"
+  },
+  {
+    "path": "logs/traffic_generator/run_Port_Scan_20261002T122625.json",
+    "bytes": 978,
+    "sha256": "c15673369f36560500e08aac8943719e2cff6b3b6fdf9fed579f9aa4885b65f0"
+  },
+  {
+    "path": "ml_detection/README.md",
+    "bytes": 1915,
+    "sha256": "a4421c17534584e5ec0b0ffe4f8d6a36438ac568b53584bd6036b8532672e5fc"
+  },
+  {
+    "path": "ml_detection/__init__.py",
+    "bytes": 818,
+    "sha256": "cdcba6dee524e51001ac317b8795be3d8f3a07d1a04fba8570132f7f69f0316f",
+    "symbols": [],
+    "doc": "Machine Learning Detection \u2014 Module 5 of the MLCN cybersecurity project."
+  },
+  {
+    "path": "ml_detection/engine.py",
+    "bytes": 9351,
+    "sha256": "c94f041fcf1c3cbd7a0d4ee199be09444a5933556a22b796feaa4cf2b0ebd019",
+    "symbols": [
+      "ModelLoadError",
+      "FeatureValidationError",
+      "_is_finite_number",
+      "validate_feature_values",
+      "validate_feature_vector",
+      "_load_features_metadata",
+      "_load_booster",
+      "_best_iteration",
+      "MLDetectionEngine",
+      "predict",
+      "__init__",
+      "classes",
+      "feature_names",
+      "best_iteration",
+      "predict",
+      "predict_many",
+      "try_predict"
+    ],
+    "doc": "Machine Learning Detection Engine \u2014 Module 5 of the MLCN pipeline.\n\nLoads the trained XGBoost multi-class IDS model and maps Module 4\n``FeatureVector`` values to a ``DetectionResult``."
+  },
+  {
+    "path": "ml_detection/models.py",
+    "bytes": 3167,
+    "sha256": "59bc6d629ece0b34c04ce6763c9a514825c2e6151087b5ea4ed209c70c1b8ea4",
+    "symbols": [
+      "DetectionResult",
+      "__post_init__",
+      "class_order",
+      "probability_vector",
+      "as_dict",
+      "items",
+      "from_probability_mapping",
+      "__repr__"
+    ],
+    "doc": "Detection result model for Module 5 of the MLCN pipeline."
+  },
+  {
+    "path": "ml_detection/schema.py",
+    "bytes": 1491,
+    "sha256": "23272a2942b642c455df08aee88875c6623ca25a165e62e9cac66c7ecefa8186",
+    "symbols": [
+      "resolve_artifact_path"
+    ],
+    "doc": "Class labels and model artifact paths for Module 5."
+  },
+  {
+    "path": "ml_detection/xgboost_import.py",
+    "bytes": 1849,
+    "sha256": "e2edbf7ec4d14defa67b61f836fadd8fc17a328da0167f35b6f68e680811ac62",
+    "symbols": [
+      "import_xgboost"
+    ],
+    "doc": "Import the pip ``xgboost`` package even if a local ``xgboost/`` artifact folder exists."
+  },
+  {
+    "path": "mlcn_launcher/__init__.py",
+    "bytes": 87,
+    "sha256": "17318ccb3ab3cb2bcfd73772a1841162a2c7409d5976d05442bcf73287d77370",
+    "symbols": [],
+    "doc": "Single Windows entry point: ``python -m mlcn_launcher`` (or ``start_mlcn.bat``)."
+  },
+  {
+    "path": "mlcn_launcher/__main__.py",
+    "bytes": 66,
+    "sha256": "c423b3d29eededb02d81b646ee2c6c9f453f43dc5d7a4d450e7f7054813af465",
+    "symbols": [],
+    "doc": null
+  },
+  {
+    "path": "mlcn_launcher/launcher.py",
+    "bytes": 10976,
+    "sha256": "0b8dd930b0547d4c44038e7a66c390ea538228543411f820d416a298c3de5b94",
+    "symbols": [
+      "build_parser",
+      "_say",
+      "_preflight",
+      "_ElevationRequired",
+      "elevated_arguments",
+      "_wait_for_port",
+      "_install_break_handler",
+      "run",
+      "_serve_ui",
+      "_report_validation",
+      "main",
+      "__init__",
+      "_interrupt"
+    ],
+    "doc": "One-command Windows start for the single-PC MLCN demo.\n\n    receiver: Npcap (LAN + NPF_Loopback) -> packets -> flows -> 24 features -> XGBoost\n    attacker: Streamlit traffic generator -> lab echo server on the lab port"
+  },
+  {
+    "path": "mlcn_launcher/preflight.py",
+    "bytes": 5468,
+    "sha256": "1c02aa731d1f79f5bba6bd1ec0d95ba6aa422e7a2fe4509d0d9448c77967683d",
+    "symbols": [
+      "LauncherError",
+      "NpcapStatus",
+      "CaptureSelection",
+      "is_windows",
+      "windows_version",
+      "is_admin",
+      "_read_npcap_flag",
+      "npcap_status",
+      "needs_elevation",
+      "relaunch_elevated",
+      "detect_local_ipv4",
+      "_is_loopback_device",
+      "select_capture_interfaces",
+      "port_available",
+      "installed",
+      "describe",
+      "interfaces",
+      "as_argument",
+      "flag"
+    ],
+    "doc": "Windows + Npcap preflight checks and capture-interface selection."
+  },
+  {
+    "path": "mlcn_launcher/processes.py",
+    "bytes": 5817,
+    "sha256": "211954b27748ecdf7083095bb71c39b1dbfc295bf2fe08fef9716c8ffc426be0",
+    "symbols": [
+      "LaunchConfig",
+      "pipeline_command",
+      "streamlit_command",
+      "child_environment",
+      "creation_flags",
+      "ManagedProcess",
+      "logs_dir",
+      "detections_log",
+      "demo_session_file",
+      "streamlit_log",
+      "streamlit_url",
+      "__init__",
+      "returncode",
+      "running",
+      "start",
+      "_pump",
+      "stop"
+    ],
+    "doc": "Child process commands and lifecycle for the MLCN launcher."
+  },
+  {
+    "path": "mlcn_launcher/validation.py",
+    "bytes": 4539,
+    "sha256": "be0cbab60527114d1ef1217440c8569aaf6c796c254bb8b2bfb6a4d43da428b0",
+    "symbols": [
+      "ProfileWindow",
+      "ProfileSummary",
+      "run_profiles",
+      "load_records",
+      "summarize",
+      "format_report",
+      "contains",
+      "match_fraction",
+      "verdict"
+    ],
+    "doc": "Automated live check (``start_mlcn.bat --validate``): generate every profile on\nloopback against the running receiver and report whether the genuine model\nrecognised it from the real Npcap capture."
+  },
+  {
+    "path": "models/xgboost_classification_report.csv",
+    "bytes": 631,
+    "sha256": "9567458a0807cb9e6041fcf37a564afc6eb4752c267013a71d5fbbedf492f9f8"
+  },
+  {
+    "path": "models/xgboost_confusion_matrix.csv",
+    "bytes": 152,
+    "sha256": "64b339974d3b1a555f7c0940e525e7a8ec1029617d5e053c84c393bc0c77ea1c"
+  },
+  {
+    "path": "models/xgboost_evaluation_results.json",
+    "bytes": 2410,
+    "sha256": "d7cad27ff607954497ff61084d6bcfaee974967f40ca7351f675004e09c4cb4e"
+  },
+  {
+    "path": "models/xgboost_ids_features.json",
+    "bytes": 1204,
+    "sha256": "45b1c9654981cb0862ab21141708e927be297333eec76b13df87c40c596e2a68"
+  },
+  {
+    "path": "models/xgboost_ids_multiclass.json",
+    "bytes": 12808972,
+    "sha256": "7e0b2cf18a647c36e9feac40506624723a83cf7abc4f743eb7f33923cacb60a5"
+  },
+  {
+    "path": "models/xgboost_test_predictions.csv",
+    "bytes": 39829951,
+    "sha256": "618a3f22d39d65ad8ab3346d84c70907cf9db6bd343448c2c51c415cecf8d0e3"
+  },
+  {
+    "path": "packet_capture/README.md",
+    "bytes": 4519,
+    "sha256": "0d7d3ccf0aa9ff5858a258c29c5fab626e08a75b8a1fc1d177abe0e0d331f5db"
+  },
+  {
+    "path": "packet_capture/__init__.py",
+    "bytes": 395,
+    "sha256": "e8a2f3bc7ffc0dcace65f0d9216b9b967ecc306ead528e2ee27690c2198c67be",
+    "symbols": [],
+    "doc": "Live Packet Capture Engine \u2014 Module 1 of the MLCN cybersecurity project."
+  },
+  {
+    "path": "packet_capture/__main__.py",
+    "bytes": 145,
+    "sha256": "340c8bb19d3d87db1bdbb5617496794a462286fe713ba288a34dfaab73357672",
+    "symbols": [],
+    "doc": "Module entry point: python -m packet_capture"
+  },
+  {
+    "path": "packet_capture/capture.py",
+    "bytes": 9599,
+    "sha256": "c0d283523b38c770a5dcba1178404f393607d8c3f9fc454493321f4263399f6c",
+    "symbols": [
+      "PacketCaptureEngine",
+      "__init__",
+      "_parse_lock",
+      "_default_handler",
+      "_parse_raw_packet",
+      "_dispatch_metadata",
+      "_dispatch_parsed",
+      "_handle_raw_packet",
+      "_install_signal_handlers",
+      "_begin_capture",
+      "_run_sniff_loop",
+      "_run_capture_workers",
+      "start",
+      "capture",
+      "capture_metadata",
+      "iter_packets",
+      "iter_metadata",
+      "_print_summary",
+      "_request_stop",
+      "on_raw_packet",
+      "on_raw_packet",
+      "on_raw_packet"
+    ],
+    "doc": "Live packet capture engine powered by Scapy."
+  },
+  {
+    "path": "packet_capture/cli.py",
+    "bytes": 2085,
+    "sha256": "617fa3bd79010b92ced43d63e3b55f373f5ca4f60648e8e2c1b63730267db810",
+    "symbols": [
+      "build_parser",
+      "_print_interfaces",
+      "main"
+    ],
+    "doc": "Command-line interface for the live packet capture engine."
+  },
+  {
+    "path": "packet_capture/formatter.py",
+    "bytes": 1092,
+    "sha256": "97c34372094e717b3db8aade89306349e3db97283d221e907e3b80177bac3a9b",
+    "symbols": [
+      "_format_port",
+      "format_packet_row",
+      "format_header",
+      "format_divider"
+    ],
+    "doc": "Tabular formatting for live packet output."
+  },
+  {
+    "path": "packet_capture/interfaces.py",
+    "bytes": 1893,
+    "sha256": "5a094aba92afdf8feb9a8185f9481450b1a614f5f8747c655321fb1acd4693c7",
+    "symbols": [
+      "NetworkInterface",
+      "list_interfaces",
+      "resolve_interface",
+      "resolve_interfaces"
+    ],
+    "doc": "Network interface discovery helpers."
+  },
+  {
+    "path": "packet_capture/models.py",
+    "bytes": 423,
+    "sha256": "a7984db392d3174f9add304d1e279c27e689be30393541f58837c743d32e8c1f",
+    "symbols": [
+      "ParsedPacket"
+    ],
+    "doc": "Data models for parsed network packets."
+  },
+  {
+    "path": "packet_capture/parser.py",
+    "bytes": 1469,
+    "sha256": "bccb266442eb7cb18f3f7ff898d0692fed123cdbdfcd9ba2858a69941ebb12bb",
+    "symbols": [
+      "metadata_to_parsed_packet",
+      "parse_packet"
+    ],
+    "doc": "Extract structured fields from raw Scapy packets.\n\nParsing, normalization, and validation live in Module 2 (``packet_parsing``).\nThis module adapts :class:`~packet_parsing.models.PacketMetadata` into the\nModule 1 display model :class:`~packet_capture.models.ParsedPacket` so the\nexisting capture CLI and public API stay unchanged."
+  },
+  {
+    "path": "packet_parsing/README.md",
+    "bytes": 2322,
+    "sha256": "e3266d0009945edcfa7a6bb01be0462a4d1c0eda6b6467641543b0a94f5a993a"
+  },
+  {
+    "path": "packet_parsing/__init__.py",
+    "bytes": 234,
+    "sha256": "f904187e3418b9b528506aeebebbf438292cc18f5a0492acd241850d7cfce1e6",
+    "symbols": [],
+    "doc": "Packet Parsing \u2014 Module 2 of the MLCN cybersecurity project."
+  },
+  {
+    "path": "packet_parsing/models.py",
+    "bytes": 915,
+    "sha256": "a315e9862a43c7d862047445d912d78ab123d2263aec6aa6d1b1ab567d18276d",
+    "symbols": [
+      "PacketMetadata"
+    ],
+    "doc": "Structured packet metadata for downstream MLCN modules."
+  },
+  {
+    "path": "packet_parsing/parser.py",
+    "bytes": 7588,
+    "sha256": "473b4988d41e0d1b53e7c945a18a47cdedc6529b44ec38b9477f6bf07dcfa97a",
+    "symbols": [
+      "_packet_timestamp",
+      "_format_tcp_flags",
+      "_has_icmpv6",
+      "_packet_length",
+      "_transport_payload_length",
+      "_ip_next_header",
+      "_extract_ttl",
+      "_resolve_protocol",
+      "parse_packet"
+    ],
+    "doc": "Module 2 \u2014 Packet Parsing.\n\nInterpret raw packets from Module 1, normalize and validate fields, and\nemit :class:`~packet_parsing.models.PacketMetadata` for Module 3 (Flow Builder)."
+  },
+  {
+    "path": "packet_parsing/validation.py",
+    "bytes": 2047,
+    "sha256": "ff76d504a90aa1af9017db83b89c1570f36d1db9565c3ea2d5fa5538587901dc",
+    "symbols": [
+      "normalize_ip",
+      "normalize_port",
+      "normalize_ttl",
+      "normalize_tcp_window",
+      "normalize_length",
+      "normalize_protocol"
+    ],
+    "doc": "Field normalization and validation helpers for packet metadata."
+  },
+  {
+    "path": "pipeline/README.md",
+    "bytes": 1528,
+    "sha256": "13c2e16a608830fe1dd971a5c1b37a220ad2cfccef0b6b355e1c8ea3a4435831"
+  },
+  {
+    "path": "pipeline/__init__.py",
+    "bytes": 260,
+    "sha256": "9024160c2fd8b2ee4452ffdf1fa37c82148818fb542184154f01d7d113def97c",
+    "symbols": [],
+    "doc": "MLCN end-to-end pipeline \u2014 orchestration for Modules 1\u20135."
+  },
+  {
+    "path": "pipeline/__main__.py",
+    "bytes": 82,
+    "sha256": "8791667e91d1793c7a6b48248de4c4f5b98b1193fd7784ec8de50be4ae1cb59e",
+    "symbols": [],
+    "doc": "python -m pipeline"
+  },
+  {
+    "path": "pipeline/cli.py",
+    "bytes": 9473,
+    "sha256": "87b76b2bc34b92b066453fc430b3da57c65e2eee984292144bb1a3355d157783",
+    "symbols": [
+      "build_parser",
+      "_print_interfaces",
+      "_format_probabilities",
+      "_print_result",
+      "_print_session_result",
+      "_append_log",
+      "_log_path",
+      "_detection_handler",
+      "_session_result_handler",
+      "_watch_sessions",
+      "_wait_for_interrupt",
+      "main",
+      "_run",
+      "_fail",
+      "handle",
+      "handle"
+    ],
+    "doc": "CLI for the integrated MLCN Modules 1\u20135 pipeline."
+  },
+  {
+    "path": "pipeline/engine.py",
+    "bytes": 10203,
+    "sha256": "940c7e4c99020ca3e6e5b3682688d8912ed403a68b8abf0e6d8b1cf5bc59ae59",
+    "symbols": [
+      "_lab_port_range",
+      "_flow_involves_port",
+      "_lab_bpf_filter",
+      "_is_classifiable",
+      "IntrusionDetectionPipeline",
+      "__init__",
+      "active_flow_count",
+      "results",
+      "packets_accepted",
+      "packets_skipped",
+      "flows_detected",
+      "flows_skipped",
+      "reset",
+      "process_metadata",
+      "process_raw_packet",
+      "process_raw_packets",
+      "process_metadata_batch",
+      "flush",
+      "close",
+      "run_live",
+      "_detect_flows",
+      "_detect_one",
+      "_emit",
+      "on_metadata"
+    ],
+    "doc": "MLCN end-to-end orchestration: Modules 1\u20135 wired through existing public APIs.\n\nDoes not reimplement capture, parsing, flow assembly, feature engineering, or\ndetection \u2014 it only connects them and manages lifecycle (flush / cleanup)."
+  },
+  {
+    "path": "pipeline/models.py",
+    "bytes": 2662,
+    "sha256": "9b28ee0a445582b9d786319cdc5a469ad5e0fdf8ad64f989e10e13831d11dbd3",
+    "symbols": [
+      "PipelineResult",
+      "model_detection",
+      "predicted_class",
+      "confidence",
+      "as_dict",
+      "__repr__"
+    ],
+    "doc": "End-to-end pipeline result for the integrated MLCN detection path."
+  },
+  {
+    "path": "query",
+    "bytes": 6,
+    "sha256": "2098fae686cc2e8fb94e58d13bde0b5107ce6815273bb288c244262b8b7fa897"
+  },
+  {
+    "path": "requirements.txt",
+    "bytes": 88,
+    "sha256": "f74632c8d4a4ccf4026a320391a19c1bc508a7b2a8e5fe900ee0a5c2c397fa46"
+  },
+  {
+    "path": "start_mlcn.bat",
+    "bytes": 555,
+    "sha256": "f76cb52657d83ab2714bedc7348948cdc2b5375b822568b4f18161ebc35b6f2f"
+  },
+  {
+    "path": "tests/__init__.py",
+    "bytes": 25,
+    "sha256": "ec1d8f982943eabb7c8b4d9a409b2434647d714ec7f0c9f901a58137dc9e3343",
+    "symbols": [],
+    "doc": "MLCN test package."
+  },
+  {
+    "path": "tests/fixtures.py",
+    "bytes": 2118,
+    "sha256": "9faee2e353c0f10242e52752aff5d64b4ea102910f833c14c57bd5f6efbde1ff",
+    "symbols": [
+      "make_tcp_packet",
+      "make_udp_packet",
+      "make_icmp_packet",
+      "make_ipv6_tcp_packet",
+      "make_ethernet_only_packet",
+      "make_malformed_standin"
+    ],
+    "doc": "Deterministic fixtures for Module 2 packet-parsing tests."
+  },
+  {
+    "path": "tests/lab_traffic_simulation.py",
+    "bytes": 7654,
+    "sha256": "2a59a3e2e7523fd3fb2db75bf12b58789d64d64146ee45f6f0f2cdc6e157686a",
+    "symbols": [
+      "_pkt",
+      "_request_len",
+      "http_close_exchange",
+      "line_session",
+      "closed_port_probe",
+      "simulate_profile",
+      "next_port"
+    ],
+    "doc": "Packet-level approximation of what the lab traffic generator puts on loopback.\n\nUsed to check, without Npcap, which generated profiles the real model\nrecognises after the feature-contract fix. Timings mimic Windows loopback\n(sub-millisecond RTT, 200 ms delayed ACK). This is an approximation, not a\nsubstitute for a real Windows capture."
+  },
+  {
+    "path": "tests/test_common_feature_schema.py",
+    "bytes": 5193,
+    "sha256": "c3e552830f9147f1a36e2b077fa17aacb3749da1607bd5cb9013acee6b555f3c",
+    "symbols": [
+      "TestCommonFeatureSchema",
+      "TestStep8Script",
+      "test_twenty_five_candidates_defined",
+      "test_finalize_removes_duplicate_average_packet_size",
+      "test_validation_passes_for_final_schema",
+      "test_validation_fails_without_formula",
+      "test_validation_fails_on_duplicate_names",
+      "test_validation_fails_without_edge_cases",
+      "test_schema_artifacts_are_deterministic",
+      "test_write_schema_artifacts_default_paths",
+      "test_script_main_exits_zero"
+    ],
+    "doc": "Unit tests for Step 8 common feature schema validation."
+  },
+  {
+    "path": "tests/test_dashboard.py",
+    "bytes": 6256,
+    "sha256": "06a901b2f47b95e4805cbad3faf3e588133cef5801e2837a1f0a3551eabacac8",
+    "symbols": [
+      "_genuine",
+      "_flow_record",
+      "_write",
+      "TestReceiverData",
+      "TestStreamlitApp",
+      "setUp",
+      "test_missing_log_is_empty_waiting_state",
+      "test_since_filters_old_runs_and_partial_lines",
+      "test_verdict_takes_priority_and_flags_fabricated",
+      "test_real_verdict_not_fabricated_and_live_flow_before_verdict",
+      "test_receiver_view_reads_log_beside_session_file",
+      "setUp",
+      "_text",
+      "test_starts_in_waiting_state_with_all_profiles",
+      "test_launch_invokes_generator_and_shows_fabricated_result",
+      "test_real_result_has_no_disclaimer_and_repeat_run_replaces_it"
+    ],
+    "doc": "Dashboard: receiver data adapter and the Streamlit app wired to the real controller."
+  },
+  {
+    "path": "tests/test_demo_fallback.py",
+    "bytes": 13162,
+    "sha256": "04684c958865d75f7b54a38c292a7cfa2382805868e9d753226f8e8b52840cdc",
+    "symbols": [
+      "_genuine",
+      "_flow",
+      "_result",
+      "TestDecision",
+      "TestSyntheticProbabilities",
+      "TestSessionFile",
+      "TestDemoFallbackTransform",
+      "TestSessionResult",
+      "TestSessionPoll",
+      "TestControllerHooks",
+      "test_real_when_no_selection_or_match",
+      "test_fallback_when_prediction_differs",
+      "test_distribution_invariants",
+      "test_values_vary_between_runs",
+      "test_unknown_profile_rejected",
+      "setUp",
+      "test_round_trip_and_finish",
+      "test_covers_time_window_and_ports",
+      "test_corrupt_file_reads_as_none",
+      "setUp",
+      "test_no_session_shows_genuine",
+      "test_matching_prediction_shows_genuine",
+      "test_mismatch_shows_selected_and_keeps_genuine",
+      "test_flows_outside_session_are_untouched",
+      "test_pipeline_results_stay_genuine",
+      "test_failing_transform_falls_back_to_genuine",
+      "test_reliable_genuine_prediction_is_real_ml",
+      "test_unreliable_or_wrong_prediction_is_fabricated_selected",
+      "test_no_flows_is_fabricated_selected",
+      "test_failure_is_fabricated_selected",
+      "test_fabricated_values_vary_and_always_carry_disclaimer",
+      "test_per_flow_fabricated_result_carries_disclaimer",
+      "test_printed_fabricated_result_shows_selected_and_disclaimer",
+      "setUp",
+      "_finish",
+      "test_reliable_session_reports_real_ml_once",
+      "test_session_without_flows_reports_fabricated_selected",
+      "test_receiver_shutdown_reports_unfinished_session",
+      "setUp",
+      "test_hooks_write_session_when_enabled",
+      "test_hooks_noop_when_disabled",
+      "broken"
+    ],
+    "doc": "Real-vs-demo display decision, synthetic probabilities and the session handoff."
+  },
+  {
+    "path": "tests/test_feature_contract.py",
+    "bytes": 4684,
+    "sha256": "961bfa7a561494cce76dbb4494988583a9b7787c57f8e17f5d78a06e92248c15",
+    "symbols": [
+      "_tcp",
+      "_flows",
+      "TestSchema",
+      "TestLiveVectorUnits",
+      "TestPayloadLengths",
+      "test_feature_order_matches_trained_model",
+      "test_time_features_are_microseconds_and_rates_per_second",
+      "test_flow_duration_is_microseconds_not_seconds",
+      "test_reproduces_cic_port_scan_row",
+      "test_parser_reports_cic_payload_bytes"
+    ],
+    "doc": "Live feature vectors must follow the model's 24-feature schema and CIC units."
+  },
+  {
+    "path": "tests/test_feature_engineering.py",
+    "bytes": 22091,
+    "sha256": "0ee6f50a5cd9425bb4ccea06c97854a5250cda7ef6ad1f1074be5bcc8b6b8c1a",
+    "symbols": [
+      "_ts",
+      "_meta",
+      "_reverse",
+      "_flow_from_packets",
+      "TestSchemaCompliance",
+      "TestNormalAndDirectionalFlows",
+      "TestEdgeCases",
+      "TestTcpFlagsAndIat",
+      "TestActiveIdle",
+      "TestEngineApiAndIntegration",
+      "test_feature_count_is_24",
+      "test_feature_order_matches_schema_json",
+      "test_vector_preserves_order",
+      "test_normal_bidirectional_flow",
+      "test_forward_only_flow",
+      "test_reverse_only_counts_via_zero_forward_means",
+      "test_single_packet_flow",
+      "test_zero_duration_multi_packet",
+      "test_empty_packet_collection",
+      "test_zero_division_means_and_ratio",
+      "test_flags_are_binary_from_first_packet_only",
+      "test_cic_flag_column_mapping",
+      "test_missing_tcp_flags_contribute_zero",
+      "test_iat_statistics",
+      "test_active_idle_with_gap_above_threshold",
+      "test_no_active_or_idle_when_gaps_within_threshold",
+      "test_gap_exactly_at_threshold_stays_active",
+      "test_closing_fin_packet_does_not_update_activity",
+      "test_engine_extract_many",
+      "test_non_flow_raises_type_error",
+      "test_invalid_activity_timeout",
+      "test_module3_to_module4_pipeline",
+      "test_module2_parse_to_module4",
+      "test_matches_schema_reference_probe",
+      "test_committed_schema_json_matches_contract",
+      "test_compute_feature_map_covers_contract",
+      "test_feature_vector_from_mapping_and_zeros"
+    ],
+    "doc": "Unit and integration tests for Module 4 Feature Engineering Engine."
+  },
+  {
+    "path": "tests/test_flow_builder.py",
+    "bytes": 14110,
+    "sha256": "b56a07ab109f9cdb10e75eb9c753eabcd6a5fb3a6407159fe991209376ade4bd",
+    "symbols": [
+      "_ts",
+      "_meta",
+      "TestFlowKeyCanonicalization",
+      "TestPacketGrouping",
+      "TestTimeoutAndMemory",
+      "TestAggregation",
+      "TestProtocolAndMissingPorts",
+      "TestMalformedInput",
+      "TestModule2Integration",
+      "TestModule1Module2Module3Pipeline",
+      "test_reverse_direction_shares_key",
+      "test_different_tuples_differ",
+      "test_packets_join_same_flow",
+      "test_reverse_direction_joins_same_flow",
+      "test_different_five_tuples_create_separate_flows",
+      "test_inactivity_timeout_completes_flow",
+      "test_expire_cleans_idle_flows",
+      "test_max_duration_closes_active_flow",
+      "test_max_active_flows_evicts_oldest",
+      "test_packet_and_byte_aggregation",
+      "test_tcp_and_udp_flows",
+      "test_icmp_without_ports",
+      "test_packets_without_ips_are_skipped",
+      "test_none_and_wrong_type_do_not_crash",
+      "test_batch_skips_bad_entries",
+      "test_consumes_module2_packet_metadata",
+      "test_end_to_end_capture_parse_flow"
+    ],
+    "doc": "Unit and integration tests for Module 3 Flow Builder."
+  },
+  {
+    "path": "tests/test_lab_capture.py",
+    "bytes": 2606,
+    "sha256": "02024b2addfcd7bb3e4b9f888f9827df2bfe5f776456d5948b9603381ad8df42",
+    "symbols": [
+      "_flow",
+      "_detection",
+      "TestResolveInterfaces",
+      "TestLabPortFilter",
+      "test_comma_separated_interfaces",
+      "test_flow_involves_port",
+      "test_emit_skips_non_lab_flows"
+    ],
+    "doc": "Tests for capture interface resolution and lab-port pipeline filtering."
+  },
+  {
+    "path": "tests/test_launcher.py",
+    "bytes": 9151,
+    "sha256": "2264919e7b77fc561af99f132060073466a271364ed3be51f98831cd6b88e062",
+    "symbols": [
+      "_interfaces",
+      "TestInterfaceSelection",
+      "TestNpcapChecks",
+      "TestProcessCommands",
+      "TestManagedProcess",
+      "TestLauncherFlow",
+      "test_maps_local_ip_to_npcap_device_plus_loopback",
+      "test_follows_address_not_guid",
+      "test_unmatched_ip_captures_loopback_with_warning",
+      "test_no_local_ip_captures_loopback_with_warning",
+      "test_missing_loopback_is_an_error",
+      "test_detects_wpcap_dll_under_system_root",
+      "test_elevation_policy",
+      "setUp",
+      "test_pipeline_command",
+      "test_pipeline_command_without_demo_fallback",
+      "test_windows_command_line_quoting",
+      "test_streamlit_command",
+      "test_child_environment",
+      "test_streams_prefixed_output_and_stops",
+      "_args",
+      "test_non_windows_is_rejected",
+      "test_check_passes_with_npcap_and_loopback",
+      "test_missing_npcap_fails",
+      "test_requests_uac_when_npcap_is_admin_only",
+      "test_elevated_arguments_are_cwd_independent",
+      "status"
+    ],
+    "doc": "Launcher: interface selection, process commands/config and preflight flow (no real Npcap)."
+  },
+  {
+    "path": "tests/test_live_validation.py",
+    "bytes": 7136,
+    "sha256": "24833190d797f4a4c1a08daf4764cb50e43c95341d0a28f4d07ec427b9c334c0",
+    "symbols": [
+      "_record",
+      "_free_port",
+      "TestSummarize",
+      "TestGenuineModelThroughReport",
+      "TestRunProfiles",
+      "TestLauncherReport",
+      "test_attributes_by_flow_start_and_counts_only_opening_flows",
+      "test_no_capture_is_fabricated_not_real",
+      "test_load_records_skips_partial_lines",
+      "test_every_simulated_profile_is_real_ml",
+      "test_generates_sequential_windows_against_lab_server",
+      "test_exit_code_requires_every_profile_real",
+      "test_validate_runs_genuine_receiver_without_streamlit",
+      "FakeProcess",
+      "fake_profiles",
+      "__init__",
+      "start",
+      "stop"
+    ],
+    "doc": "``--validate`` report: attribution, verdicts and the genuine-model path (no Npcap)."
+  },
+  {
+    "path": "tests/test_ml_detection.py",
+    "bytes": 7942,
+    "sha256": "5ca3a37353bb5f031ec9fbaca66cd06f4118a0768a740dde7e79fd476602f70c",
+    "symbols": [
+      "_vector_for",
+      "TestInferenceBenign",
+      "TestInferenceBruteForce",
+      "TestInferenceDDoS",
+      "TestInferenceDoS",
+      "TestInferencePortScan",
+      "TestFeatureValidation",
+      "TestModelLoading",
+      "test_predicts_benign",
+      "test_predicts_brute_force",
+      "test_predicts_ddos",
+      "test_predicts_dos",
+      "test_predicts_port_scan",
+      "test_wrong_feature_count_raises",
+      "test_non_finite_values_raise",
+      "test_malformed_input_raises",
+      "test_default_artifacts_exist_and_match_schema",
+      "test_missing_model_raises",
+      "test_corrupt_metadata_raises"
+    ],
+    "doc": "Unit and real-model inference tests for Module 5 ML Detection Engine."
+  },
+  {
+    "path": "tests/test_module1_module2_integration.py",
+    "bytes": 4117,
+    "sha256": "a258102bd824d0790c388fae74f7a4d23bdc0a6d0056d50aac807b9b7682b5c9",
+    "symbols": [
+      "TestModule1Module2Integration",
+      "test_module1_parser_delegates_to_module2",
+      "test_metadata_to_parsed_packet_maps_missing_ips",
+      "test_engine_parse_path_produces_metadata",
+      "test_engine_display_dispatch_uses_parsed_packet",
+      "test_malformed_does_not_break_pipeline"
+    ],
+    "doc": "Module 1 \u2192 Module 2 integration tests (no live network traffic)."
+  },
+  {
+    "path": "tests/test_packet_parsing.py",
+    "bytes": 7756,
+    "sha256": "1d287ec889723c8f85827bbc2616ea6f1103cf7721319703e6c6c7944914d690",
+    "symbols": [
+      "TestTcpParsing",
+      "TestUdpParsing",
+      "TestIcmpParsing",
+      "TestOptionalAndMissingFields",
+      "TestNormalizationAndTypes",
+      "TestMalformedPacketHandling",
+      "test_tcp_basic_fields",
+      "test_tcp_flags",
+      "test_tcp_ttl_and_window",
+      "test_ipv6_tcp_uses_hop_limit_as_ttl",
+      "test_udp_basic_fields",
+      "test_udp_protocol_specific_fields_are_none",
+      "test_icmp_basic_fields",
+      "test_icmp_optional_fields_are_none",
+      "test_non_ip_packet_has_null_address_fields",
+      "test_ip_other_protocol_without_ports",
+      "test_metadata_field_types",
+      "test_ip_normalization",
+      "test_port_ttl_window_normalization",
+      "test_non_packet_object_returns_none",
+      "test_none_returns_none",
+      "test_parser_never_raises_on_odd_layers",
+      "test_invalid_window_value_normalized_when_buildable"
+    ],
+    "doc": "Unit tests for Module 2 packet parsing, normalization, and validation."
+  },
+  {
+    "path": "tests/test_pipeline_e2e.py",
+    "bytes": 11280,
+    "sha256": "41b5d24898a0aa913b69f31e4fb47a20839d1fedf41136f48e6e8cde2cde77b3",
+    "symbols": [
+      "_stamp",
+      "_tcp_pair",
+      "TestModuleHandoffs",
+      "TestPipelineBehaviors",
+      "TestPipelineResultShape",
+      "test_module1_to_module2_handoff",
+      "test_module2_to_module3_handoff",
+      "test_single_packet_flows_are_not_classified",
+      "test_fin_terminates_flow",
+      "test_module3_to_module4_handoff",
+      "test_module4_to_module5_and_detection_result",
+      "test_multiple_flows",
+      "test_flush_at_shutdown_closes_active_flows",
+      "test_benign_traffic_produces_valid_detection",
+      "test_invalid_input_handling",
+      "test_callback_and_lifecycle_cleanup",
+      "test_live_path_wires_capture_metadata_and_flushes",
+      "test_as_dict_contains_detection_fields",
+      "on_detection",
+      "_FakeCapture",
+      "__init__",
+      "capture_metadata"
+    ],
+    "doc": "End-to-end integration tests for the Modules 1\u20135 pipeline."
+  },
+  {
+    "path": "tests/test_profile_validation.py",
+    "bytes": 3007,
+    "sha256": "1f33ec5b047b1db371cb2e85234d55ee1c3b683b35a275d614e1bebfa6223bb7",
+    "symbols": [
+      "_opening_flow_predictions",
+      "TestGeneratedProfilesUseRealModel",
+      "TestLabWireShapes",
+      "_assert_recognised",
+      "test_benign",
+      "test_port_scan",
+      "test_brute_force",
+      "test_ddos",
+      "test_dos",
+      "test_port_scan_breaks_if_windows_retransmits_syn",
+      "test_lab_page_and_request_sizes"
+    ],
+    "doc": "Profile chain check without Npcap: generator wire shape \u2192 flows \u2192 24 features \u2192 real model.\n\nPackets come from ``tests.lab_traffic_simulation`` (an approximation of Windows\nloopback captures). The connection-opening flow of every profile must be\nrecognised by the genuine XGBoost model; the short close-handshake tail flows\nare BENIGN and are what the demo fallback covers."
+  },
+  {
+    "path": "tests/test_traffic_generator.py",
+    "bytes": 15216,
+    "sha256": "5984ac3506f67926c0b55ccbc6434c12756947dace504e3642e5df4bd2f59fa0",
+    "symbols": [
+      "TestProfileLoader",
+      "TestSafety",
+      "TestParameterMapper",
+      "TestTrafficGenerators",
+      "TestProfileWireShapes",
+      "TestLabEchoServerShapes",
+      "TestControllerIntegration",
+      "TestConnectivity",
+      "TestProfilesFilePresent",
+      "test_load_default_profiles",
+      "test_list_profile_names",
+      "test_extract_reference_features_for_each_profile",
+      "test_rejects_public_ip",
+      "test_accepts_private_ips",
+      "test_localhost_is_loopback",
+      "test_confirmation_required",
+      "test_duration_cap",
+      "test_maps_all_profiles",
+      "test_port_scan_syn_only",
+      "test_dos_idle_gap_above_threshold",
+      "test_dos_produces_about_one_connection_per_second",
+      "test_intensity_scales_rates",
+      "test_build_generator_for_each_profile",
+      "test_benign_generator_counts_stats",
+      "_fast",
+      "test_brute_force_uses_one_session_of_short_attempt_lines",
+      "test_ddos_sends_tiny_page_request",
+      "test_dos_sends_full_header_page_request",
+      "test_port_scan_probe_timeout_below_windows_syn_retry",
+      "setUp",
+      "tearDown",
+      "_fetch",
+      "test_page_paths_return_lab_page",
+      "test_brute_force_line_session_gets_one_deny_per_attempt",
+      "test_controller_rejects_without_confirmation",
+      "test_controller_runs_short_test",
+      "test_same_machine_target_rejected_for_two_machine",
+      "test_recommended_receiver_command_includes_lab_port",
+      "test_validation_mode_skips_receiver_probe",
+      "test_single_pc_mode_allows_same_machine_but_still_probes",
+      "test_unreachable_receiver_rejected",
+      "test_default_profiles_path_exists",
+      "exchange"
+    ],
+    "doc": "Tests for the MLCN controlled traffic generator."
+  },
+  {
+    "path": "traffic_generator/README.md",
+    "bytes": 2782,
+    "sha256": "6807e8d7c9f05c69fa07b20171f318aba60f28c4bd4d862fb3da9fed1ac743fb"
+  },
+  {
+    "path": "traffic_generator/__init__.py",
+    "bytes": 539,
+    "sha256": "0bb6ef6a1fc541c9cf3bb80e5925bc6b160f1c9d90b1f4e5c724312b55700886",
+    "symbols": [],
+    "doc": "MLCN Controlled IDS Traffic Generator \u2014 laboratory test traffic only."
+  },
+  {
+    "path": "traffic_generator/__main__.py",
+    "bytes": 362,
+    "sha256": "7dd95638e72f99fb2434a407b48f833f752b19c2d28a335a88951d2b6150151d",
+    "symbols": [],
+    "doc": "python -m traffic_generator.streamlit_app"
+  },
+  {
+    "path": "traffic_generator/config.py",
+    "bytes": 2292,
+    "sha256": "bbce91203ad6ca4bac5dbf6089a276a2441180bed859b948445554173493628d",
+    "symbols": [],
+    "doc": "Configuration and safety limits for the MLCN traffic generator."
+  },
+  {
+    "path": "traffic_generator/connectivity.py",
+    "bytes": 4516,
+    "sha256": "d9448307df8ee92ac2cf74e3196433c290d915fea75531c80614c33272564b34",
+    "symbols": [
+      "single_pc_mode",
+      "local_ip_addresses",
+      "is_same_machine_target",
+      "probe_tcp_endpoint",
+      "require_two_machine_receiver",
+      "default_loopback_capture_interface",
+      "recommended_receiver_pipeline_command"
+    ],
+    "doc": "Pre-flight checks for two-machine laboratory traffic tests."
+  },
+  {
+    "path": "traffic_generator/controller.py",
+    "bytes": 10481,
+    "sha256": "1b4ca474918c67c53e46a5275cbaf58c3a7e3d190e12df832fc890576a28bcee",
+    "symbols": [
+      "_demo_session_start",
+      "_demo_session_finish",
+      "TrafficGeneratorController",
+      "__init__",
+      "running",
+      "progress",
+      "status",
+      "stats",
+      "last_log",
+      "validation_records",
+      "log_lines",
+      "append_log",
+      "stop",
+      "start",
+      "_write_log",
+      "wait",
+      "_progress",
+      "_worker"
+    ],
+    "doc": "Orchestrate profile mapping, safe generation, logging, and optional validation."
+  },
+  {
+    "path": "traffic_generator/dashboard_data.py",
+    "bytes": 2778,
+    "sha256": "29a7f0b1dcc32ed235ee6f44f6509aaaca2ea3289d214d57ae93b324d765ef19",
+    "symbols": [
+      "detections_log_path",
+      "read_records",
+      "ReceiverView",
+      "build_view",
+      "receiver_view",
+      "primary",
+      "fabricated"
+    ],
+    "doc": "Read-only receiver data for the dashboard (no Streamlit imports, unit-testable)."
+  },
+  {
+    "path": "traffic_generator/lab_server.py",
+    "bytes": 4883,
+    "sha256": "2d09bed0c36737e1b3fb3e848ea2b50ebb562cac713ebdab92d73d3fbdea6cb7",
+    "symbols": [
+      "_build_lab_page_response",
+      "_requested_path",
+      "_serve_line_session",
+      "LabEchoServer",
+      "__init__",
+      "running",
+      "start",
+      "stop",
+      "_serve",
+      "_handle"
+    ],
+    "doc": "Minimal HTTP responder for single-machine lab validation (generator side only)."
+  },
+  {
+    "path": "traffic_generator/parameter_mapper.py",
+    "bytes": 9063,
+    "sha256": "bf0ef1428c60f8e0fb1086e3e8da545e8e6a4338cfc06bca9d6c950aac3543aa",
+    "symbols": [
+      "_clamp",
+      "_microseconds_to_seconds",
+      "_safe_packet_rate",
+      "_safe_connection_rate",
+      "map_profile_to_parameters"
+    ],
+    "doc": "Translate empirical profile characteristics into safe lab traffic parameters."
+  },
+  {
+    "path": "traffic_generator/profile_loader.py",
+    "bytes": 4391,
+    "sha256": "69a781d1ef9c433d1fc697d7464801198866a2fea14fd1a02721429ad40fa1a8",
+    "symbols": [
+      "ProfileLoadError",
+      "load_profiles",
+      "list_profile_names",
+      "get_attack_profile",
+      "_percentile_value",
+      "extract_reference_features",
+      "feature_value_from_profile"
+    ],
+    "doc": "Load MLCN compact attack traffic profiles from JSON."
+  },
+  {
+    "path": "traffic_generator/receiver_server.py",
+    "bytes": 2493,
+    "sha256": "5dbd34d18ba5380dc9411db61ce624c67af812e5868ab920a9b0a7eec7ef6b36",
+    "symbols": [
+      "main",
+      "_handle_signal"
+    ],
+    "doc": "Run the lab HTTP echo server on Laptop B for two-machine IDS tests."
+  },
+  {
+    "path": "traffic_generator/safety.py",
+    "bytes": 5263,
+    "sha256": "7747c54f715a8980e8bec13fcd214c3e08baeb2bdd90293a6466c70aead14832",
+    "symbols": [
+      "SafetyError",
+      "normalize_target",
+      "resolve_target_host",
+      "_assert_allowed_ip",
+      "validate_test_limits",
+      "validate_port",
+      "require_lab_confirmation",
+      "is_loopback_target",
+      "allowed_targets_hint",
+      "validate_targets_iterable"
+    ],
+    "doc": "Laboratory-only safety checks for the traffic generator."
+  },
+  {
+    "path": "traffic_generator/streamlit_app.py",
+    "bytes": 15509,
+    "sha256": "14467236925ba00f6d3a34bfe7069094a50142530eb74e382ecfe31772f52f79",
+    "symbols": [
+      "_html",
+      "_clock",
+      "_card",
+      "_init_state",
+      "_start",
+      "_attacker_panel",
+      "_attacker_status",
+      "_probability_bars",
+      "_result_card",
+      "_flow_cards",
+      "_history_card",
+      "_receiver_panel",
+      "main"
+    ],
+    "doc": "MLCN operations console: attacker/control (left) and receiver/detection (right)."
+  },
+  {
+    "path": "traffic_generator/traffic_generator.py",
+    "bytes": 13996,
+    "sha256": "989fa6150e3f1eb6e3edac5a42fd3ac755e823ab6a160b146da9ff9c97f326d3",
+    "symbols": [
+      "BaseTrafficGenerator",
+      "_clamp_fraction",
+      "_build_http_request",
+      "_tcp_exchange",
+      "_line_session",
+      "_build_dos_request",
+      "_tcp_probe",
+      "BenignTrafficGenerator",
+      "PortScanTrafficGenerator",
+      "BruteForceTrafficGenerator",
+      "DDoSTrafficGenerator",
+      "DoSTrafficGenerator",
+      "build_generator",
+      "__init__",
+      "_record_error",
+      "_sleep",
+      "_jittered_delay",
+      "_report",
+      "run",
+      "run",
+      "run",
+      "run",
+      "run",
+      "run",
+      "worker"
+    ],
+    "doc": "Safe, rate-limited laboratory traffic generators (socket-based)."
+  },
+  {
+    "path": "traffic_generator/traffic_profile.py",
+    "bytes": 4771,
+    "sha256": "3d32368cb5a820f604557c60f26a103f220fd643ae5dcb1b76fdb4e37cbffc43",
+    "symbols": [
+      "FeatureSnapshot",
+      "TrafficParameters",
+      "GeneratorStats",
+      "GeneratorRunLog",
+      "ValidationRecord",
+      "as_dict",
+      "as_dict",
+      "as_dict",
+      "as_dict"
+    ],
+    "doc": "Data models for mapped laboratory traffic parameters."
+  },
+  {
+    "path": "traffic_generator/validation.py",
+    "bytes": 5595,
+    "sha256": "48c9efef0fc238d556819db91f5624b4163829ea4b78cd41e24d71ebf847cfaf",
+    "symbols": [
+      "default_loopback_interface",
+      "LocalValidationRunner",
+      "summarize_validation",
+      "format_validation_table",
+      "__init__",
+      "running",
+      "start",
+      "stop",
+      "flush_records",
+      "on_detection",
+      "_run"
+    ],
+    "doc": "Optional local validation: correlate generator profile with receiver M1\u2192M5 output."
+  }
+]

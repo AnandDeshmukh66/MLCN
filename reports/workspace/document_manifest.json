@@ -1,0 +1,301 @@
+{
+  "figures": {
+    "architecture": {
+      "num": "3.1",
+      "caption": "Overall MLCN architecture. Solid blocks show audited components; the dashed Gemini block is proposed. This is an architectural diagram, not a measured network topology.",
+      "chapter": 3,
+      "index": 1
+    },
+    "pipeline": {
+      "num": "3.2",
+      "caption": "Five-module processing pipeline and typed handoffs. The pipeline orchestrator connects existing module APIs and retains the genuine combined result.",
+      "chapter": 3,
+      "index": 2
+    },
+    "packet_flow": {
+      "num": "3.3",
+      "caption": "Packet-to-flow transformation, completion and classification eligibility. Discard and completion rules are architectural conditions, not experimental detection rates.",
+      "chapter": 3,
+      "index": 3
+    },
+    "bidirectional": {
+      "num": "3.4",
+      "caption": "Bidirectional key construction and orientation. Canonical endpoint ordering and forward-direction anchoring serve different purposes.",
+      "chapter": 3,
+      "index": 4
+    },
+    "features": {
+      "num": "3.5",
+      "caption": "Feature-engineering workflow under the current 24-feature contract. Timing features use microseconds; rates use seconds.",
+      "chapter": 3,
+      "index": 5
+    },
+    "inference": {
+      "num": "3.6",
+      "caption": "XGBoost loading and inference. Confidence is the maximum model probability and is not a calibrated probability of a real intrusion.",
+      "chapter": 3,
+      "index": 6
+    },
+    "training": {
+      "num": "3.7",
+      "caption": "Recorded training/evaluation methodology and audit replay. Early notebook outputs are inconsistent; the saved test artifacts and regenerated inference are independently checked.",
+      "chapter": 3,
+      "index": 7
+    },
+    "generator": {
+      "num": "3.8",
+      "caption": "Generator/receiver interaction and evidence paths. Profile reference medians do not bypass capture or enter the detector as synthetic feature vectors.",
+      "chapter": 3,
+      "index": 8
+    },
+    "gemini": {
+      "num": "3.9",
+      "caption": "Proposed Gemini explanation architecture. Dashed blocks are unimplemented design elements; only genuine evidence is eligible for explanation.",
+      "chapter": 3,
+      "index": 9
+    },
+    "distribution": {
+      "num": "4.1",
+      "caption": "Verified class distribution in models/xgboost_test_predictions.csv, n = 251,812. Bar heights use a logarithmic count axis.",
+      "chapter": 4,
+      "index": 1
+    },
+    "performance": {
+      "num": "4.2",
+      "caption": "Per-class precision, recall and F1 reconstructed from saved offline labels. Brute Force precision is substantially below the other classes.",
+      "chapter": 4,
+      "index": 2
+    },
+    "confusion": {
+      "num": "4.3",
+      "caption": "Verified offline confusion matrix. Cell annotations are exact counts; colour represents log10(count + 1). Rows are actual and columns predicted.",
+      "chapter": 4,
+      "index": 3
+    },
+    "roc": {
+      "num": "4.4",
+      "caption": "One-versus-rest ROC curves regenerated from the saved booster and test features using XGBoost 2.1.4. These are offline ranking results.",
+      "chapter": 4,
+      "index": 4
+    },
+    "pr": {
+      "num": "4.5",
+      "caption": "One-versus-rest PR curves from regenerated probabilities. The black point shows the separate Brute Force multiclass argmax operating point.",
+      "chapter": 4,
+      "index": 5
+    },
+    "live_counts": {
+      "num": "4.6",
+      "caption": "Saved laboratory opening-flow counts, reconciled using consecutive JSONL blocks and the saved report\u2019s profile totals. Matching is relative to the selected profile.",
+      "chapter": 4,
+      "index": 6
+    }
+  },
+  "tables": {
+    "objectives": {
+      "num": "1.1",
+      "title": "Investigation objectives and evidence boundaries",
+      "rows": 6
+    },
+    "literature": {
+      "num": "2.1",
+      "title": "Critical literature comparison",
+      "rows": 9
+    },
+    "patents": {
+      "num": "2.2",
+      "title": "Verified related patent publications",
+      "rows": 2
+    },
+    "contracts": {
+      "num": "3.1",
+      "title": "Core data contracts and interfaces",
+      "rows": 6
+    },
+    "featuregroups": {
+      "num": "3.2",
+      "title": "Feature families and current semantics",
+      "rows": 6
+    },
+    "training": {
+      "num": "3.3",
+      "title": "Recorded final notebook training configuration",
+      "rows": 12
+    },
+    "evidence": {
+      "num": "4.1",
+      "title": "Result provenance and permitted interpretation",
+      "rows": 7
+    },
+    "metrics": {
+      "num": "4.2",
+      "title": "Offline evaluation summary",
+      "rows": 13
+    },
+    "perclass": {
+      "num": "4.3",
+      "title": "Verified per-class offline evaluation",
+      "rows": 5
+    },
+    "confusion": {
+      "num": "4.4",
+      "title": "Exact confusion matrix (actual rows, predicted columns)",
+      "rows": 5
+    },
+    "auc": {
+      "num": "4.5",
+      "title": "Regenerated one-versus-rest ranking metrics",
+      "rows": 5
+    },
+    "baseline": {
+      "num": "4.6",
+      "title": "Same-test-population baseline comparison",
+      "rows": 2
+    },
+    "live": {
+      "num": "4.7",
+      "title": "Saved laboratory validation, opening-flow denominator",
+      "rows": 5
+    },
+    "failures": {
+      "num": "4.8",
+      "title": "Failures in the 202-test audit run",
+      "rows": 6
+    },
+    "achievement": {
+      "num": "5.1",
+      "title": "Objective achievement and remaining work",
+      "rows": 6
+    },
+    "schema": {
+      "num": "6.1",
+      "title": "Complete ordered 24-feature runtime contract",
+      "rows": 24
+    },
+    "modules": {
+      "num": "6.2",
+      "title": "Audited implementation and artifact inventory",
+      "rows": 14
+    },
+    "config": {
+      "num": "6.3",
+      "title": "Configuration by execution context",
+      "rows": 12
+    },
+    "commands": {
+      "num": "6.4",
+      "title": "Reproducibility and laboratory command reference",
+      "rows": 7
+    },
+    "xai_contract": {
+      "num": "6.5",
+      "title": "Proposed Gemini evidence and response contract",
+      "rows": 10
+    },
+    "rawfiles": {
+      "num": "6.6",
+      "title": "Local CIC CSV row counts",
+      "rows": 8
+    },
+    "hashes": {
+      "num": "6.7",
+      "title": "Selected artifact SHA-256 hashes",
+      "rows": 7
+    },
+    "publications": {
+      "num": "P.1",
+      "title": "Candidate publications status",
+      "rows": 1
+    }
+  },
+  "citations": [
+    {
+      "number": 1,
+      "key": "sommer",
+      "text": "Sommer R., Paxson V., \u201cOutside the Closed World: On Using Machine Learning for Network Intrusion Detection,\u201d 2010 IEEE Symposium on Security and Privacy (2010).",
+      "url": "https://gangw.cs.illinois.edu/class/cs562/papers/Closed_World-IDS-sp10.pdf"
+    },
+    {
+      "number": 2,
+      "key": "cic2017",
+      "text": "Canadian Institute for Cybersecurity, University of New Brunswick, \u201cIntrusion Detection Evaluation Dataset (CIC-IDS2017).\u201d Dataset documentation, including the cited study by Sharafaldin I., Lashkari A. H. and Ghorbani A. A., \u201cToward Generating a New Intrusion Detection Dataset and Intrusion Traffic Characterization,\u201d 4th International Conference on Information Systems Security and Privacy (2018).",
+      "url": "https://www.unb.ca/cic/datasets/ids-2017.html"
+    },
+    {
+      "number": 3,
+      "key": "xgb",
+      "text": "Chen T., Guestrin C., \u201cXGBoost: A Scalable Tree Boosting System,\u201d arXiv:1603.02754 (2016), associated conference DOI: 10.1145/2939672.2939785.",
+      "url": "https://arxiv.org/abs/1603.02754"
+    },
+    {
+      "number": 4,
+      "key": "normalization",
+      "text": "Handley M., Paxson V., Kreibich C., \u201cNetwork Intrusion Detection: Evasion, Traffic Normalization, and End-to-End Protocol Semantics,\u201d 10th USENIX Security Symposium, Washington, D.C. (2001).",
+      "url": "https://www.usenix.org/conference/10th-usenix-security-symposium/network-intrusion-detection-evasion-traffic-normalization"
+    },
+    {
+      "number": 5,
+      "key": "ddos2019",
+      "text": "Canadian Institute for Cybersecurity, University of New Brunswick, \u201cDDoS Evaluation Dataset (CIC-DDoS2019).\u201d Dataset documentation and associated study by Sharafaldin I., Lashkari A. H., Hakak S. and Ghorbani A. A., \u201cDeveloping Realistic Distributed Denial of Service (DDoS) Attack Dataset and Taxonomy,\u201d IEEE 53rd International Carnahan Conference on Security Technology, Chennai (2019).",
+      "url": "https://www.unb.ca/cic/datasets/ddos-2019.html"
+    },
+    {
+      "number": 6,
+      "key": "ctu13",
+      "text": "Stratosphere Laboratory, \u201cThe CTU-13 Dataset: A Labeled Dataset with Botnet, Normal and Background Traffic.\u201d Dataset-provider documentation, accessed 21 October 2026.",
+      "url": "https://www.stratosphereips.org/datasets-ctu13"
+    },
+    {
+      "number": 7,
+      "key": "engelen",
+      "text": "Engelen G., Rimmer V., Joosen W., \u201cTroubleshooting an Intrusion Detection Dataset: the CICIDS2017 Case Study,\u201d 2021 IEEE Security and Privacy Workshops, pp. 7\u201312 (2021), DOI: 10.1109/SPW53761.2021.00009.",
+      "url": "https://intrusion-detection.distrinet-research.be/WTMC2021/index.html"
+    },
+    {
+      "number": 8,
+      "key": "arp",
+      "text": "Arp D., Quiring E., Pendlebury F., Warnecke A., Pierazzi F., Wressnegger C., Cavallaro L., Rieck K., \u201cDos and Don\u2019ts of Machine Learning in Computer Security,\u201d 31st USENIX Security Symposium, pp. 3971\u20133988 (2022).",
+      "url": "https://www.usenix.org/conference/usenixsecurity22/presentation/arp"
+    },
+    {
+      "number": 9,
+      "key": "pr",
+      "text": "Saito T., Rehmsmeier M., \u201cThe Precision-Recall Plot Is More Informative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced Datasets,\u201d PLOS ONE, vol. 10, no. 3, e0118432 (2015), DOI: 10.1371/journal.pone.0118432.",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0118432"
+    },
+    {
+      "number": 10,
+      "key": "shap",
+      "text": "Lundberg S., Lee S.-I., \u201cA Unified Approach to Interpreting Model Predictions,\u201d arXiv:1705.07874 (2017).",
+      "url": "https://arxiv.org/abs/1705.07874"
+    },
+    {
+      "number": 11,
+      "key": "lime",
+      "text": "Ribeiro M. T., Singh S., Guestrin C., \u201cWhy Should I Trust You?: Explaining the Predictions of Any Classifier,\u201d arXiv:1602.04938 (2016).",
+      "url": "https://arxiv.org/abs/1602.04938"
+    },
+    {
+      "number": 12,
+      "key": "gemini",
+      "text": "Google, \u201cStructured Outputs,\u201d Gemini API documentation. Accessed 21 October 2026; page update shown as 20 October 2026.",
+      "url": "https://ai.google.dev/gemini-api/docs/structured-output"
+    },
+    {
+      "number": 13,
+      "key": "patent1",
+      "text": "Powell M. S., Drozdenko B. M., Roodbeen S. A., \u201cReal-time Network Intrusion Detection System,\u201d US12143406B1, published 12 November 2024; original assignee: United States Department of the Navy.",
+      "url": "https://patents.google.com/patent/US12143406B1/en"
+    },
+    {
+      "number": 14,
+      "key": "patent2",
+      "text": "Papamartzivanos D., Bifulco R., Kambourakis G., Gomez Marmol F., \u201cMethod and System for Adaptive Network Intrusion Detection,\u201d US20220021695A1, published 20 January 2022; original assignee: NEC Laboratories Europe GmbH.",
+      "url": "https://patents.google.com/patent/US20220021695A1/en"
+    }
+  ],
+  "abstract_words": 165,
+  "body_words": 12310,
+  "paragraphs": 396,
+  "tables_count": 28
+}

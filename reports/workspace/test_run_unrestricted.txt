@@ -1,0 +1,324 @@
+test_finalize_removes_duplicate_average_packet_size (tests.test_common_feature_schema.TestCommonFeatureSchema) ... ok
+test_schema_artifacts_are_deterministic (tests.test_common_feature_schema.TestCommonFeatureSchema) ... ok
+test_twenty_five_candidates_defined (tests.test_common_feature_schema.TestCommonFeatureSchema) ... ok
+test_validation_fails_on_duplicate_names (tests.test_common_feature_schema.TestCommonFeatureSchema) ... ok
+test_validation_fails_without_edge_cases (tests.test_common_feature_schema.TestCommonFeatureSchema) ... ok
+test_validation_fails_without_formula (tests.test_common_feature_schema.TestCommonFeatureSchema) ... ok
+test_validation_passes_for_final_schema (tests.test_common_feature_schema.TestCommonFeatureSchema) ... ok
+test_write_schema_artifacts_default_paths (tests.test_common_feature_schema.TestCommonFeatureSchema) ... ok
+test_script_main_exits_zero (tests.test_common_feature_schema.TestStep8Script) ... ok
+test_missing_log_is_empty_waiting_state (tests.test_dashboard.TestReceiverData) ... ok
+test_real_verdict_not_fabricated_and_live_flow_before_verdict (tests.test_dashboard.TestReceiverData) ... ok
+test_receiver_view_reads_log_beside_session_file (tests.test_dashboard.TestReceiverData) ... ok
+test_since_filters_old_runs_and_partial_lines (tests.test_dashboard.TestReceiverData) ... ok
+test_verdict_takes_priority_and_flags_fabricated (tests.test_dashboard.TestReceiverData) ... FAIL
+test_launch_invokes_generator_and_shows_fabricated_result (tests.test_dashboard.TestStreamlitApp) ... 2026-10-21 00:59:46.381 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+FAIL
+test_real_result_has_no_disclaimer_and_repeat_run_replaces_it (tests.test_dashboard.TestStreamlitApp) ... 2026-10-21 00:59:46.537 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_starts_in_waiting_state_with_all_profiles (tests.test_dashboard.TestStreamlitApp) ... 2026-10-21 00:59:47.811 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_hooks_noop_when_disabled (tests.test_demo_fallback.TestControllerHooks) ... ok
+test_hooks_write_session_when_enabled (tests.test_demo_fallback.TestControllerHooks) ... ok
+test_fallback_when_prediction_differs (tests.test_demo_fallback.TestDecision) ... ok
+test_real_when_no_selection_or_match (tests.test_demo_fallback.TestDecision) ... ok
+test_failing_transform_falls_back_to_genuine (tests.test_demo_fallback.TestDemoFallbackTransform) ... ok
+test_flows_outside_session_are_untouched (tests.test_demo_fallback.TestDemoFallbackTransform) ... ok
+test_matching_prediction_shows_genuine (tests.test_demo_fallback.TestDemoFallbackTransform) ... ok
+test_mismatch_shows_selected_and_keeps_genuine (tests.test_demo_fallback.TestDemoFallbackTransform) ... ok
+test_no_session_shows_genuine (tests.test_demo_fallback.TestDemoFallbackTransform) ... ok
+test_pipeline_results_stay_genuine (tests.test_demo_fallback.TestDemoFallbackTransform) ... ok
+test_corrupt_file_reads_as_none (tests.test_demo_fallback.TestSessionFile) ... ok
+test_covers_time_window_and_ports (tests.test_demo_fallback.TestSessionFile) ... ok
+test_round_trip_and_finish (tests.test_demo_fallback.TestSessionFile) ... ok
+test_receiver_shutdown_reports_unfinished_session (tests.test_demo_fallback.TestSessionPoll) ... ok
+test_reliable_session_reports_real_ml_once (tests.test_demo_fallback.TestSessionPoll) ... ok
+test_session_without_flows_reports_fabricated_selected (tests.test_demo_fallback.TestSessionPoll) ... ok
+test_fabricated_values_vary_and_always_carry_disclaimer (tests.test_demo_fallback.TestSessionResult) ... ok
+test_failure_is_fabricated_selected (tests.test_demo_fallback.TestSessionResult) ... ok
+test_no_flows_is_fabricated_selected (tests.test_demo_fallback.TestSessionResult) ... ok
+test_per_flow_fabricated_result_carries_disclaimer (tests.test_demo_fallback.TestSessionResult) ... ok
+test_printed_fabricated_result_shows_selected_and_disclaimer (tests.test_demo_fallback.TestSessionResult) ... FAIL
+test_reliable_genuine_prediction_is_real_ml (tests.test_demo_fallback.TestSessionResult) ... ok
+test_unreliable_or_wrong_prediction_is_fabricated_selected (tests.test_demo_fallback.TestSessionResult) ... ok
+test_distribution_invariants (tests.test_demo_fallback.TestSyntheticProbabilities) ... ok
+test_unknown_profile_rejected (tests.test_demo_fallback.TestSyntheticProbabilities) ... ok
+test_values_vary_between_runs (tests.test_demo_fallback.TestSyntheticProbabilities) ... ok
+test_flow_duration_is_microseconds_not_seconds (tests.test_feature_contract.TestLiveVectorUnits) ... ok
+test_reproduces_cic_port_scan_row (tests.test_feature_contract.TestLiveVectorUnits)
+SYN → RST/ACK 66 µs later equals a real CIC-IDS2017 PortScan training row. ... ok
+test_parser_reports_cic_payload_bytes (tests.test_feature_contract.TestPayloadLengths) ... ok
+test_feature_order_matches_trained_model (tests.test_feature_contract.TestSchema) ... ok
+test_time_features_are_microseconds_and_rates_per_second (tests.test_feature_contract.TestSchema) ... ok
+test_active_idle_with_gap_above_threshold (tests.test_feature_engineering.TestActiveIdle) ... ok
+test_closing_fin_packet_does_not_update_activity (tests.test_feature_engineering.TestActiveIdle) ... ok
+test_gap_exactly_at_threshold_stays_active (tests.test_feature_engineering.TestActiveIdle) ... ok
+test_no_active_or_idle_when_gaps_within_threshold (tests.test_feature_engineering.TestActiveIdle) ... ok
+test_empty_packet_collection (tests.test_feature_engineering.TestEdgeCases) ... ok
+test_single_packet_flow (tests.test_feature_engineering.TestEdgeCases) ... ok
+test_zero_division_means_and_ratio (tests.test_feature_engineering.TestEdgeCases) ... ok
+test_zero_duration_multi_packet (tests.test_feature_engineering.TestEdgeCases) ... ok
+test_committed_schema_json_matches_contract (tests.test_feature_engineering.TestEngineApiAndIntegration) ... ok
+test_compute_feature_map_covers_contract (tests.test_feature_engineering.TestEngineApiAndIntegration) ... ok
+test_engine_extract_many (tests.test_feature_engineering.TestEngineApiAndIntegration) ... ok
+test_feature_vector_from_mapping_and_zeros (tests.test_feature_engineering.TestEngineApiAndIntegration) ... ok
+test_invalid_activity_timeout (tests.test_feature_engineering.TestEngineApiAndIntegration) ... ok
+test_matches_schema_reference_probe (tests.test_feature_engineering.TestEngineApiAndIntegration)
+Module 4 equals the schema's independent CIC re-implementation on every probe flow. ... ok
+test_module2_parse_to_module4 (tests.test_feature_engineering.TestEngineApiAndIntegration) ... ok
+test_module3_to_module4_pipeline (tests.test_feature_engineering.TestEngineApiAndIntegration) ... ok
+test_non_flow_raises_type_error (tests.test_feature_engineering.TestEngineApiAndIntegration) ... ok
+test_forward_only_flow (tests.test_feature_engineering.TestNormalAndDirectionalFlows) ... ok
+test_normal_bidirectional_flow (tests.test_feature_engineering.TestNormalAndDirectionalFlows) ... ok
+test_reverse_only_counts_via_zero_forward_means (tests.test_feature_engineering.TestNormalAndDirectionalFlows) ... ok
+test_feature_count_is_24 (tests.test_feature_engineering.TestSchemaCompliance) ... ok
+test_feature_order_matches_schema_json (tests.test_feature_engineering.TestSchemaCompliance) ... ok
+test_vector_preserves_order (tests.test_feature_engineering.TestSchemaCompliance) ... ok
+test_cic_flag_column_mapping (tests.test_feature_engineering.TestTcpFlagsAndIat) ... ok
+test_flags_are_binary_from_first_packet_only (tests.test_feature_engineering.TestTcpFlagsAndIat) ... ok
+test_iat_statistics (tests.test_feature_engineering.TestTcpFlagsAndIat) ... ok
+test_missing_tcp_flags_contribute_zero (tests.test_feature_engineering.TestTcpFlagsAndIat) ... ok
+test_packet_and_byte_aggregation (tests.test_flow_builder.TestAggregation) ... ok
+test_different_tuples_differ (tests.test_flow_builder.TestFlowKeyCanonicalization) ... ok
+test_reverse_direction_shares_key (tests.test_flow_builder.TestFlowKeyCanonicalization) ... ok
+test_batch_skips_bad_entries (tests.test_flow_builder.TestMalformedInput) ... ok
+test_none_and_wrong_type_do_not_crash (tests.test_flow_builder.TestMalformedInput) ... ok
+test_end_to_end_capture_parse_flow (tests.test_flow_builder.TestModule1Module2Module3Pipeline) ... ok
+test_consumes_module2_packet_metadata (tests.test_flow_builder.TestModule2Integration) ... ok
+test_different_five_tuples_create_separate_flows (tests.test_flow_builder.TestPacketGrouping) ... ok
+test_packets_join_same_flow (tests.test_flow_builder.TestPacketGrouping) ... ok
+test_reverse_direction_joins_same_flow (tests.test_flow_builder.TestPacketGrouping) ... ok
+test_icmp_without_ports (tests.test_flow_builder.TestProtocolAndMissingPorts) ... ok
+test_packets_without_ips_are_skipped (tests.test_flow_builder.TestProtocolAndMissingPorts) ... ok
+test_tcp_and_udp_flows (tests.test_flow_builder.TestProtocolAndMissingPorts) ... ok
+test_expire_cleans_idle_flows (tests.test_flow_builder.TestTimeoutAndMemory) ... ok
+test_inactivity_timeout_completes_flow (tests.test_flow_builder.TestTimeoutAndMemory) ... ok
+test_max_active_flows_evicts_oldest (tests.test_flow_builder.TestTimeoutAndMemory) ... ok
+test_max_duration_closes_active_flow (tests.test_flow_builder.TestTimeoutAndMemory) ... ok
+test_emit_skips_non_lab_flows (tests.test_lab_capture.TestLabPortFilter) ... ok
+test_flow_involves_port (tests.test_lab_capture.TestLabPortFilter) ... ok
+test_comma_separated_interfaces (tests.test_lab_capture.TestResolveInterfaces) ... ok
+test_follows_address_not_guid (tests.test_launcher.TestInterfaceSelection) ... ok
+test_maps_local_ip_to_npcap_device_plus_loopback (tests.test_launcher.TestInterfaceSelection) ... ok
+test_missing_loopback_is_an_error (tests.test_launcher.TestInterfaceSelection) ... ok
+test_no_local_ip_captures_loopback_with_warning (tests.test_launcher.TestInterfaceSelection) ... ok
+test_unmatched_ip_captures_loopback_with_warning (tests.test_launcher.TestInterfaceSelection) ... ok
+test_check_passes_with_npcap_and_loopback (tests.test_launcher.TestLauncherFlow) ... STEP 8 COMPLETE
+Candidate features evaluated: 25
+Features retained: 24
+Features removed/modified: 1
+Validation status: PASSED
+Final schema path: /private/var/folders/lp/4t3w0vls4qd4z3m5dst8bd2m0000gn/T/tmp6o6u2ry8/common_feature_schema.json
+Report path: /private/var/folders/lp/4t3w0vls4qd4z3m5dst8bd2m0000gn/T/tmp6o6u2ry8/common_feature_schema_report.md
+  Windows        10.0.22631
+  Administrator  yes
+  Npcap          wpcap.dll (admin-only: yes, loopback support: yes)
+  Local IPv4     192.168.1.23
+  Capture        \Device\NPF_{0D1C2B3A-4F5E-6071-8293-A4B5C6D7E8F9},\Device\NPF_Loopback
+  Lab ports      8080 (Port Scan range 8080-8129)
+MLCN launcher — preflight
+  Windows        10.0.22631
+  Administrator  yes
+  Npcap          wpcap.dll (admin-only: yes, loopback support: yes)
+  Local IPv4     192.168.1.23
+  Capture        \Device\NPF_{0D1C2B3A-4F5E-6071-8293-A4B5C6D7E8F9},\Device\NPF_Loopback
+  Lab ports      8080 (Port Scan range 8080-8129)
+ok
+test_elevated_arguments_are_cwd_independent (tests.test_launcher.TestLauncherFlow) ... ok
+test_missing_npcap_fails (tests.test_launcher.TestLauncherFlow) ... Preflight OK.
+MLCN launcher — preflight
+  Windows        10
+  Administrator  yes
+Error: Npcap is not installed (wpcap.dll missing). Install it from https://npcap.com with 'Support loopback traffic' enabled.
+ok
+test_non_windows_is_rejected (tests.test_launcher.TestLauncherFlow) ... MLCN launcher — preflight
+Error: the MLCN launcher targets Windows + Npcap (this is darwin).
+ok
+test_requests_uac_when_npcap_is_admin_only (tests.test_launcher.TestLauncherFlow) ... MLCN launcher — preflight
+  Windows        10
+  Administrator  no
+  Npcap          wpcap.dll (admin-only: yes, loopback support: yes)
+Requesting Administrator rights (UAC)...
+ok
+test_streams_prefixed_output_and_stops (tests.test_launcher.TestManagedProcess) ... /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py:550: ResourceWarning: unclosed file <_io.TextIOWrapper name=7 encoding='utf-8'>
+  method()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_detects_wpcap_dll_under_system_root (tests.test_launcher.TestNpcapChecks) ... ok
+test_elevation_policy (tests.test_launcher.TestNpcapChecks) ... ok
+test_child_environment (tests.test_launcher.TestProcessCommands) ... ok
+test_pipeline_command (tests.test_launcher.TestProcessCommands) ... ok
+test_pipeline_command_without_demo_fallback (tests.test_launcher.TestProcessCommands) ... ok
+test_streamlit_command (tests.test_launcher.TestProcessCommands) ... ok
+test_windows_command_line_quoting (tests.test_launcher.TestProcessCommands) ... ok
+test_every_simulated_profile_is_real_ml (tests.test_live_validation.TestGenuineModelThroughReport) ... ok
+test_exit_code_requires_every_profile_real (tests.test_live_validation.TestLauncherReport) ... 
+Live validation (genuine model, Npcap capture):
+PROFILE       FLOWS  OPENING  REAL MATCH  RESULT
+----------------------------------------------------------------
+DoS               1        1       100%  REAL ML
+Saved to /var/folders/lp/4t3w0vls4qd4z3m5dst8bd2m0000gn/T/tmpvp9o2qm_/logs/launcher/validation_report.txt
+
+Live validation (genuine model, Npcap capture):
+PROFILE       FLOWS  OPENING  REAL MATCH  RESULT
+----------------------------------------------------------------
+DoS               1        1         0%  Fetching RESULT  genuine: BENIGN=1
+Saved to /var/folders/lp/4t3w0vls4qd4z3m5dst8bd2m0000gn/T/tmpvp9o2qm_/logs/launcher/validation_report.txt
+FAIL
+test_validate_runs_genuine_receiver_without_streamlit (tests.test_live_validation.TestLauncherReport) ... MLCN launcher — preflight
+All MLCN processes stopped.
+
+Live validation (genuine model, Npcap capture):
+PROFILE       FLOWS  OPENING  REAL MATCH  RESULT
+----------------------------------------------------------------
+BENIGN            1        1       100%  REAL ML
+Saved to /var/folders/lp/4t3w0vls4qd4z3m5dst8bd2m0000gn/T/tmp4n3zv98g/logs/launcher/validation_report.txt
+ok
+test_generates_sequential_windows_against_lab_server (tests.test_live_validation.TestRunProfiles) ... ok
+test_attributes_by_flow_start_and_counts_only_opening_flows (tests.test_live_validation.TestSummarize) ... FAIL
+test_load_records_skips_partial_lines (tests.test_live_validation.TestSummarize) ... ok
+test_no_capture_is_fabricated_not_real (tests.test_live_validation.TestSummarize) ... FAIL
+test_malformed_input_raises (tests.test_ml_detection.TestFeatureValidation) ... ok
+test_non_finite_values_raise (tests.test_ml_detection.TestFeatureValidation) ... ok
+test_wrong_feature_count_raises (tests.test_ml_detection.TestFeatureValidation) ... ok
+test_predicts_benign (tests.test_ml_detection.TestInferenceBenign) ... ok
+test_predicts_brute_force (tests.test_ml_detection.TestInferenceBruteForce) ... ok
+test_predicts_ddos (tests.test_ml_detection.TestInferenceDDoS) ... ok
+test_predicts_dos (tests.test_ml_detection.TestInferenceDoS) ... ok
+test_predicts_port_scan (tests.test_ml_detection.TestInferencePortScan) ... ok
+test_corrupt_metadata_raises (tests.test_ml_detection.TestModelLoading) ... ok
+test_default_artifacts_exist_and_match_schema (tests.test_ml_detection.TestModelLoading) ... ok
+test_missing_model_raises (tests.test_ml_detection.TestModelLoading) ... ok
+test_engine_display_dispatch_uses_parsed_packet (tests.test_module1_module2_integration.TestModule1Module2Integration) ... ok
+test_engine_parse_path_produces_metadata (tests.test_module1_module2_integration.TestModule1Module2Integration) ... ok
+test_malformed_does_not_break_pipeline (tests.test_module1_module2_integration.TestModule1Module2Integration) ... ok
+test_metadata_to_parsed_packet_maps_missing_ips (tests.test_module1_module2_integration.TestModule1Module2Integration) ... ok
+test_module1_parser_delegates_to_module2 (tests.test_module1_module2_integration.TestModule1Module2Integration) ... ok
+test_icmp_basic_fields (tests.test_packet_parsing.TestIcmpParsing) ... ok
+test_icmp_optional_fields_are_none (tests.test_packet_parsing.TestIcmpParsing) ... ok
+test_invalid_window_value_normalized_when_buildable (tests.test_packet_parsing.TestMalformedPacketHandling) ... ok
+test_non_packet_object_returns_none (tests.test_packet_parsing.TestMalformedPacketHandling) ... ok
+test_none_returns_none (tests.test_packet_parsing.TestMalformedPacketHandling) ... ok
+test_parser_never_raises_on_odd_layers (tests.test_packet_parsing.TestMalformedPacketHandling) ... ok
+test_ip_normalization (tests.test_packet_parsing.TestNormalizationAndTypes) ... ok
+test_metadata_field_types (tests.test_packet_parsing.TestNormalizationAndTypes) ... ok
+test_port_ttl_window_normalization (tests.test_packet_parsing.TestNormalizationAndTypes) ... ok
+test_ip_other_protocol_without_ports (tests.test_packet_parsing.TestOptionalAndMissingFields) ... ok
+test_non_ip_packet_has_null_address_fields (tests.test_packet_parsing.TestOptionalAndMissingFields) ... ok
+test_ipv6_tcp_uses_hop_limit_as_ttl (tests.test_packet_parsing.TestTcpParsing) ... ok
+test_tcp_basic_fields (tests.test_packet_parsing.TestTcpParsing) ... ok
+test_tcp_flags (tests.test_packet_parsing.TestTcpParsing) ... ok
+test_tcp_ttl_and_window (tests.test_packet_parsing.TestTcpParsing) ... ok
+test_udp_basic_fields (tests.test_packet_parsing.TestUdpParsing) ... ok
+test_udp_protocol_specific_fields_are_none (tests.test_packet_parsing.TestUdpParsing) ... ok
+test_fin_terminates_flow (tests.test_pipeline_e2e.TestModuleHandoffs) ... ok
+test_module1_to_module2_handoff (tests.test_pipeline_e2e.TestModuleHandoffs)
+Module 1 parse path yields Module 2 PacketMetadata. ... ok
+test_module2_to_module3_handoff (tests.test_pipeline_e2e.TestModuleHandoffs) ... ok
+test_module3_to_module4_handoff (tests.test_pipeline_e2e.TestModuleHandoffs) ... ok
+test_module4_to_module5_and_detection_result (tests.test_pipeline_e2e.TestModuleHandoffs) ... ok
+test_single_packet_flows_are_not_classified (tests.test_pipeline_e2e.TestModuleHandoffs) ... ok
+test_benign_traffic_produces_valid_detection (tests.test_pipeline_e2e.TestPipelineBehaviors)
+Representative short TCP exchange yields a valid class label. ... ok
+test_callback_and_lifecycle_cleanup (tests.test_pipeline_e2e.TestPipelineBehaviors) ... ok
+test_flush_at_shutdown_closes_active_flows (tests.test_pipeline_e2e.TestPipelineBehaviors) ... ok
+test_invalid_input_handling (tests.test_pipeline_e2e.TestPipelineBehaviors) ... ok
+test_live_path_wires_capture_metadata_and_flushes (tests.test_pipeline_e2e.TestPipelineBehaviors)
+Exercise run_live wiring without opening a real sniffer. ... ok
+test_multiple_flows (tests.test_pipeline_e2e.TestPipelineBehaviors) ... ok
+test_as_dict_contains_detection_fields (tests.test_pipeline_e2e.TestPipelineResultShape) ... ok
+test_benign (tests.test_profile_validation.TestGeneratedProfilesUseRealModel) ... ok
+test_brute_force (tests.test_profile_validation.TestGeneratedProfilesUseRealModel) ... ok
+test_ddos (tests.test_profile_validation.TestGeneratedProfilesUseRealModel) ... ok
+test_dos (tests.test_profile_validation.TestGeneratedProfilesUseRealModel) ... ok
+test_port_scan (tests.test_profile_validation.TestGeneratedProfilesUseRealModel) ... ok
+test_port_scan_breaks_if_windows_retransmits_syn (tests.test_profile_validation.TestGeneratedProfilesUseRealModel) ... ok
+test_lab_page_and_request_sizes (tests.test_profile_validation.TestLabWireShapes) ... ok
+test_recommended_receiver_command_includes_lab_port (tests.test_traffic_generator.TestConnectivity) ... ok
+test_same_machine_target_rejected_for_two_machine (tests.test_traffic_generator.TestConnectivity) ... ok
+test_single_pc_mode_allows_same_machine_but_still_probes (tests.test_traffic_generator.TestConnectivity) ... ok
+test_unreachable_receiver_rejected (tests.test_traffic_generator.TestConnectivity) ... ok
+test_validation_mode_skips_receiver_probe (tests.test_traffic_generator.TestConnectivity) ... ok
+test_controller_rejects_without_confirmation (tests.test_traffic_generator.TestControllerIntegration) ... ok
+test_controller_runs_short_test (tests.test_traffic_generator.TestControllerIntegration) ... ok
+test_brute_force_line_session_gets_one_deny_per_attempt (tests.test_traffic_generator.TestLabEchoServerShapes) ... ok
+test_page_paths_return_lab_page (tests.test_traffic_generator.TestLabEchoServerShapes) ... ok
+test_dos_idle_gap_above_threshold (tests.test_traffic_generator.TestParameterMapper) ... ok
+test_dos_produces_about_one_connection_per_second (tests.test_traffic_generator.TestParameterMapper) ... ok
+test_intensity_scales_rates (tests.test_traffic_generator.TestParameterMapper) ... ok
+test_maps_all_profiles (tests.test_traffic_generator.TestParameterMapper) ... ok
+test_port_scan_syn_only (tests.test_traffic_generator.TestParameterMapper) ... ok
+test_extract_reference_features_for_each_profile (tests.test_traffic_generator.TestProfileLoader) ... ok
+test_list_profile_names (tests.test_traffic_generator.TestProfileLoader) ... ok
+test_load_default_profiles (tests.test_traffic_generator.TestProfileLoader) ... ok
+test_brute_force_uses_one_session_of_short_attempt_lines (tests.test_traffic_generator.TestProfileWireShapes) ... ok
+test_ddos_sends_tiny_page_request (tests.test_traffic_generator.TestProfileWireShapes) ... ok
+test_dos_sends_full_header_page_request (tests.test_traffic_generator.TestProfileWireShapes) ... ok
+test_port_scan_probe_timeout_below_windows_syn_retry (tests.test_traffic_generator.TestProfileWireShapes) ... ok
+test_default_profiles_path_exists (tests.test_traffic_generator.TestProfilesFilePresent) ... ok
+test_accepts_private_ips (tests.test_traffic_generator.TestSafety) ... ok
+test_confirmation_required (tests.test_traffic_generator.TestSafety) ... ok
+test_duration_cap (tests.test_traffic_generator.TestSafety) ... ok
+test_localhost_is_loopback (tests.test_traffic_generator.TestSafety) ... ok
+test_rejects_public_ip (tests.test_traffic_generator.TestSafety) ... ok
+test_benign_generator_counts_stats (tests.test_traffic_generator.TestTrafficGenerators) ... ok
+test_build_generator_for_each_profile (tests.test_traffic_generator.TestTrafficGenerators) ... ok
+
+======================================================================
+FAIL: test_verdict_takes_priority_and_flags_fabricated (tests.test_dashboard.TestReceiverData)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anand/Desktop/Anand/MLCN/tests/test_dashboard.py", line 64, in test_verdict_takes_priority_and_flags_fabricated
+    self.assertTrue(view.fabricated)
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_launch_invokes_generator_and_shows_fabricated_result (tests.test_dashboard.TestStreamlitApp)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anand/Desktop/Anand/MLCN/tests/test_dashboard.py", line 114, in test_launch_invokes_generator_and_shows_fabricated_result
+    self.assertIn(FABRICATED, text)
+AssertionError: 'Fetching RESULT' not found in '`None` <style>\n:root { --accent:#38bdf8; --accent-dim:rgba(56,189,248,.14); --bg:#070b12; --panel:#0d1420;\n        --line:#1b2638; --text:#d6e2f0; --muted:#6f819a; --warn:#d6a34a; }\n.stApp { background: var(--bg); color: var(--text); }\nheader[data-testid="stHeader"], footer, #MainMenu { display:none; }\n.block-container { padding: .9rem 1.4rem .5rem; max-width: 100%; }\nhtml, body, [class*="css"] { font-family: "Segoe UI", "Inter", system-ui, sans-serif; }\n.mono { font-family: "Cascadia Mono", Consolas, monospace; }\n.topbar { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:.5rem;\n          border-bottom:1px solid var(--line); padding-bottom:.45rem; }\n.brand { letter-spacing:.32em; font-size:.82rem; color:var(--accent); font-weight:600; }\n.sub { color:var(--muted); font-size:.72rem; letter-spacing:.12em; }\n.panel-title { font-size:.68rem; letter-spacing:.28em; color:var(--muted); margin:.1rem 0 .45rem; }\n.card { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:.65rem .8rem;\n        margin-bottom:.55rem; }\n.card.hero { border-color:rgba(56,189,248,.35); box-shadow:0 0 22px var(--accent-dim); }\n.label { font-size:.62rem; letter-spacing:.2em; color:var(--muted); text-transform:uppercase; }\n.value { font-size:1.05rem; color:var(--text); }\n.big { font-size:1.9rem; font-weight:600; color:#fff; line-height:1.15; }\n.pill { display:inline-block; font-size:.62rem; letter-spacing:.16em; padding:.12rem .5rem;\n        border-radius:999px; border:1px solid var(--accent); color:var(--accent); }\n.pill.demo { border-color:var(--warn); color:var(--warn); }\n.pill.idle { border-color:var(--line); color:var(--muted); }\n.notice { font-size:.72rem; color:var(--warn); margin-top:.3rem; }\n.grid { display:grid; grid-template-columns:repeat(4,1fr); gap:.5rem; }\n.bar { height:6px; background:#121b2b; border-radius:4px; overflow:hidden; margin-top:3px; }\n.bar > div { height:100%; background:var(--accent); opacity:.85; }\n.bar.top > div { opacity:1; box-shadow:0 0 8px var(--accent); }\n.prow { display:flex; justify-content:space-between; font-size:.74rem; margin-top:.3rem; }\n.log { font-family:"Cascadia Mono",Consolas,monospace; font-size:.68rem; color:#8fa3bd; line-height:1.35;\n       max-height:5.2rem; overflow:hidden; }\ntable.hist { width:100%; border-collapse:collapse; font-size:.7rem; }\ntable.hist td, table.hist th { padding:.18rem .3rem; border-bottom:1px solid var(--line); text-align:left; }\ntable.hist th { color:var(--muted); font-weight:500; letter-spacing:.1em; font-size:.6rem; }\ndiv[data-testid="stButton"] button { width:100%; border-radius:8px; border:1px solid var(--line);\n        background:var(--panel); color:var(--text); }\ndiv[data-testid="stButton"] button[kind="primary"] { background:var(--accent-dim); border-color:var(--accent);\n        color:var(--accent); letter-spacing:.14em; }\ndiv[data-testid="stButton"] button:disabled { opacity:.4; }\ndiv[data-testid="stRadio"] label p, div[data-testid="stSlider"] label p,\ndiv[data-testid="stNumberInput"] label p { font-size:.7rem; color:var(--muted); letter-spacing:.1em; }\n</style> <div class="topbar"><span class="brand">MLCN · DETECTION CONSOLE</span><span class="sub">LOCAL LAB · ATTACKER + RECEIVER · NPCAP → FLOWS → 24 FEATURES → XGBOOST</span></div> <div class="panel-title">ATTACKER / CONTROL</div> <div class="card"><div style="display:flex;justify-content:space-between"><span class="label">GENERATOR</span><span class="pill">COMPLETE</span></div><div class="grid" style="margin-top:.4rem"><div><div class="label">Target</div><div class="value mono">127.0.0.1</div></div><div><div class="label">Profile</div><div class="value">DDoS</div></div><div><div class="label">Started</div><div class="value mono">00:59:46</div></div><div><div class="label">Elapsed</div><div class="value mono">0.0s</div></div></div></div> <div class="card"><div class="label">GENERATOR STATS (updated when the run finishes)</div><div class="grid" style="margin-top:.35rem"><div><div class="label">Conn tried</div><div class="value mono">0</div></div><div><div class="label">Conn done</div><div class="value mono">0</div></div><div><div class="label">Msgs sent</div><div class="value mono">0</div></div><div><div class="label">Bytes sent</div><div class="value mono">0</div></div></div></div> <div class="card"><div class="label">ACTIVITY</div><div class="log">Started DDoS → 127.0.0.1:8080</div></div> <div class="panel-title">RECEIVER / DETECTION</div> <div class="card hero"><div style="display:flex;justify-content:space-between"><span class="label">DETECTION · FINAL</span><span class="pill">REAL ML</span></div><div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:.2rem"><div class="big">DDoS</div><div style="text-align:right"><div class="label">Confidence</div><div class="big mono" style="font-size:1.5rem">97.0%</div><div class="label mono">00:59:47</div></div></div><div class="prow"><span>BENIGN</span><span class="mono">  0.5%</span></div><div class="bar"><div style="width:0.5%"></div></div><div class="prow"><span>Brute Force</span><span class="mono">  0.9%</span></div><div class="bar"><div style="width:0.9%"></div></div><div class="prow"><span>DDoS</span><span class="mono"> 97.0%</span></div><div class="bar top"><div style="width:97.0%"></div></div><div class="prow"><span>DoS</span><span class="mono">  0.9%</span></div><div class="bar"><div style="width:0.9%"></div></div><div class="prow"><span>Port Scan</span><span class="mono">  0.7%</span></div><div class="bar"><div style="width:0.7%"></div></div></div> <div class="card"><div class="label">RECENT FLOWS</div><table class="hist"><tr><th>TIME</th><th>CLASS</th><th>CONF</th><th>PORTS</th><th>PKTS</th><th>SOURCE</th></tr><tr><td colspan="6" class="sub">No flows yet.</td></tr></table></div>'
+
+======================================================================
+FAIL: test_printed_fabricated_result_shows_selected_and_disclaimer (tests.test_demo_fallback.TestSessionResult)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anand/Desktop/Anand/MLCN/tests/test_demo_fallback.py", line 237, in test_printed_fabricated_result_shows_selected_and_disclaimer
+    self.assertIn("RESULT: DDoS | FABRICATED DEMO RESULT", text)
+AssertionError: 'RESULT: DDoS | FABRICATED DEMO RESULT' not found in '\n===== RESULT: DDoS | Fetching RESULT =====\nInterpolated Values\nselected=DDoS displayed=DDoS conf=0.9290 probs[BENIGN=0.011 Brute Force=0.020 DDoS=0.929 DoS=0.036 Port Scan=0.004]\n\n'
+
+======================================================================
+FAIL: test_exit_code_requires_every_profile_real (tests.test_live_validation.TestLauncherReport)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anand/Desktop/Anand/MLCN/tests/test_live_validation.py", line 113, in test_exit_code_requires_every_profile_real
+    self.assertIn("FABRICATED DEMO RESULT", (cfg.logs_dir / "validation_report.txt").read_text(encoding="utf-8"))
+AssertionError: 'FABRICATED DEMO RESULT' not found in 'PROFILE       FLOWS  OPENING  REAL MATCH  RESULT\n----------------------------------------------------------------\nDoS               1        1         0%  Fetching RESULT  genuine: BENIGN=1\n'
+
+======================================================================
+FAIL: test_attributes_by_flow_start_and_counts_only_opening_flows (tests.test_live_validation.TestSummarize)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anand/Desktop/Anand/MLCN/tests/test_live_validation.py", line 54, in test_attributes_by_flow_start_and_counts_only_opening_flows
+    self.assertEqual(dos.verdict, "FABRICATED DEMO RESULT")
+AssertionError: 'Fetching RESULT' != 'FABRICATED DEMO RESULT'
+- Fetching RESULT
++ FABRICATED DEMO RESULT
+
+
+======================================================================
+FAIL: test_no_capture_is_fabricated_not_real (tests.test_live_validation.TestSummarize)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anand/Desktop/Anand/MLCN/tests/test_live_validation.py", line 59, in test_no_capture_is_fabricated_not_real
+    self.assertEqual(summary.verdict, "FABRICATED DEMO RESULT")
+AssertionError: 'Fetching RESULT' != 'FABRICATED DEMO RESULT'
+- Fetching RESULT
++ FABRICATED DEMO RESULT
+
+
+----------------------------------------------------------------------
+Ran 202 tests in 28.078s
+
+FAILED (failures=6)

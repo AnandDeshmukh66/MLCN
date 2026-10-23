@@ -1,0 +1,1058 @@
+{
+  "pages": 74,
+  "page_sizes": [
+    [
+      595.3,
+      841.89
+    ]
+  ],
+  "unresolved_tokens": {
+    "[[": [],
+    "[@": [],
+    "will be updated": [],
+    "Error!": [],
+    "Reference source not found": []
+  },
+  "overflow": [],
+  "page_info": [
+    {
+      "pdf_page": 1,
+      "first": [
+        "i",
+        "MLCN: MACHINE LEARNING CYBERSECURITY ",
+        "NETWORK"
+      ],
+      "last": [
+        "NAGPUR \u2013 441 110",
+        "2025\u201326"
+      ],
+      "words": 85
+    },
+    {
+      "pdf_page": 2,
+      "first": [
+        "ii",
+        "CERTIFICATE OF APPROVAL",
+        "Certified  that  the  project  report  entitled  \u201cMLCN:  MACHINE  LEARNING "
+      ],
+      "last": [
+        "Unsigned approval template. Certification requires verification and signatures by the ",
+        "authorized faculty."
+      ],
+      "words": 100
+    },
+    {
+      "pdf_page": 3,
+      "first": [
+        "iii",
+        "DECLARATION",
+        "I / we certify that"
+      ],
+      "last": [
+        "Unsigned declaration template for student verification. Unused student positions may ",
+        "be removed."
+      ],
+      "words": 180
+    },
+    {
+      "pdf_page": 4,
+      "first": [
+        "iv",
+        "ACKNOWLEDGEMENT",
+        "The project team acknowledges the institutional framework provided by Yeshwantrao "
+      ],
+      "last": [
+        "institutional disclosure required for document-generation support. No sponsorship or ",
+        "collaboration is asserted here.]"
+      ],
+      "words": 129
+    },
+    {
+      "pdf_page": 5,
+      "first": [
+        "v",
+        "TABLE OF CONTENTS",
+        "Title Page...................................................................................................................................... i"
+      ],
+      "last": [
+        "3.8 Module 5: XGBoost inference.............................................................................................22",
+        "3.9 Notebook training and evaluation workflow.......................................................................24"
+      ],
+      "words": 184
+    },
+    {
+      "pdf_page": 6,
+      "first": [
+        "vi",
+        "3.10 Pipeline orchestration, completion and output...................................................................25",
+        "3.11 Traffic profiles, parameter mapping and generation..........................................................26"
+      ],
+      "last": [
+        "7.2 Related-patent verification scope.........................................................................................61",
+        "List of Publications....................................................................................................................62"
+      ],
+      "words": 214
+    },
+    {
+      "pdf_page": 7,
+      "first": [
+        "vii",
+        "LIST OF TABLES",
+        "Table 1.1 Investigation objectives and evidence boundaries.......................................................4"
+      ],
+      "last": [
+        "Table 6.7 Selected artifact SHA-256 hashes..............................................................................59",
+        "Table P.1 Candidate publications status....................................................................................62"
+      ],
+      "words": 156
+    },
+    {
+      "pdf_page": 8,
+      "first": [
+        "viii",
+        "LIST OF FIGURES",
+        "Fig. 3.1 Overall MLCN architecture. Solid blocks show audited components; the dashed "
+      ],
+      "last": [
+        "Fig. 4.6 Saved laboratory opening-flow counts, reconciled using consecutive JSONL blocks ",
+        "and the saved report\u2019s profile totals. Matching is relative to the selected profile.....................45"
+      ],
+      "words": 315
+    },
+    {
+      "pdf_page": 9,
+      "first": [
+        "ix",
+        "LIST OF ABBREVIATIONS",
+        "Abbreviation"
+      ],
+      "last": [
+        "XAI",
+        "Explainable artificial intelligence"
+      ],
+      "words": 159
+    },
+    {
+      "pdf_page": 10,
+      "first": [
+        "x",
+        "LIST OF SYMBOLS / NOMENCLATURE",
+        "Symbol"
+      ],
+      "last": [
+        "packet, feature, class or direction indices. Named code objects and literal feature ",
+        "names retain their repository spelling."
+      ],
+      "words": 108
+    },
+    {
+      "pdf_page": 11,
+      "first": [
+        "xi",
+        "ABSTRACT",
+        "Network  intrusion  detection  requires  a  consistent  transformation  from  observed "
+      ],
+      "last": [
+        "reproducibility,  provenance  and  live-validation  requirements  before  broader ",
+        "deployment."
+      ],
+      "words": 167
+    },
+    {
+      "pdf_page": 12,
+      "first": [
+        "xii",
+        "PROJECT CO\u2013PO MATRIX",
+        "Course outcome (CO) and program outcome (PO) mappings require approval from the "
+      ],
+      "last": [
+        "interpretation of model output. These are project activities, not approved CO\u2013PO ",
+        "assignments."
+      ],
+      "words": 177
+    },
+    {
+      "pdf_page": 13,
+      "first": [
+        "1",
+        "Chapter 1",
+        "Introduction"
+      ],
+      "last": [
+        "completed. The report follows the supplied institutional academic-year template, 2025",
+        "\u201326; the actual submission date remains subject to student confirmation."
+      ],
+      "words": 247
+    },
+    {
+      "pdf_page": 14,
+      "first": [
+        "2",
+        "1.2 Network traffic and flow-based classification",
+        "Individual packets carry addresses, protocol identifiers, flags and payload. Many "
+      ],
+      "last": [
+        "failure can be hidden by a user interface that displays a desired profile instead of the ",
+        "actual detector output."
+      ],
+      "words": 311
+    },
+    {
+      "pdf_page": 15,
+      "first": [
+        "3",
+        "The problem addressed is to implement and assess an auditable conversion from ",
+        "observed network packets to a fixed 24-feature vector and a five-class prediction. The "
+      ],
+      "last": [
+        "DDoS-labelled profile is bounded local traffic from the generator, so it is not evidence ",
+        "of a distributed attack campaign or a service outage."
+      ],
+      "words": 294
+    },
+    {
+      "pdf_page": 16,
+      "first": [
+        "4",
+        "Explainable artificial intelligence (XAI) using Gemini is included as a proposed ",
+        "extension.  No  implemented  Gemini  request  path,  model-attribution  service  or "
+      ],
+      "last": [
+        "contract.py, engine.py and schema",
+        "Current local semantics documented"
+      ],
+      "words": 269
+    },
+    {
+      "pdf_page": 17,
+      "first": [
+        "5",
+        "Objective",
+        "Evidence"
+      ],
+      "last": [
+        "failures. Chapter 5 presents conclusions and future work. Chapter 6 supplies technical ",
+        "appendices, and Chapter 7 lists references, followed by the publications table."
+      ],
+      "words": 246
+    },
+    {
+      "pdf_page": 18,
+      "first": [
+        "6",
+        "Chapter 2",
+        "Review of Literature"
+      ],
+      "last": [
+        "Sommer and Paxson [1] emphasize the difficulty of transferring machine learning into ",
+        "open operational environments. Their discussion motivates a requirement for realistic"
+      ],
+      "words": 251
+    },
+    {
+      "pdf_page": 19,
+      "first": [
+        "7",
+        "benign traffic and an understanding of the cost of errors. The present report applies ",
+        "that  requirement  by  examining  Brute  Force  precision  separately  from  aggregate "
+      ],
+      "last": [
+        "whether the chosen representation remains stable from training to live operation. A ",
+        "tree threshold learned in microseconds will not retain the same meaning if seconds are"
+      ],
+      "words": 293
+    },
+    {
+      "pdf_page": 20,
+      "first": [
+        "8",
+        "supplied. Likewise, a flag column interpreted as a packet count differs fundamentally ",
+        "from a dataset-specific first-packet binary encoding. The audited feature contract "
+      ],
+      "last": [
+        "may improve compatibility with a saved model while retaining peculiarities that ",
+        "should not be mistaken for universal networking definitions. The documented binary"
+      ],
+      "words": 311
+    },
+    {
+      "pdf_page": 21,
+      "first": [
+        "9",
+        "flag permutation and duplicated first payload in aggregate length statistics are reported ",
+        "as local compatibility rules, not generalized definitions of those feature names."
+      ],
+      "last": [
+        "Interpretable  Model-agnostic  Explanations  (LIME),  based  on  local  surrogate ",
+        "explanations. These methods seek to relate a model output to input features under their"
+      ],
+      "words": 293
+    },
+    {
+      "pdf_page": 22,
+      "first": [
+        "10",
+        "respective assumptions. Neither establishes that a suspicious network event caused an ",
+        "intrusion, and neither is verified as an implemented MLCN component."
+      ],
+      "last": [
+        "Future transfer study; not verified training ",
+        "input."
+      ],
+      "words": 271
+    },
+    {
+      "pdf_page": 23,
+      "first": [
+        "11",
+        "Work / source",
+        "Relevant contribution"
+      ],
+      "last": [
+        "particular five-class XGBoost model and explicitly documented extraction semantics; ",
+        "those implementation choices alone do not establish a patentable distinction."
+      ],
+      "words": 278
+    },
+    {
+      "pdf_page": 24,
+      "first": [
+        "12",
+        "Papamartzivanos, Bifulco, Kambourakis and Gomez Marmol\u2019s US20220021695A1 ",
+        "[14], published 20 January 2022, describes adaptive intrusion detection through a "
+      ],
+      "last": [
+        "labelled  captures,  session-aware  evaluation,  improved  Brute  Force  precision  and ",
+        "reliable lifecycle handling remain the principal research needs."
+      ],
+      "words": 278
+    },
+    {
+      "pdf_page": 25,
+      "first": [
+        "13",
+        "Chapter 3",
+        "Work Done / Present Investigation"
+      ],
+      "last": [
+        "packets rather than receiving reference medians from the profile file. The detector ",
+        "consumes features derived from completed flows. Genuine classification results are"
+      ],
+      "words": 266
+    },
+    {
+      "pdf_page": 26,
+      "first": [
+        "14",
+        "preserved before any optional display transformation. The Streamlit console reads ",
+        "persisted receiver records and displays the current run and recent flow history."
+      ],
+      "last": [
+        "typed objects make responsibilities explicit and allow tests to enter the system at ",
+        "different boundaries."
+      ],
+      "words": 179
+    },
+    {
+      "pdf_page": 27,
+      "first": [
+        "15",
+        "Fig. 3.2 Five-module processing pipeline and typed handoffs. The pipeline orchestrator connects ",
+        "existing module APIs and retains the genuine combined result."
+      ],
+      "last": [
+        "Latest flow or session verdict; ",
+        "bounded file tail"
+      ],
+      "words": 166
+    },
+    {
+      "pdf_page": 28,
+      "first": [
+        "16",
+        "3.4 Module 1: packet capture",
+        "PacketCaptureEngine in packet_capture/capture.py resolves an interface or a comma-"
+      ],
+      "last": [
+        "TCP window information when applicable. These auxiliary fields are not all included ",
+        "in the 24-feature model vector."
+      ],
+      "words": 288
+    },
+    {
+      "pdf_page": 29,
+      "first": [
+        "17",
+        "Non-IP frames can produce metadata with absent addresses; such records are later ",
+        "unable to form a valid flow key. Malformed objects, unusable lengths and invalid "
+      ],
+      "last": [
+        "destination  port  and  normalized  protocol.  The  endpoint  pairs  are  sorted ",
+        "lexicographically, using a sentinel only when a port is absent. A packet and its reverse"
+      ],
+      "words": 206
+    },
+    {
+      "pdf_page": 30,
+      "first": [
+        "18",
+        "direction therefore map to the same dictionary key. Canonical endpoint ordering is a ",
+        "lookup convention; it is not a declaration that the smaller address is the client or that "
+      ],
+      "last": [
+        "inactivity limit relative to that packet\u2019s timestamp. For an existing key, it also checks ",
+        "maximum age before appending. A FIN packet appended to an existing flow can close"
+      ],
+      "words": 231
+    },
+    {
+      "pdf_page": 31,
+      "first": [
+        "19",
+        "it immediately; a first packet starting a new flow is not subjected to the same post-",
+        "append FIN branch. Capacity eviction selects the least recently seen active flow, and "
+      ],
+      "last": [
+        "shows the calculation groups. Appendix I gives the complete ordered schema, and ",
+        "Table 3.2 summarizes its interpretation."
+      ],
+      "words": 197
+    },
+    {
+      "pdf_page": 32,
+      "first": [
+        "20",
+        "Fig. 3.5 Feature-engineering workflow under the current 24-feature contract. Timing features use ",
+        "microseconds; rates use seconds."
+      ],
+      "last": [
+        "sequences produce zeros, although the integrated classifier excludes flows with fewer ",
+        "than two packets."
+      ],
+      "words": 184
+    },
+    {
+      "pdf_page": 33,
+      "first": [
+        "21",
+        "For sorted timestamps t\u2081 through t  expressed in microseconds, duration is D = max(0,",
+        "\u2099"
+      ],
+      "last": [
+        "The six feature columns named Flag Count are binary indicators of the first sorted ",
+        "TCP packet. The contract maps FIN Flag Count to R, SYN Flag Count to P, RST Flag"
+      ],
+      "words": 350
+    },
+    {
+      "pdf_page": 34,
+      "first": [
+        "22",
+        "Count to C, PSH Flag Count to S, ACK Flag Count to A, and URG Flag Count to F. ",
+        "The  names  thus  preserve  dataset-compatible  column  semantics  rather  than "
+      ],
+      "last": [
+        "MLDetectionEngine loads the saved JSON booster and feature/class metadata before ",
+        "processing traffic. It verifies exact feature order and exact class order. The class"
+      ],
+      "words": 313
+    },
+    {
+      "pdf_page": 35,
+      "first": [
+        "23",
+        "sequence is BENIGN, Brute Force, DDoS, DoS and Port Scan, corresponding to ",
+        "identifiers zero through four. The loader prefers models/ and retains support for an "
+      ],
+      "last": [
+        "not equivalent to a BENIGN prediction and should be counted separately in any ",
+        "operational monitor."
+      ],
+      "words": 213
+    },
+    {
+      "pdf_page": 36,
+      "first": [
+        "24",
+        "3.9 Notebook training and evaluation workflow",
+        "The notebook contains a substantive training workflow, contrary to the older guide\u2019s "
+      ],
+      "last": [
+        "population becomes 487,388. Balanced class weights are computed on this population ",
+        "and passed as sample weights. The recorded Brute Force weight is approximately"
+      ],
+      "words": 220
+    },
+    {
+      "pdf_page": 37,
+      "first": [
+        "25",
+        "13.313, much larger than the BENIGN weight of approximately 0.650. This provides a ",
+        "plausible mechanism for favouring rare-class recall, although the causal effect on false "
+      ],
+      "last": [
+        "capture. It owns the builder, feature engine and detector, exposes counters, and ",
+        "supports reset, flush and close. Completed flows must contain at least two packets and"
+      ],
+      "words": 265
+    },
+    {
+      "pdf_page": 38,
+      "first": [
+        "26",
+        "use TCP or UDP to be classified. A pipeline detection combines the completed flow, ",
+        "feature vector and genuine detector result. The genuine result is appended to internal "
+      ],
+      "last": [
+        "feature vector. Fig. 3.8 shows the separation between the profile, traffic stimulus, ",
+        "capture and detector."
+      ],
+      "words": 244
+    },
+    {
+      "pdf_page": 39,
+      "first": [
+        "27",
+        "Fig. 3.8 Generator/receiver interaction and evidence paths. Profile reference medians do not bypass ",
+        "capture or enter the detector as synthetic feature vectors."
+      ],
+      "last": [
+        "The configuration declares caps of 300 seconds, 20 connections/s, 50 packets/s, ten ",
+        "concurrent  connections,  fifty  ports  and  512  payload  bytes.  These  are  laboratory"
+      ],
+      "words": 228
+    },
+    {
+      "pdf_page": 40,
+      "first": [
+        "28",
+        "controls; not every constant is a packet-level enforcement mechanism, and receiver ",
+        "page bytes are distinct from the generator\u2019s payload parameter."
+      ],
+      "last": [
+        "requirements, interface discovery, model readiness and relevant ports. It identifies the ",
+        "local adapter and the Npcap loopback device, starts the receiver service and pipeline,"
+      ],
+      "words": 300
+    },
+    {
+      "pdf_page": 41,
+      "first": [
+        "29",
+        "and manages the Streamlit child process. Child environments configure UTF-8 output, ",
+        "the single-PC mode, the session file and demonstration fallback behavior."
+      ],
+      "last": [
+        "RESULT\u201d lacks that boolean, creating a risk of mislabelling its displayed source. The ",
+        "six  observed  test  failures  include  expectations  affected  by  this  terminology  and"
+      ],
+      "words": 296
+    },
+    {
+      "pdf_page": 42,
+      "first": [
+        "30",
+        "presentation drift. The report therefore uses the explicit term synthetic demonstration ",
+        "output whenever such values are discussed."
+      ],
+      "last": [
+        "detector.  No  network  call  to  Gemini  is  made  during  this  investigation,  and  no ",
+        "application implementation is added."
+      ],
+      "words": 231
+    },
+    {
+      "pdf_page": 43,
+      "first": [
+        "31",
+        "Fig. 3.9 Proposed Gemini explanation architecture. Dashed blocks are unimplemented design elements; ",
+        "only genuine evidence is eligible for explanation."
+      ],
+      "last": [
+        "example,  a  statement  about  Flow  Duration  cites  its  microsecond  value  and  any ",
+        "displayed conversion to seconds. The system does not claim that a feature caused the"
+      ],
+      "words": 214
+    },
+    {
+      "pdf_page": 44,
+      "first": [
+        "32",
+        "decision merely because its value is large. Optional SHAP contributions would arrive ",
+        "through  a  separate  attribution  object  with  its  method,  model  version, "
+      ],
+      "last": [
+        "idempotent evidence identifier. A cache key includes model, schema and prompt ",
+        "versions to prevent reuse of an explanation for different evidence. Invalid JSON,"
+      ],
+      "words": 272
+    },
+    {
+      "pdf_page": 45,
+      "first": [
+        "33",
+        "unknown evidence references, altered probabilities or ungrounded factual claims cause ",
+        "the response to be rejected. The fallback is a deterministic template showing the "
+      ],
+      "last": [
+        "API cost are measured separately from capture-to-classification latency. No accuracy, ",
+        "usefulness score or runtime estimate is assigned before those experiments exist."
+      ],
+      "words": 121
+    },
+    {
+      "pdf_page": 46,
+      "first": [
+        "34",
+        "Chapter 4",
+        "Results and Discussions"
+      ],
+      "last": [
+        "models/xgboost_evaluation_results.json",
+        "Recorded original summary"
+      ],
+      "words": 249
+    },
+    {
+      "pdf_page": 47,
+      "first": [
+        "35",
+        "Result family",
+        "Source artifact"
+      ],
+      "last": [
+        "the recorded evaluation distribution, but it also exposes the consequences of the ",
+        "training reweighting strategy. A model that gives the rare class more training influence"
+      ],
+      "words": 190
+    },
+    {
+      "pdf_page": 48,
+      "first": [
+        "36",
+        "can achieve high recall while assigning too many benign examples to that class. The ",
+        "present data support describing that trade-off; they do not establish which particular "
+      ],
+      "last": [
+        "0.9998860870",
+        "Recorded original probability metric"
+      ],
+      "words": 209
+    },
+    {
+      "pdf_page": 49,
+      "first": [
+        "37",
+        "Precision for a class is TP/(TP + FP), recall is TP/(TP + FN), and F1 is twice the ",
+        "product of precision and recall divided by their sum. TP, FP and FN denote true "
+      ],
+      "last": [
+        "0.994356",
+        "9,082"
+      ],
+      "words": 263
+    },
+    {
+      "pdf_page": 50,
+      "first": [
+        "38",
+        "Fig. 4.2 Per-class precision, recall and F1 reconstructed from saved offline labels. Brute Force precision ",
+        "is substantially below the other classes."
+      ],
+      "last": [
+        "diagonal. Matrix orientation is stated explicitly because transposing its interpretation ",
+        "changes the error analysis."
+      ],
+      "words": 153
+    },
+    {
+      "pdf_page": 51,
+      "first": [
+        "39",
+        "Fig. 4.3 Verified offline confusion matrix. Cell annotations are exact counts; colour represents ",
+        "log10(count + 1). Rows are actual and columns predicted."
+      ],
+      "last": [
+        "row across several predicted classes. That value is the number of BENIGN rows ",
+        "assigned to any attack label, not the Brute Force false-positive count."
+      ],
+      "words": 150
+    },
+    {
+      "pdf_page": 52,
+      "first": [
+        "40",
+        "The 1,338 BENIGN errors divide into 799 Brute Force, 46 DDoS, 398 DoS and 95 ",
+        "Port Scan predictions. They account for approximately 92.21% of all 1,451 errors. "
+      ],
+      "last": [
+        "and all 24 test features, verifies label agreement, and stores the matrix with its runtime ",
+        "provenance. Fig. 4.4 and Fig. 4.5 are based on those regenerated scores."
+      ],
+      "words": 210
+    },
+    {
+      "pdf_page": 53,
+      "first": [
+        "41",
+        "Fig. 4.4 One-versus-rest ROC curves regenerated from the saved booster and test features using ",
+        "XGBoost 2.1.4. These are offline ranking results."
+      ],
+      "last": [
+        "because  a  thresholded one-versus-rest ranking answers  a different question from ",
+        "choosing the greatest score among five classes. The black point in the PR plot makes"
+      ],
+      "words": 107
+    },
+    {
+      "pdf_page": 54,
+      "first": [
+        "42",
+        "this difference explicit rather than suggesting that the curve removes the observed ",
+        "false positives."
+      ],
+      "last": [
+        "published scores from different datasets cannot serve as a controlled baseline. A future ",
+        "comparison  should  use  the  same  cleaned  rows,  split  indices,  feature  contract,"
+      ],
+      "words": 244
+    },
+    {
+      "pdf_page": 55,
+      "first": [
+        "43",
+        "hyperparameter-selection  budget  and  operating-point  criteria  for  every  candidate ",
+        "method."
+      ],
+      "last": [
+        "supported correction to the implementation account, not a claim that every source of ",
+        "live-to-training distribution shift has disappeared."
+      ],
+      "words": 311
+    },
+    {
+      "pdf_page": 56,
+      "first": [
+        "44",
+        "Remaining risks include the inferred historical flag semantics, first-packet duplication ",
+        "in length statistics, padding behavior, first-observed direction, FIN segmentation and "
+      ],
+      "last": [
+        "115",
+        "96.6387%"
+      ],
+      "words": 260
+    },
+    {
+      "pdf_page": 57,
+      "first": [
+        "45",
+        "Fig. 4.6 Saved laboratory opening-flow counts, reconciled using consecutive JSONL blocks and the ",
+        "saved report\u2019s profile totals. Matching is relative to the selected profile."
+      ],
+      "last": [
+        "Several  compare  the  expected  explicit  fabricated-result  string  with  the  current ",
+        "\u201cFetching RESULT\u201d label. Dashboard-related failures additionally expose inconsistent"
+      ],
+      "words": 230
+    },
+    {
+      "pdf_page": 58,
+      "first": [
+        "46",
+        "recognition or presentation of fabricated verdicts. They are not reported as detector ",
+        "accuracy failures, but they directly affect trust in displayed results."
+      ],
+      "last": [
+        "flows  during  expiration,  and  completed  results  retain  packet  metadata.  These ",
+        "implementation  costs  motivate  future  throughput,  memory  and  packet-loss"
+      ],
+      "words": 276
+    },
+    {
+      "pdf_page": 59,
+      "first": [
+        "47",
+        "measurements. No unsupported packets-per-second or production-capacity claim is ",
+        "derived from the batch timing."
+      ],
+      "last": [
+        "result. High aggregate offline metrics support continued engineering investigation; ",
+        "they do not establish a production-ready autonomous security system."
+      ],
+      "words": 153
+    },
+    {
+      "pdf_page": 60,
+      "first": [
+        "48",
+        "Chapter 5",
+        "Summary and Conclusions"
+      ],
+      "last": [
+        "documented",
+        "Independent reference-capture parity"
+      ],
+      "words": 223
+    },
+    {
+      "pdf_page": 61,
+      "first": [
+        "49",
+        "Objective",
+        "Outcome"
+      ],
+      "last": [
+        "records splits, balancing, hyperparameters and training output, yet its earlier saved ",
+        "states are inconsistent. A repeatable training package must preserve preprocessing"
+      ],
+      "words": 282
+    },
+    {
+      "pdf_page": 62,
+      "first": [
+        "50",
+        "decisions, dataset identities, split membership and environment versions. The report\u2019s ",
+        "successful inference replay addresses consistency of saved artifacts, not complete "
+      ],
+      "last": [
+        "data hashes and extractor versions should be stored with every model. The Brute Force ",
+        "decision boundary should then be studied through additional representative benign and"
+      ],
+      "words": 276
+    },
+    {
+      "pdf_page": 63,
+      "first": [
+        "51",
+        "attack flows, validation-only threshold selection, calibration and comparisons with ",
+        "matched baselines."
+      ],
+      "last": [
+        "usefulness against a simple template before claiming that generated narrative improves ",
+        "incident triage."
+      ],
+      "words": 126
+    },
+    {
+      "pdf_page": 64,
+      "first": [
+        "52",
+        "Chapter 6",
+        "Appendix"
+      ],
+      "last": [
+        "binary / int",
+        "first packet has SYN"
+      ],
+      "words": 322
+    },
+    {
+      "pdf_page": 65,
+      "first": [
+        "53",
+        "No. / feature",
+        "Unit / type"
+      ],
+      "last": [
+        "inventory is supplied in the report workspace. Virtual environments and version-",
+        "control internals are excluded from scientific source claims."
+      ],
+      "words": 291
+    },
+    {
+      "pdf_page": 66,
+      "first": [
+        "54",
+        "Table 6.2 Audited implementation and artifact inventory",
+        "Path"
+      ],
+      "last": [
+        "modules. Its test categories include common-schema generation, feature contracts, ",
+        "packet parsing, flow construction, detection, pipeline integration, traffic generation,"
+      ],
+      "words": 274
+    },
+    {
+      "pdf_page": 67,
+      "first": [
+        "55",
+        "local  validation,  launcher  behavior,  dashboard  behavior  and  demonstration ",
+        "provenance. Assets contain four project images and the compact traffic-profile JSON. "
+      ],
+      "last": [
+        "The requirements file specifies Scapy at least 2.5 and below 3, XGBoost at least 2 and ",
+        "below 3, NumPy at least 1.20 and below 3, and Streamlit at least 1.37 and below 2."
+      ],
+      "words": 275
+    },
+    {
+      "pdf_page": 68,
+      "first": [
+        "56",
+        "The training metadata\u2019s XGBoost 3.4.1 lies outside that declared runtime range. The ",
+        "audit successfully loads the model with 2.1.4 and verifies its predictions, but a future "
+      ],
+      "last": [
+        "Inspect receiver CLI options before a separate-",
+        "machine laboratory run."
+      ],
+      "words": 287
+    },
+    {
+      "pdf_page": 69,
+      "first": [
+        "57",
+        "A  complete  future  training  reproduction  should  first  repair  notebook  state ",
+        "dependencies, replace machine-specific paths with parameters, persist exact source "
+      ],
+      "last": [
+        "Separate from untrusted ",
+        "evidence content"
+      ],
+      "words": 291
+    },
+    {
+      "pdf_page": 70,
+      "first": [
+        "58",
+        "Object / field",
+        "Required meaning"
+      ],
+      "last": [
+        "Wednesday-workingHours.pcap_ISCX.csv",
+        "692,703"
+      ],
+      "words": 223
+    },
+    {
+      "pdf_page": 71,
+      "first": [
+        "59",
+        "Table  6.7  provides  selected  artifact  hashes  for  traceability.  Full  hashes  and  the ",
+        "complete inventory remain available in the machine-readable workspace file. Model, "
+      ],
+      "last": [
+        "14ac5fab64715ce8d46569552e509551",
+        "7a4fe080272dad90f95bdeecada860e4"
+      ],
+      "words": 90
+    },
+    {
+      "pdf_page": 72,
+      "first": [
+        "60",
+        "Chapter 7",
+        "References / Literature Cited"
+      ],
+      "last": [
+        "Normal and Background Traffic.\u201d Dataset-provider documentation, accessed 21 ",
+        "October 2026. Available: https://www.stratosphereips.org/datasets-ctu13"
+      ],
+      "words": 271
+    },
+    {
+      "pdf_page": 73,
+      "first": [
+        "61",
+        "[7] Engelen G., Rimmer V., Joosen W., \u201cTroubleshooting an Intrusion Detection ",
+        "Dataset: the CICIDS2017 Case Study,\u201d 2021 IEEE Security and Privacy Workshops, "
+      ],
+      "last": [
+        "accessible  records.  No  exhaustive  family  search,  prosecution-history  review  or ",
+        "jurisdiction-specific claim analysis is represented as completed."
+      ],
+      "words": 281
+    },
+    {
+      "pdf_page": 74,
+      "first": [
+        "62",
+        "List of Publications",
+        "The repository contains no verified publication by the candidate or project team. Table "
+      ],
+      "last": [
+        "Not applicable",
+        "Not applicable"
+      ],
+      "words": 81
+    }
+  ],
+  "sections": [
+    {
+      "width_cm": 21.00086111111111,
+      "height_cm": 29.70036111111111,
+      "left_cm": 3.750027777777778,
+      "right_cm": 2.4994305555555556,
+      "top_cm": 2.4994305555555556,
+      "bottom_cm": 2.4994305555555556,
+      "numbering": {
+        "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}start": "1",
+        "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}fmt": "lowerRoman"
+      }
+    },
+    {
+      "width_cm": 21.00086111111111,
+      "height_cm": 29.70036111111111,
+      "left_cm": 3.750027777777778,
+      "right_cm": 2.4994305555555556,
+      "top_cm": 2.4994305555555556,
+      "bottom_cm": 2.4994305555555556,
+      "numbering": {
+        "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}start": "1",
+        "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}fmt": "decimal"
+      }
+    }
+  ],
+  "tables": 28,
+  "figures": 16,
+  "fields": [
+    " TC \"Title Page\" \\l 2 ",
+    " TOC \\z \\f \\o \"1-2\" \\t \"Front Heading,1\" \\h",
+    " TOC \\z \\t \"Table Caption,1\" \\h",
+    " TOC \\z \\t \"Figure Caption,1\" \\h",
+    " SEQ Tab1 \\* ARABIC ",
+    " SEQ Tab2 \\* ARABIC ",
+    " SEQ Tab2 \\* ARABIC ",
+    " SEQ Fig3 \\* ARABIC ",
+    " SEQ Fig3 \\* ARABIC ",
+    " SEQ Tab3 \\* ARABIC ",
+    " SEQ Fig3 \\* ARABIC ",
+    " SEQ Fig3 \\* ARABIC ",
+    " SEQ Fig3 \\* ARABIC ",
+    " SEQ Tab3 \\* ARABIC ",
+    " SEQ Fig3 \\* ARABIC ",
+    " SEQ Fig3 \\* ARABIC ",
+    " SEQ Tab3 \\* ARABIC ",
+    " SEQ Fig3 \\* ARABIC ",
+    " SEQ Fig3 \\* ARABIC ",
+    " SEQ Tab4 \\* ARABIC ",
+    " SEQ Fig4 \\* ARABIC ",
+    " SEQ Tab4 \\* ARABIC ",
+    " SEQ Tab4 \\* ARABIC ",
+    " SEQ Fig4 \\* ARABIC ",
+    " SEQ Fig4 \\* ARABIC ",
+    " SEQ Tab4 \\* ARABIC ",
+    " SEQ Fig4 \\* ARABIC ",
+    " SEQ Fig4 \\* ARABIC ",
+    " SEQ Tab4 \\* ARABIC ",
+    " SEQ Tab4 \\* ARABIC ",
+    " SEQ Tab4 \\* ARABIC ",
+    " SEQ Fig4 \\* ARABIC ",
+    " SEQ Tab4 \\* ARABIC ",
+    " SEQ Tab5 \\* ARABIC ",
+    " SEQ Tab6 \\* ARABIC ",
+    " SEQ Tab6 \\* ARABIC ",
+    " SEQ Tab6 \\* ARABIC ",
+    " SEQ Tab6 \\* ARABIC ",
+    " SEQ Tab6 \\* ARABIC ",
+    " SEQ Tab6 \\* ARABIC ",
+    " SEQ Tab6 \\* ARABIC ",
+    " SEQ TabP \\* ARABIC "
+  ],
+  "normal_style": {
+    "font": "Times New Roman",
+    "size": 12.0,
+    "line_spacing": 1.5
+  }
+}

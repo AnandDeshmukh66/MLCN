@@ -1,0 +1,329 @@
+{
+  "passed": true,
+  "pages": 74,
+  "chapter_pages": {
+    "1": {
+      "pdf_page": 13,
+      "printed_page": 1
+    },
+    "2": {
+      "pdf_page": 18,
+      "printed_page": 6
+    },
+    "3": {
+      "pdf_page": 25,
+      "printed_page": 13
+    },
+    "4": {
+      "pdf_page": 46,
+      "printed_page": 34
+    },
+    "5": {
+      "pdf_page": 60,
+      "printed_page": 48
+    },
+    "6": {
+      "pdf_page": 64,
+      "printed_page": 52
+    },
+    "7": {
+      "pdf_page": 72,
+      "printed_page": 60
+    }
+  },
+  "footer_sequence_verified": true,
+  "citation_order": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "inventories": {
+    "figures": [
+      {
+        "number": "3.1",
+        "title": "Overall MLCN architecture. Solid blocks show audited components; the dashed Gemini block is proposed. This is an architectural diagram, not a measured network topology.",
+        "pdf_page": 26,
+        "printed_page": 14
+      },
+      {
+        "number": "3.2",
+        "title": "Five-module processing pipeline and typed handoffs. The pipeline orchestrator connects existing module APIs and retains the genuine combined result.",
+        "pdf_page": 27,
+        "printed_page": 15
+      },
+      {
+        "number": "3.3",
+        "title": "Packet-to-flow transformation, completion and classification eligibility. Discard and completion rules are architectural conditions, not experimental detection rates.",
+        "pdf_page": 29,
+        "printed_page": 17
+      },
+      {
+        "number": "3.4",
+        "title": "Bidirectional key construction and orientation. Canonical endpoint ordering and forward-direction anchoring serve different purposes.",
+        "pdf_page": 30,
+        "printed_page": 18
+      },
+      {
+        "number": "3.5",
+        "title": "Feature-engineering workflow under the current 24-feature contract. Timing features use microseconds; rates use seconds.",
+        "pdf_page": 32,
+        "printed_page": 20
+      },
+      {
+        "number": "3.6",
+        "title": "XGBoost loading and inference. Confidence is the maximum model probability and is not a calibrated probability of a real intrusion.",
+        "pdf_page": 35,
+        "printed_page": 23
+      },
+      {
+        "number": "3.7",
+        "title": "Recorded training/evaluation methodology and audit replay. Early notebook outputs are inconsistent; the saved test artifacts and regenerated inference are independently checked.",
+        "pdf_page": 36,
+        "printed_page": 24
+      },
+      {
+        "number": "3.8",
+        "title": "Generator/receiver interaction and evidence paths. Profile reference medians do not bypass capture or enter the detector as synthetic feature vectors.",
+        "pdf_page": 39,
+        "printed_page": 27
+      },
+      {
+        "number": "3.9",
+        "title": "Proposed Gemini explanation architecture. Dashed blocks are unimplemented design elements; only genuine evidence is eligible for explanation.",
+        "pdf_page": 43,
+        "printed_page": 31
+      },
+      {
+        "number": "4.1",
+        "title": "Verified class distribution in models/xgboost_test_predictions.csv, n = 251,812. Bar heights use a logarithmic count axis.",
+        "pdf_page": 47,
+        "printed_page": 35
+      },
+      {
+        "number": "4.2",
+        "title": "Per-class precision, recall and F1 reconstructed from saved offline labels. Brute Force precision is substantially below the other classes.",
+        "pdf_page": 50,
+        "printed_page": 38
+      },
+      {
+        "number": "4.3",
+        "title": "Verified offline confusion matrix. Cell annotations are exact counts; colour represents log10(count + 1). Rows are actual and columns predicted.",
+        "pdf_page": 51,
+        "printed_page": 39
+      },
+      {
+        "number": "4.4",
+        "title": "One-versus-rest ROC curves regenerated from the saved booster and test features using XGBoost 2.1.4. These are offline ranking results.",
+        "pdf_page": 53,
+        "printed_page": 41
+      },
+      {
+        "number": "4.5",
+        "title": "One-versus-rest PR curves from regenerated probabilities. The black point shows the separate Brute Force multiclass argmax operating point.",
+        "pdf_page": 53,
+        "printed_page": 41
+      },
+      {
+        "number": "4.6",
+        "title": "Saved laboratory opening-flow counts, reconciled using consecutive JSONL blocks and the saved report\u2019s profile totals. Matching is relative to the selected profile.",
+        "pdf_page": 57,
+        "printed_page": 45
+      }
+    ],
+    "tables": [
+      {
+        "number": "1.1",
+        "title": "Investigation objectives and evidence boundaries",
+        "pdf_page": 16,
+        "printed_page": 4
+      },
+      {
+        "number": "2.1",
+        "title": "Critical literature comparison",
+        "pdf_page": 22,
+        "printed_page": 10
+      },
+      {
+        "number": "2.2",
+        "title": "Verified related patent publications",
+        "pdf_page": 24,
+        "printed_page": 12
+      },
+      {
+        "number": "3.1",
+        "title": "Core data contracts and interfaces",
+        "pdf_page": 27,
+        "printed_page": 15
+      },
+      {
+        "number": "3.2",
+        "title": "Feature families and current semantics",
+        "pdf_page": 32,
+        "printed_page": 20
+      },
+      {
+        "number": "3.3",
+        "title": "Recorded final notebook training configuration",
+        "pdf_page": 37,
+        "printed_page": 25
+      },
+      {
+        "number": "4.1",
+        "title": "Result provenance and permitted interpretation",
+        "pdf_page": 46,
+        "printed_page": 34
+      },
+      {
+        "number": "4.2",
+        "title": "Offline evaluation summary",
+        "pdf_page": 48,
+        "printed_page": 36
+      },
+      {
+        "number": "4.3",
+        "title": "Verified per-class offline evaluation",
+        "pdf_page": 49,
+        "printed_page": 37
+      },
+      {
+        "number": "4.4",
+        "title": "Exact confusion matrix (actual rows, predicted columns)",
+        "pdf_page": 51,
+        "printed_page": 39
+      },
+      {
+        "number": "4.5",
+        "title": "Regenerated one-versus-rest ranking metrics",
+        "pdf_page": 54,
+        "printed_page": 42
+      },
+      {
+        "number": "4.6",
+        "title": "Same-test-population baseline comparison",
+        "pdf_page": 54,
+        "printed_page": 42
+      },
+      {
+        "number": "4.7",
+        "title": "Saved laboratory validation, opening-flow denominator",
+        "pdf_page": 56,
+        "printed_page": 44
+      },
+      {
+        "number": "4.8",
+        "title": "Failures in the 202-test audit run",
+        "pdf_page": 58,
+        "printed_page": 46
+      },
+      {
+        "number": "5.1",
+        "title": "Objective achievement and remaining work",
+        "pdf_page": 60,
+        "printed_page": 48
+      },
+      {
+        "number": "6.1",
+        "title": "Complete ordered 24-feature runtime contract",
+        "pdf_page": 64,
+        "printed_page": 52
+      },
+      {
+        "number": "6.2",
+        "title": "Audited implementation and artifact inventory",
+        "pdf_page": 66,
+        "printed_page": 54
+      },
+      {
+        "number": "6.3",
+        "title": "Configuration by execution context",
+        "pdf_page": 67,
+        "printed_page": 55
+      },
+      {
+        "number": "6.4",
+        "title": "Reproducibility and laboratory command reference",
+        "pdf_page": 68,
+        "printed_page": 56
+      },
+      {
+        "number": "6.5",
+        "title": "Proposed Gemini evidence and response contract",
+        "pdf_page": 69,
+        "printed_page": 57
+      },
+      {
+        "number": "6.6",
+        "title": "Local CIC CSV row counts",
+        "pdf_page": 70,
+        "printed_page": 58
+      },
+      {
+        "number": "6.7",
+        "title": "Selected artifact SHA-256 hashes",
+        "pdf_page": 71,
+        "printed_page": 59
+      },
+      {
+        "number": "P.1",
+        "title": "Candidate publications status",
+        "pdf_page": 74,
+        "printed_page": 62
+      }
+    ]
+  },
+  "styles": {
+    "Normal": {
+      "font": "Times New Roman",
+      "size_pt": 12.0,
+      "line_spacing": 1.5
+    },
+    "Front Text": {
+      "font": "Times New Roman",
+      "size_pt": 12.0,
+      "line_spacing": 1.0
+    },
+    "Reference": {
+      "font": "Times New Roman",
+      "size_pt": 12.0,
+      "line_spacing": 1.0
+    },
+    "Figure Caption": {
+      "font": "Times New Roman",
+      "size_pt": 10.0,
+      "line_spacing": 1.0
+    },
+    "Table Caption": {
+      "font": "Times New Roman",
+      "size_pt": 11.0,
+      "line_spacing": 1.0
+    },
+    "Heading 1": {
+      "font": "Times New Roman",
+      "size_pt": 16.0,
+      "line_spacing": 1.5
+    },
+    "Heading 2": {
+      "font": "Times New Roman",
+      "size_pt": 12.0,
+      "line_spacing": 1.5
+    },
+    "Heading 3": {
+      "font": "Times New Roman",
+      "size_pt": 12.0,
+      "line_spacing": 1.5
+    }
+  },
+  "docx_sha256": "66025ec83da614c8f05008f13fa7ac9238270f415ecc9bac57f93ea98629d15a",
+  "pdf_sha256": "e434e82e47337918f0df2de6146ec47d70ac5950e492f19e8268d97960fdfa16"
+}

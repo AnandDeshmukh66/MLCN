@@ -6,3 +6,18 @@ npcap-*.exe
 .DS_Store
 MachineLearningCVE/
 MachineLearningCVE/
+# Python virtual environments
+venv/
+.venv/
+**/venv/
+**/.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Local LibreOffice installation
+reports/workspace/tools/LibreOffice.app/
+
+# macOS files
+.DS_Store
