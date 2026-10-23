@@ -29,6 +29,7 @@ from traffic_generator.config import (
 from traffic_generator.controller import TrafficGeneratorController
 from traffic_generator.dashboard_data import DEMO_NOTICE, HISTORY_LIMIT, ReceiverView, receiver_view
 from traffic_generator.safety import SafetyError
+from traffic_generator.xai_panel import xai_panel
 
 CLASSES = ("BENIGN", "Brute Force", "DDoS", "DoS", "Port Scan")
 TARGET = "127.0.0.1"
@@ -309,6 +310,7 @@ def main() -> None:
         _attacker_panel(st.session_state.controller)
     with right:
         _receiver_panel()
+    xai_panel(st.session_state.controller)
 
 
 if __name__ == "__main__":

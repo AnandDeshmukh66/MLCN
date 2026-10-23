@@ -21,3 +21,6 @@ reports/workspace/tools/LibreOffice.app/
 
 # macOS files
 .DS_Store
+
+# Local secrets (see .env.example)
+.env
